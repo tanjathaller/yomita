@@ -37,13 +37,26 @@ export function AboutTeaserSection({
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div
           className={cn(
-            "relative isolate w-full overflow-hidden rounded-t-3xl rounded-b-none",
+            "relative isolate w-full overflow-hidden rounded-t-3xl rounded-b-2xl sm:rounded-b-3xl",
             "border-border/50 border-x border-t border-b-0",
             /* Langer Fade: Kartenfläche löst sich unten in dasselbe Band wie die Sektion auf */
             "bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_42%,color-mix(in_oklab,var(--card)_82%,var(--surface-muted-band)_18%)_62%,color-mix(in_oklab,var(--card)_28%,var(--surface-muted-band)_72%)_84%,var(--surface-muted-band)_100%)]",
             "shadow-[0_2px_20px_rgba(0,0,0,0.04)]",
           )}
         >
+          {/* Weicher Übergang unten inkl. seitlicher Kanten (unter dem Inhalt, analog Hero) */}
+          <div
+            className="pointer-events-none absolute inset-x-[-1px] bottom-0 z-[1] h-28 border-0 ring-0 sm:h-32 md:h-36"
+            style={{
+              /* Erste Schicht = oben: Ecken weicher; darunter linearer Fade über die volle Breite */
+              background: [
+                "radial-gradient(ellipse 72% 95% at 0% 100%, color-mix(in oklab, var(--surface-muted-band) 70%, transparent), transparent 62%)",
+                "radial-gradient(ellipse 72% 95% at 100% 100%, color-mix(in oklab, var(--surface-muted-band) 70%, transparent), transparent 62%)",
+                "linear-gradient(to bottom, transparent 0%, color-mix(in oklab, var(--surface-muted-band) 18%, transparent) 28%, color-mix(in oklab, var(--surface-muted-band) 48%, transparent) 48%, var(--surface-muted-band) 76%, var(--surface-muted-band) 100%)",
+              ].join(", "),
+            }}
+            aria-hidden
+          />
           <div className="relative z-10 p-5 sm:p-7 lg:p-8">
             <div className="grid grid-cols-1 gap-6 md:grid-cols-12 md:items-stretch md:gap-8 lg:gap-10">
               <header className="flex flex-col text-center md:col-span-5 md:h-full md:text-left">
