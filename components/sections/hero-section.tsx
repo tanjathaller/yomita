@@ -4,7 +4,10 @@ import { ArrowRight } from "lucide-react";
 import type { HeroSection as HeroModel } from "@/types/site-content";
 
 import { SectionWaveBottom } from "@/components/shared/section-wave";
-import { buttonVariants } from "@/components/ui/button-variants";
+import {
+  buttonTrailingArrowClassName,
+  buttonVariants,
+} from "@/components/ui/button-variants";
 import { cn } from "@/lib/utils";
 
 type HeroSectionProps = {
@@ -84,7 +87,7 @@ export function HeroSection({ hero, businessName }: HeroSectionProps) {
                 >
                   {hero.primaryCtaLabel}
                   <ArrowRight
-                    className="size-[1.05rem] shrink-0 opacity-95 transition-transform duration-200 ease-out group-hover/button:translate-x-0.5"
+                    className={cn(buttonTrailingArrowClassName, "size-[1.05rem]")}
                     aria-hidden
                   />
                 </Link>

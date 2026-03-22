@@ -4,7 +4,10 @@ import {
   SectionWaveBottom,
   type SectionWaveTarget,
 } from "@/components/shared/section-wave";
-import { buttonVariants } from "@/components/ui/button-variants";
+import {
+  buttonTrailingArrowClassName,
+  buttonVariants,
+} from "@/components/ui/button-variants";
 import { cn } from "@/lib/utils";
 
 const ctaClassName = cn(
@@ -72,7 +75,7 @@ export function AboutTeaserSection({
                   <a href="#ueber-mich" className={cn(ctaClassName, "w-fit")}>
                     Mehr über mich
                     <ArrowRight
-                      className="size-[1.05rem] shrink-0 opacity-95 transition-transform duration-200 ease-out group-hover/button:translate-x-0.5"
+                      className={cn(buttonTrailingArrowClassName, "size-[1.05rem]")}
                       aria-hidden
                     />
                   </a>
@@ -91,7 +94,7 @@ export function AboutTeaserSection({
                 <a href="#ueber-mich" className={ctaClassName}>
                   Mehr über mich
                   <ArrowRight
-                    className="size-[1.05rem] shrink-0 opacity-95 transition-transform duration-200 ease-out group-hover/button:translate-x-0.5"
+                    className={cn(buttonTrailingArrowClassName, "size-[1.05rem]")}
                     aria-hidden
                   />
                 </a>

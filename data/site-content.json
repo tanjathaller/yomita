@@ -7,12 +7,12 @@
   },
   "aktuell": {
     "title": "Aktuelles",
-    "intro": "Kurze Hinweise zu Workshops, Aktionen oder Saison-Themen. [Platzhalter]",
+    "intro": "Kurze Hinweise zu Workshops, Aktionen oder Saison-Themen.",
     "items": [
       {
         "id": "aktuell-yin-workshop",
-        "title": "Yin & Entspannung (Beispiel)",
-        "text": "Am **Wochenende 12./13. April** gibt es eine vertiefende Yin-Einheit mit viel Raum für Regeneration. [Platzhalter – Text und Bild später ersetzen.]",
+        "title": "Yin & Entspannung",
+        "text": "Am **Wochenende 12./13. April** gibt es eine vertiefende Yin-Einheit mit viel Raum für Regeneration.",
         "image": {
           "url": "https://images.unsplash.com/photo-1545389336-cf090694435e?w=900&h=700&fit=crop",
           "alt": "Ruhige Yogastimmung, Kerzenlicht"
@@ -22,7 +22,7 @@
       {
         "id": "aktuell-neu-im-studio",
         "title": "Neu im Studio",
-        "text": "Wir haben die **Mattenfläche erweitert** – mehr Platz für deine Praxis. Komm vorbei oder schreib uns über das Kontaktformular. [Platzhalter]",
+        "text": "Wir haben die **Mattenfläche erweitert** – mehr Platz für deine Praxis. Komm vorbei oder schreib uns über das Kontaktformular.",
         "image": {
           "url": "https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?w=900&h=700&fit=crop",
           "alt": "Yogamatten und ruhige Atmosphäre im Studio"

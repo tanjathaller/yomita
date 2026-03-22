@@ -3,7 +3,11 @@
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 
 import { cn } from "@/lib/utils";
-import { buttonVariants, type ButtonVariantProps } from "@/components/ui/button-variants";
+import {
+  buttonTrailingArrowClassName,
+  buttonVariants,
+  type ButtonVariantProps,
+} from "@/components/ui/button-variants";
 
 function Button({
   className,
@@ -20,4 +24,4 @@ function Button({
   );
 }
 
-export { Button, buttonVariants };
+export { Button, buttonTrailingArrowClassName, buttonVariants };
