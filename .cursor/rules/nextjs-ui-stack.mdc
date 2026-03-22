@@ -1,0 +1,28 @@
+---
+description: Next.js-Stack, UI-Schichten und Dateikonventionen für diese App
+globs: "**/*.{ts,tsx}"
+alwaysApply: false
+---
+
+# Stack & UI (tech-decisions.md)
+
+- **Next.js** (App Router), **TypeScript**, **Tailwind CSS**, **shadcn/ui**
+- **Design:** `design-reference/design-system-profile.json` (Umsetzung: Theme/Tokens)
+- **Mobile-first**, responsive
+- Öffentliche Site im Haupt-App-Baum; **Admin unter `/admin`**
+
+## Struktur (Zielbild, wenn die App existiert)
+
+- Route Groups: `app/(public)/`, `app/(admin)/admin/`
+- `components/ui/` – shadcn
+- `components/layout/` – z. B. `SiteHeader`, `SiteFooter`, Admin-Shell
+- `components/sections/` – `HeroSection`, `CoursesSection`, … (Props aus `SiteContent`)
+
+## Content
+
+- Öffentliche Seite und Admin nutzen **dieselbe** `SiteContent`-Form (`types/site-content.ts`)
+- Kurse: **Union** `InternalCourse | ExternalCourse` – `externalUrl` nur bei `type: "external"`
+
+## Offen (nicht raten – in tech-decisions.md festhalten)
+
+Admin-Auth, Bild-Upload, Storage/DB, Kontaktformular-Backend, Cookie-Consent.

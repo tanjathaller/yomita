@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "meta": {
+    "id": "wellness-editorial-organic-v1",
+    "version": "1.0.0",
+    "purpose": "Cursor/AI design tokens and patterns distilled from reference screenshots; semantic roles over brand literals.",
+    "notes": "References span marketing sites and one mobile UI. Prefer tokens + roles; pick one typography mode (serif+sans vs single sans) per product."
+  },
+  "overallDesignStyle": {
+    "aesthetic": ["editorial-wellness", "organic-modern", "quiet-luxury", "calm-minimal"],
+    "principles": [
+      "Generous whitespace; vertical rhythm over density.",
+      "Nature-inspired palettes (greens, cream, earth) with one high-contrast accent for primary actions.",
+      "Photography-led sections with warm or slightly desaturated grading.",
+      "Soft geometry: large radii, pills, occasional fluid/wavy section masks or overlapping color blocks.",
+      "Depth from layering (overlap, color blocks, subtle elevation) rather than heavy chrome."
+    ],
+    "density": "low-to-medium",
+    "chrome": "minimal"
+  },
+  "colorSystem": {
+    "semanticRoles": {
+      "canvas": "off-white / warm cream / bone (page ground)",
+      "surface": "white or very light tint on canvas",
+      "surfaceElevated": "white with optional pastel wash for category/chip backgrounds",
+      "primary": "deep muted green or teal (text on light, large fills, active states)",
+      "primaryForeground": "white or cream on primary fills",
+      "accent": "single warm contrast CTA (terracotta/coral) OR cream-on-dark inversion—choose one primary CTA logic per theme",
+      "muted": "sage/olive/taupe blocks for banded sections",
+      "text": "near-black / charcoal primary",
+      "textSecondary": "mid gray for supporting copy",
+      "textMuted": "light gray for placeholders/meta",
+      "border": "hairline neutral or translucent white (glass)",
+      "overlay": "semi-transparent scrim on imagery when text sits on photos"
+    },
+    "palettePatterns": {
+      "pastelIconBubbles": "soft lime, mint, yellow, sky, coral circles behind outline icons",
+      "sectionBands": "alternate canvas ↔ muted green/sage/teal bands; dark forest for high-impact bands",
+      "onDark": "cream or white type; cream pill buttons on dark green"
+    },
+    "implementation": {
+      "cssVariablesSuggestion": [
+        "--color-canvas", "--color-surface", "--color-primary", "--color-primary-fg",
+        "--color-accent-cta", "--color-text", "--color-text-muted", "--color-border"
+      ]
+    }
+  },
+  "typographySystem": {
+    "modes": {
+      "editorialPairing": {
+        "display": "high-contrast serif for H1/H2; optional italic for emphasis inside headlines",
+        "ui": "clean geometric or humanist sans for nav, body, buttons, labels",
+        "eyebrow": "small caps or all-caps sans with increased letter-spacing"
+      },
+      "singleSans": {
+        "display": "bold/large geometric sans; optional wide tracking on uppercase headings",
+        "ui": "same family; weight/size contrast carries hierarchy"
+      }
+    },
+    "scalePattern": {
+      "heroDisplay": "largest size, tight or comfortable tracking per font",
+      "sectionTitle": "clear step down from hero",
+      "body": "comfortable line-height 1.5–1.65, regular/medium",
+      "meta": "smaller sans for dates, captions, legal"
+    },
+    "weights": ["regular for body", "semibold for card titles and key labels", "bold for primary headings"],
+    "rules": [
+      "Do not mix more than two families in one interface.",
+      "Keep button and nav in sans when using serif display.",
+      "Optional decorative script/italic only for accent words, not body."
+    ]
+  },
+  "spacingScale": {
+    "baseUnit": 4,
+    "scaleRem": [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10],
+    "usage": {
+      "pageInline": "clamp(1rem, 4vw, 2rem) or fixed 20–24px mobile; wide side margins on desktop editorial layouts",
+      "sectionBlock": "large vertical gaps (e.g. 4–10rem) between major sections",
+      "cardPadding": "1rem–1.25rem mobile; 1.25–1.5rem desktop",
+      "componentGap": "0.75–1.5rem between stacked UI elements"
+    }
+  },
+  "layoutRules": {
+    "grid": "12-column mental model; expose as 1–3–4 column feature grids on desktop",
+    "alignment": "mix allowed: centered hero vs left-aligned editorial columns; keep consistency within a section",
+    "asymmetry": "hero text + large image offset; floating small stat cards overlapping hero media",
+    "maxWidth": "constrain readable text column (~65ch) inside wide sections",
+    "fullBleed": "heroes and banded sections full width; inner container padded",
+    "figureTreatment": "large rounded rectangles; optional circular or blob masks; overlap with solid color rectangles"
+  },
+  "sectionPatterns": {
+    "hero": {
+      "variants": [
+        "full-bleed photo + centered or left headline block",
+        "photo background + frosted glass panel card for headline/CTA",
+        "split: text column + large rounded image"
+      ]
+    },
+    "band": "solid color horizontal band with large top radius (scoop/bowl) transitioning from previous section",
+    "featureGrid": "2–4 columns of image-forward cards with title + short description",
+    "editorial": "eyebrow + serif headline + sans body + single primary CTA",
+    "footer": "often darker or textured neutral band; simplified links and CTA"
+  },
+  "cardStyles": {
+    "default": {
+      "background": "surface white or very light tint",
+      "radius": "medium (12–16px) for dense grids; large (20–32px) for editorial/luxury",
+      "border": "none or 1px subtle neutral",
+      "shadow": "soft, low-opacity, wide blur; avoid harsh drops",
+      "padding": "uniform; content top-aligned when image + text stack"
+    },
+    "imageForward": {
+      "layout": "image dominant with text overlay bottom-left or below image",
+      "ctaAffordance": "small circular icon button (e.g. arrow) corner placement"
+    },
+    "glass": {
+      "when": "hero overlays on photography",
+      "fill": "translucent white with backdrop blur",
+      "stroke": "thin light border",
+      "radius": "very large (28–40px)"
+    },
+    "mobileList": {
+      "when": "app-style screens",
+      "pattern": "vertical stack of rounded rectangles with internal row layout"
+    }
+  },
+  "buttonStyles": {
+    "primary": {
+      "shape": "pill (full round ends) most common; occasional 8px rounded rect",
+      "fill": "primary or accent solid",
+      "label": "sans, often all-caps small; high contrast on fill",
+      "width": "auto or full-width on mobile onboarding flows"
+    },
+    "secondary": {
+      "shape": "pill or rounded rect",
+      "style": "outline thin neutral, ghost on imagery, or solid that blends with section color"
+    },
+    "composite": {
+      "pattern": "pill button with trailing circular icon chip (arrow) integrated on the right"
+    },
+    "iconOnly": {
+      "shape": "circle for FAB and card corner actions",
+      "size": "min ~44px touch target"
+    }
+  },
+  "inputAndFormStyles": {
+    "fields": {
+      "shape": "rounded rect; search often full pill",
+      "border": "thin light border or borderless on tinted field background",
+      "background": "light gray fill on canvas or white on tinted section",
+      "label": "above field; small sans"
+    },
+    "grouping": "nest form in colored band for visual grouping",
+    "placeholder": "muted text color"
+  },
+  "headerNavigationPatterns": {
+    "marketing": {
+      "layout": "logo left, links center or left cluster, primary CTA right",
+      "style": "transparent over hero → solid/blurred on scroll (implied)",
+      "type": "small caps / tracked sans",
+      "utilities": "thin outline icons (search, account, notifications) right-aligned"
+    },
+    "floatingBar": {
+      "shape": "pill-shaped nav container floating inset from top",
+      "background": "cream/white solid or translucent with soft shadow"
+    },
+    "app": {
+      "layout": "avatar + greeting left; calendar/notification icons right; or close + centered pill control + icon",
+      "title": "large display headline below bar"
+    },
+    "mobileCollapse": "hamburger or bottom nav (not shown—reserve for small breakpoints)"
+  },
+  "borderRadius": {
+    "tokens": {
+      "sm": "8px",
+      "md": "12–16px",
+      "lg": "20–32px",
+      "xl": "40px+ for hero cards and section scoops",
+      "pill": "9999px",
+      "blob": "SVG organic mask (non-uniform)"
+    },
+    "consistencyRule": "pick one card radius tier per product; buttons usually pill; imagery matches card tier or larger"
+  },
+  "shadows": {
+    "elevationLow": "0 4px 24px rgba(0,0,0,0.06–0.08)",
+    "elevationMedium": "soft wide blur; no sharp offset",
+    "usage": "cards, floating nav, glass panels sparingly; prefer flat sections with color overlap",
+    "avoid": "strong Material-style shadows"
+  },
+  "iconographyStyle": {
+    "stroke": "outline/linear icons; 1–2px stroke; rounded caps where appropriate",
+    "fill": "optional solid icons in app chrome",
+    "color": "inherit text or white on dark; accent circles for categories",
+    "size": "16–24px inline; larger in touch rows",
+    "decorative": "sparse hand-drawn marks (circles, x, wavy arrows) only as accent—not for core UI"
+  },
+  "visualHierarchy": {
+    "order": ["hero display size", "section title", "eyebrow/label", "body", "meta"],
+    "techniques": [
+      "extreme size contrast serif/sans",
+      "color: accent for labels and key words; primary green for persistent emphasis",
+      "weight: bold headings vs regular body",
+      "isolation: whitespace around primary CTA",
+      "imagery scale: one dominant visual per viewport height where possible"
+    ],
+    "selectionStates": "filled primary circle for active date/chip; dot indicator optional; radio-style completion affordance on list rows"
+  },
+  "mobileResponsivenessPatterns": {
+    "gridCollapse": "3–4 columns → 2 → 1; maintain card spacing",
+    "typography": "fluid clamp on display sizes; reduce tracking if wrapping suffers",
+    "hero": "stack image under text; glass card full width with reduced padding",
+    "floatingElements": "reorder floating stat cards below hero image",
+    "touch": "min 44px targets for chips, list rows, FAB, icon buttons",
+    "safeArea": "respect notches; bottom padding for home indicator on app-style screens"
+  },
+  "interactionPatterns": {
+    "hover": "subtle lift (translateY) + shadow deepen on cards; lighten/darken fills on buttons; underline or color shift on links",
+    "focus": "visible focus ring consistent with primary color",
+    "scroll": "optional nav background transition; parallax not required",
+    "horizontal": "chips and date strips scroll horizontally with snap optional",
+    "motion": "prefer short fades; avoid aggressive bounces"
+  },
+  "toneAndMood": {
+    "voice": "calm, professional, empathetic, premium without coldness",
+    "keywords": ["grounded", "breathable", "trust", "wellness", "nature", "clarity"],
+    "visualMood": "soft contrast, warm neutrals, restrained accent use",
+    "whatToAvoid": ["neon saturation", "dense dashboards on marketing pages", "sharp brutalist corners unless intentional exception"]
+  }
+}

@@ -1,0 +1,34 @@
+---
+description: Yoga Tanja – Specs, Nicht-Ziele, Quellen für jede Session
+alwaysApply: true
+---
+
+# Projektkontext
+
+Vor größeren Änderungen oder neuen Features die folgenden **Repo-Dateien** berücksichtigen:
+
+- `project-brief.md` – Ziele, Zielgruppen, **Nicht-Ziele**
+- `content-model.md` – Inhaltsmodell, Anker, Kurs-Regeln (internal/external)
+- `types/site-content.ts` – **Canonical** TypeScript-Typen für `SiteContent`
+- `tech-decisions.md` – Stack und offene Entscheidungen
+- `docs/architecture.md` – Routing, Datenfluss, Komponenten
+
+## Nicht umsetzen (Brief)
+
+- Zahlungsabwicklung auf der Webseite
+- Komplexes Mitglieder-/Buchungssystem auf der Webseite (Buchung läuft über die **externe App**)
+- Direkte **Neukunden-Registrierung für die App** auf der Site
+- Logo-**Entwicklung** als Projektaufgabe (URL-Upload für Logo ist ok)
+
+## Produktfokus
+
+- Hauptzielgruppe: schnell zur **Kursbuchungs-App**
+- Sekundär: **Kontaktformular** für Neukunden
+
+## Sprache
+
+Nutzer schreibt oft **Deutsch** → Antworten **auf Deutsch**, klar und strukturiert.
+
+## Konflikte
+
+Stehen Regeln im Widerspruch zu den genannten Spec-Dateien, **Spec-Dateien im Repo aktualisieren** und Regeln anpassen.

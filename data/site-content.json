@@ -1,0 +1,122 @@
+{
+  "hero": {
+    "title": "Yoga & Achtsamkeit für Körper und Ruhe",
+    "claim": "Sanfte Praxis, klare Anleitung – Kurse und Zeiten bequem in der App buchen, wenn es dir passt.",
+    "primaryCtaLabel": "Zur Kursbuchung",
+    "primaryCtaUrl": "https://example.com/app"
+  },
+  "aktuell": {
+    "title": "Aktuelles",
+    "intro": "Kurze Hinweise zu Workshops, Aktionen oder Saison-Themen. [Platzhalter]",
+    "items": [
+      {
+        "id": "aktuell-yin-workshop",
+        "title": "Yin & Entspannung (Beispiel)",
+        "text": "Am **Wochenende 12./13. April** gibt es eine vertiefende Yin-Einheit mit viel Raum für Regeneration. [Platzhalter – Text und Bild später ersetzen.]",
+        "image": {
+          "url": "https://images.unsplash.com/photo-1545389336-cf090694435e?w=900&h=700&fit=crop",
+          "alt": "Ruhige Yogastimmung, Kerzenlicht"
+        },
+        "sortOrder": 10
+      },
+      {
+        "id": "aktuell-neu-im-studio",
+        "title": "Neu im Studio",
+        "text": "Wir haben die **Mattenfläche erweitert** – mehr Platz für deine Praxis. Komm vorbei oder schreib uns über das Kontaktformular. [Platzhalter]",
+        "image": {
+          "url": "https://images.unsplash.com/photo-1575052814086-f385e2e2ad1b?w=900&h=700&fit=crop",
+          "alt": "Yogamatten und ruhige Atmosphäre im Studio"
+        },
+        "sortOrder": 20
+      }
+    ]
+  },
+  "courses": [
+    {
+      "id": "course-hatha-mo",
+      "type": "internal",
+      "title": "Hatha Yoga (Beispiel)",
+      "description": "Sanfte Sequenzen mit Fokus auf Atmung und Haltung. [Platzhalter]",
+      "day": "Montag",
+      "time": "18:00–19:30",
+      "location": "Studio Musterstraße (Beispiel)",
+      "bookingStatus": "available",
+      "sortOrder": 10,
+      "scheduleNote": "wöchentlich"
+    },
+    {
+      "id": "course-vinyasa-mi",
+      "type": "internal",
+      "title": "Flow & Vinyasa (Beispiel)",
+      "description": "Dynamischere Einheit für Fortgeschrittene. [Platzhalter]",
+      "day": "Mittwoch",
+      "time": "19:00–20:15",
+      "location": "Studio Musterstraße (Beispiel)",
+      "bookingStatus": "full",
+      "sortOrder": 20
+    },
+    {
+      "id": "course-external-retreat",
+      "type": "external",
+      "title": "Wochenend-Retreat (externer Anbieter)",
+      "description": "Vertiefung an einem Wochenende – Link zum Veranstalter. [Platzhalter]",
+      "day": "Sa.–So.",
+      "time": "ganztägig",
+      "location": "Ort siehe Anbieter",
+      "bookingStatus": "available",
+      "sortOrder": 30,
+      "externalUrl": "https://example.com/retreat"
+    }
+  ],
+  "prices": [
+    {
+      "id": "price-dropin",
+      "title": "Einzelstunde",
+      "price": "18 €",
+      "description": "Pro Termin, nach Verfügbarkeit. [Platzhalter]",
+      "sortOrder": 10
+    },
+    {
+      "id": "price-10",
+      "title": "10er-Karte",
+      "price": "160 €",
+      "description": "Flexibel einlösbar innerhalb der Laufzeit. [Platzhalter]",
+      "sortOrder": 20,
+      "highlighted": true
+    },
+    {
+      "id": "price-month",
+      "title": "Monatsabo (Beispiel)",
+      "price": "59 € / Monat",
+      "description": "Regelmäßige Teilnahme zum Vorteilspreis. [Platzhalter]",
+      "sortOrder": 30
+    }
+  ],
+  "about": {
+    "title": "Über mich",
+    "text": "Yoga begleitet mich schon seit einigen Jahren und fasziniert mich immer wieder aufs Neue. Für mich bedeutet Yoga, Körper und Geist in Einklang zu bringen und sich selbst immer wieder neu zu entdecken – weit über die reine Asanapraxis hinaus.\n\nMeine erste Yogaausbildung (200 Std.) habe ich 2019 im Yogaloft Düsseldorf begonnen und 2020 abgeschlossen. Seitdem bilde ich mich stetig weiter, aktuell in einer Yin Yoga & Anatomie-Ausbildung sowie durch verschiedene Workshops und eine Yoga-Therapie-Ausbildung (100 Std.).\n\nIn meinen Stunden möchte ich dieses Gefühl von Verbundenheit und innerer Ruhe weitergeben. Ich lege Wert auf eine präzise und zugleich individuelle Ausrichtung, verbunden mit der Atmung – und darauf, dass auch die Entspannung ihren Raum bekommt.",
+    "image": {
+      "url": "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=900&h=1100&fit=crop",
+      "alt": "Portrait im Yogastudio"
+    }
+  },
+  "contact": {
+    "email": "kontakt@example.com",
+    "phone": "+49 123 456789",
+    "formHeadline": "Erstkontakt",
+    "formText": "Schreib uns – wir melden uns schnellstmöglich. (Beispieltext, E-Mail-Adresse später anpassen.)",
+    "formSuccessMessage": "Danke! Deine Nachricht ist angekommen. (Demo – Backend folgt.)"
+  },
+  "settings": {
+    "businessName": "Tanja Thaller",
+    "navWordmark": "YOMITA",
+    "appUrl": "https://example.com/app",
+    "siteTitle": "Tanja Thaller – Yoga & Achtsamkeit",
+    "metaDescription": "Yoga-Kurse und Buchung über die App. Kontakt für Neukundinnen und Neukunden. Platzhalter-SEO-Text.",
+    "ogImageUrl": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1200&h=630&fit=crop"
+  },
+  "legal": {
+    "imprintText": "# Impressum (Platzhalter)\n\n**Angaben gemäß § 5 TMG**\n\nMusterfirma / Name  \nMusterstraße 1  \n12345 Musterstadt\n\n**Kontakt**  \nTelefon: …  \nE-Mail: …\n\n*Dieser Text ist ein Platzhalter und muss durch die finalen Angaben ersetzt werden.*",
+    "privacyText": "# Datenschutz (Platzhalter)\n\nHier folgt die Datenschutzerklärung. Bitte durch eine rechtskonforme Fassung ersetzen.\n\n- Verantwortliche Stelle\n- Zwecke der Verarbeitung\n- Speicherdauer\n- Betroffenenrechte\n\n*Platzhalter – keine Rechtsberatung.*"
+  }
+}
