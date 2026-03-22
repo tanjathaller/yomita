@@ -32,13 +32,20 @@ export function HeroSection({ hero, businessName }: HeroSectionProps) {
             data-hero-media
             className="relative min-h-[280px] h-[75vh] w-full max-h-[36rem] border-0 bg-[var(--surface-muted-band)] ring-0 sm:max-h-[40rem] md:h-[48vh] md:max-h-[32rem] lg:max-h-[36rem]"
           >
-            <img
-              src="/images/hero.png"
-              alt="Portrait in ruhiger Sitzpose vor heller Wand – Yogastudio und Achtsamkeit"
-              className="absolute inset-0 block size-full max-h-none max-w-none border-0 object-cover object-[center_22%] p-0 outline-none ring-0"
-              decoding="async"
-              fetchPriority="high"
-            />
+            <picture>
+              <source
+                media="(min-width: 585px)"
+                srcSet="/images/hero-desktop.jpg"
+                type="image/jpeg"
+              />
+              <img
+                src="/images/hero.png"
+                alt="Portrait in ruhiger Sitzpose vor heller Wand – Yogastudio und Achtsamkeit"
+                className="absolute inset-0 block size-full max-h-none max-w-none border-0 object-cover object-[center_22%] p-0 outline-none ring-0 min-[585px]:object-left"
+                decoding="async"
+                fetchPriority="high"
+              />
+            </picture>
             <div className="absolute inset-0 border-0 bg-black/30 ring-0" aria-hidden />
             <div
               className="absolute inset-0 border-0 bg-gradient-to-t from-black/40 via-black/18 to-black/12 ring-0"
