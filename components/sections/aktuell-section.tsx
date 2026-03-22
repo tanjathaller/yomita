@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Fragment } from "react";
 
 import type { AktuellesSection as AktuellesModel } from "@/types/site-content";
 
@@ -43,34 +44,43 @@ export function AktuellesSection({
           <MarkdownContent markdown={intro} />
         </div>
       ) : null}
-      <div className="mt-10 space-y-14 sm:space-y-16 md:space-y-20">
+      <div className="mt-10 space-y-0">
         {items.map((item, index) => (
-          <article
-            key={item.id}
-            className={cn(
-              "grid gap-8 md:grid-cols-2 md:items-center md:gap-10 lg:gap-14",
-              index % 2 === 1 && "md:[&>*:first-child]:order-2",
-            )}
-          >
-            <div className="relative aspect-[4/3] max-h-[22rem] overflow-hidden rounded-3xl border border-border/60 bg-muted sm:aspect-[5/4] md:max-h-none md:min-h-[16rem]">
-              <Image
-                src={item.image.url}
-                alt={item.image.alt}
-                fill
-                className="object-cover"
-                sizes="(min-width: 768px) 42vw, 100vw"
-                priority={index === 0}
-              />
-            </div>
-            <div className="space-y-3">
-              {item.title?.trim() ? (
-                <h3 className="text-foreground text-xl font-semibold tracking-tight sm:text-2xl">
-                  {item.title.trim()}
-                </h3>
-              ) : null}
-              <MarkdownContent markdown={item.text} />
-            </div>
-          </article>
+          <Fragment key={item.id}>
+            {index > 0 ? (
+              <div
+                className="flex items-center py-7 sm:py-8 md:py-10"
+                aria-hidden
+              >
+                <div className="h-px w-full bg-border/10" />
+              </div>
+            ) : null}
+            <article
+              className={cn(
+                "grid gap-8 md:grid-cols-2 md:items-center md:gap-10 lg:gap-14",
+                index % 2 === 1 && "md:[&>*:first-child]:order-2",
+              )}
+            >
+              <div className="relative aspect-[4/3] max-h-[22rem] overflow-hidden rounded-3xl border border-border/60 bg-muted sm:aspect-[5/4] md:max-h-none md:min-h-[16rem]">
+                <Image
+                  src={item.image.url}
+                  alt={item.image.alt}
+                  fill
+                  className="object-cover"
+                  sizes="(min-width: 768px) 42vw, 100vw"
+                  priority={index === 0}
+                />
+              </div>
+              <div className="space-y-3">
+                {item.title?.trim() ? (
+                  <h3 className="text-foreground text-xl font-semibold tracking-tight sm:text-2xl">
+                    {item.title.trim()}
+                  </h3>
+                ) : null}
+                <MarkdownContent markdown={item.text} />
+              </div>
+            </article>
+          </Fragment>
         ))}
       </div>
     </SectionShell>
