@@ -17,7 +17,9 @@ export default async function HomePage() {
         hero={content.hero}
         businessName={content.settings.businessName}
       />
-      <AboutTeaserSection />
+      <AboutTeaserSection
+        waveInto={hasAktuelles ? "background" : "muted-band"}
+      />
       <AktuellesSection aktuell={content.aktuell} afterAboutTeaser={hasAktuelles} />
       <CoursesSection
         courses={content.courses}

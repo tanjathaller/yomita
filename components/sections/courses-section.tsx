@@ -28,7 +28,7 @@ export function CoursesSection({
       className={cn(
         "-mt-px",
         afterAktuelles || afterAboutTeaser
-          ? "border-border/40 border-t pt-12 sm:pt-14 md:pt-16"
+          ? "-mt-px pt-12 sm:pt-14 md:pt-16"
           : "pt-8 sm:pt-10 md:pt-12",
       )}
     >

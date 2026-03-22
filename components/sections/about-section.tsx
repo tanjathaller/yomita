@@ -15,7 +15,7 @@ export function AboutSection({ about }: AboutSectionProps) {
       id="ueber-mich"
       variant="muted"
       waveInto="background"
-      className="-mt-px"
+      className="-mt-2 pt-12 sm:pt-20"
     >
       <div className="grid gap-10 lg:grid-cols-2 lg:items-center lg:gap-14">
         <div className="relative aspect-[4/5] max-h-[28rem] overflow-hidden rounded-3xl border border-border/60 bg-muted">

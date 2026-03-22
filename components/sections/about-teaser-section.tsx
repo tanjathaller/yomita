@@ -1,5 +1,9 @@
 import { ArrowRight } from "lucide-react";
 
+import {
+  SectionWaveBottom,
+  type SectionWaveTarget,
+} from "@/components/shared/section-wave";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { cn } from "@/lib/utils";
 
@@ -8,19 +12,29 @@ const ctaClassName = cn(
   "min-h-11 gap-2 px-5 text-base font-semibold sm:min-h-12 sm:px-6 sm:text-[1.05rem]",
 );
 
+type AboutTeaserSectionProps = {
+  /**
+   * Füllfarbe der Welle = Hintergrund des **nächsten** Blocks.
+   * Mit `background` (wenn darunter Aktuelles auf Seitenfläche folgt) wie Kurse→Preise sichtbar; sonst `muted-band`.
+   */
+  waveInto?: SectionWaveTarget;
+};
+
 /**
  * Mini-Teaser unter dem Hero (Muted-Band, kein zweites Bild). Unten langer Farbverlauf Karte → Band (kein harter Schnitt).
  * Inhalt grob an `about` in `SiteContent` halten; bei stärkeren Textänderungen dort mitziehen.
  */
-export function AboutTeaserSection() {
+export function AboutTeaserSection({
+  waveInto = "muted-band",
+}: AboutTeaserSectionProps) {
   return (
     <section
       className={cn(
-        "scroll-mt-[calc(var(--site-header-clearance-mobile)+0.5rem)] sm:scroll-mt-[calc(var(--site-header-clearance)+0.5rem)]",
-        "bg-[var(--surface-muted-band)] pt-3 pb-7 sm:pt-4 sm:pb-9 md:pt-5 md:pb-10",
+        "relative scroll-mt-[calc(var(--site-header-clearance-mobile)+0.5rem)] sm:scroll-mt-[calc(var(--site-header-clearance)+0.5rem)]",
+        "bg-[var(--surface-muted-band)] pt-3 pb-24 sm:pt-4 sm:pb-28 md:pt-5 md:pb-32",
       )}
     >
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div
           className={cn(
             "relative isolate w-full overflow-hidden rounded-t-3xl rounded-b-none",
@@ -73,6 +87,7 @@ export function AboutTeaserSection() {
           </div>
         </div>
       </div>
+      <SectionWaveBottom into={waveInto} />
     </section>
   );
 }

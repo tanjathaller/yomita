@@ -50,7 +50,7 @@ Optional. Wenn leer oder nicht gesetzt, kann die UI Default-Einträge aus der Ta
 
 ## Kurz-„Über mich“-Teaser (nur öffentliche UI)
 
-Zwischen **Hero** und **Aktuelles** (bzw. – wenn `aktuell.items` leer ist – direkt vor **Kurse**) rendert die Seite einen **sehr kurzen Mini-Teaser** ohne zweites Portraitfoto: äußeres Band wie nach der Hero-Wellenkante (`--surface-muted-band`), **innere Karte** im Hero-Rahmen-Stil mit leicht **warmem Verlauf**, persönliche Eyebrow-Zeile, kurze **Headline**, **ein knapper Absatz** (Verweis auf den ausführlichen Block), sekundärer Button **„Mehr über mich“** → `/#ueber-mich` (ab `md` zweispaltig: links Titel + CTA, rechts Text).
+Zwischen **Hero** und **Aktuelles** (bzw. – wenn `aktuell.items` leer ist – direkt vor **Kurse**) rendert die Seite einen **sehr kurzen Mini-Teaser** ohne zweites Portraitfoto: äußeres Band wie nach der Hero-Wellenkante (`--surface-muted-band`), **innere Karte** im Hero-Rahmen-Stil mit leicht **warmem Verlauf**, persönliche Eyebrow-Zeile, kurze **Headline**, **ein knapper Absatz** (Verweis auf den ausführlichen Block), sekundärer Button **„Mehr über mich“** → `/#ueber-mich` (ab `md` zweispaltig: links Titel + CTA, rechts Text). **Welle unten:** Wenn **Aktuelles** sichtbar ist, geht die Kurve wie bei **Kurse → Preise** in die Seitenfläche (`--background`); **Aktuelles** liegt dann auf derselben hellen Fläche wie **Preise**. Ohne Aktuelles bleibt die Welle im **Muted-Band** vor **Kurse**.
 
 | Aspekt | Festlegung |
 |--------|------------|
@@ -63,7 +63,7 @@ Zwischen **Hero** und **Aktuelles** (bzw. – wenn `aktuell.items` leer ist – 
 
 ## Aktuelles (`aktuell`)
 
-Kurzmeldungen, Saison-Hinweise oder Einzelthemen **oberhalb** der Kursübersicht (und **unter** dem Kurz-„Über mich“-Teaser, sofern dieser angezeigt wird). Liegt die Liste `items` leer, rendert die öffentliche Seite die Sektion nicht; die **Standard-Navigation** blendet den Eintrag „Aktuelles“ dann ebenfalls aus (eigene `settings.navigation` bleibt unverändert).
+Kurzmeldungen, Saison-Hinweise oder Einzelthemen **oberhalb** der Kursübersicht (und **unter** dem Kurz-„Über mich“-Teaser, sofern dieser angezeigt wird). Direkt unter dem Teaser (wenn beide Sektionen sichtbar) liegt die Sektion auf **`bg-background`** (helle Fläche) mit Wellenübergang **nach unten** zurück ins **Muted-Band** vor **Kurse**. Liegt die Liste `items` leer, rendert die öffentliche Seite die Sektion nicht; die **Standard-Navigation** blendet den Eintrag „Aktuelles“ dann ebenfalls aus (eigene `settings.navigation` bleibt unverändert).
 
 ### Sektion
 

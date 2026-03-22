@@ -29,11 +29,12 @@ export function AktuellesSection({
   return (
     <SectionShell
       id="aktuelles"
-      variant="muted"
+      variant={afterAboutTeaser ? "default" : "muted"}
+      waveInto="muted-band"
       className={cn(
         afterAboutTeaser
-          ? "border-border/40 border-t pt-12 sm:pt-14 md:pt-16"
-          : "-mt-px pt-8 sm:pt-10 md:pt-12",
+          ? "-mt-px pt-10 sm:pt-12 md:pt-14"
+          : "-mt-px pt-7 sm:pt-9 md:pt-10",
       )}
     >
       <SectionHeading eyebrow="Neuigkeiten" title={heading} className="max-w-2xl" />
