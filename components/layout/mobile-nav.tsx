@@ -60,7 +60,7 @@ export function MobileNav({
       <SheetContent
         side="right"
         overlayClassName="bg-[rgba(30,40,28,0.26)] supports-backdrop-filter:backdrop-blur-none"
-        className="w-[min(100%,75vw)] max-w-none gap-0 border-0 shadow-none bg-[rgba(222,233,214,0.96)] text-foreground supports-backdrop-filter:backdrop-blur-[20px] dark:bg-[rgba(50,60,47,0.95)] [&_button]:text-foreground [&_button]:hover:bg-[rgba(118,146,106,0.16)] dark:[&_button]:hover:bg-[rgba(160,191,147,0.15)]"
+        className="w-[min(100%,75vw)] max-w-none gap-0 border-0 shadow-none bg-[rgba(222,233,214,0.68)] text-foreground supports-backdrop-filter:backdrop-blur-[20px] dark:bg-[rgba(50,60,47,0.66)] [&_button]:text-foreground [&_button]:hover:bg-[rgba(118,146,106,0.16)] dark:[&_button]:hover:bg-[rgba(160,191,147,0.15)]"
       >
         <SheetHeader className="@container border-b border-[rgba(72,90,68,0.22)] px-4 pb-6 pt-14 text-center dark:border-[rgba(169,194,158,0.2)] sm:px-6">
           <SheetTitle
@@ -101,6 +101,27 @@ export function MobileNav({
             {appCtaLabel}
           </Link>
         </div>
+        <nav
+          className="border-t border-[rgba(72,90,68,0.22)] px-4 pb-[max(1rem,env(safe-area-inset-bottom,0px))] pt-3 dark:border-[rgba(169,194,158,0.2)] sm:px-6 sm:pb-5"
+          aria-label="Rechtliches"
+        >
+          <div className="text-muted-foreground flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm font-semibold">
+            <Link
+              href="/impressum"
+              onClick={() => setOpen(false)}
+              className="hover:text-foreground transition-colors"
+            >
+              Impressum
+            </Link>
+            <Link
+              href="/datenschutz"
+              onClick={() => setOpen(false)}
+              className="hover:text-foreground transition-colors"
+            >
+              Datenschutz
+            </Link>
+          </div>
+        </nav>
       </SheetContent>
     </Sheet>
   );
