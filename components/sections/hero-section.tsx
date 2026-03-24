@@ -50,11 +50,11 @@ export function HeroSection({ hero, businessName }: HeroSectionProps) {
               />
             </picture>
             <div
-              className="absolute inset-0 border-0 bg-[color-mix(in_oklab,oklch(0.3_0.022_72)_30%,transparent)] ring-0"
+              className="absolute inset-0 border-0 bg-[rgba(56,42,30,0.28)] ring-0"
               aria-hidden
             />
             <div
-              className="absolute inset-0 border-0 bg-gradient-to-t from-[color-mix(in_oklab,oklch(0.28_0.02_70)_44%,transparent)] via-[color-mix(in_oklab,oklch(0.28_0.02_70)_22%,transparent)] to-[color-mix(in_oklab,oklch(0.3_0.018_72)_10%,transparent)] ring-0"
+              className="absolute inset-0 border-0 bg-gradient-to-t from-[rgba(49,37,27,0.42)] via-[rgba(58,44,31,0.22)] to-[rgba(76,60,45,0.08)] ring-0"
               aria-hidden
             />
             <div
