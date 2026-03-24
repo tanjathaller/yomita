@@ -50,11 +50,11 @@ export function HeroSection({ hero, businessName }: HeroSectionProps) {
               />
             </picture>
             <div
-              className="absolute inset-0 border-0 bg-[rgba(56,42,30,0.28)] ring-0"
+              className="absolute inset-0 border-0 bg-[rgba(40,54,38,0.24)] ring-0"
               aria-hidden
             />
             <div
-              className="absolute inset-0 border-0 bg-gradient-to-t from-[rgba(49,37,27,0.42)] via-[rgba(58,44,31,0.22)] to-[rgba(76,60,45,0.08)] ring-0"
+              className="absolute inset-0 border-0 bg-gradient-to-t from-[rgba(34,48,34,0.38)] via-[rgba(44,60,43,0.2)] to-[rgba(58,76,56,0.07)] ring-0"
               aria-hidden
             />
             <div

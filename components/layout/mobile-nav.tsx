@@ -59,10 +59,10 @@ export function MobileNav({
       </SheetTrigger>
       <SheetContent
         side="right"
-        overlayClassName="bg-[rgba(42,32,24,0.28)] supports-backdrop-filter:backdrop-blur-none"
-        className="w-[min(100%,75vw)] max-w-none gap-0 border-0 shadow-none bg-[rgba(239,229,216,0.96)] text-foreground supports-backdrop-filter:backdrop-blur-[20px] dark:bg-[rgba(61,50,40,0.95)] [&_button]:text-foreground [&_button]:hover:bg-[rgba(158,126,95,0.16)] dark:[&_button]:hover:bg-[rgba(225,203,178,0.14)]"
+        overlayClassName="bg-[rgba(30,40,28,0.26)] supports-backdrop-filter:backdrop-blur-none"
+        className="w-[min(100%,75vw)] max-w-none gap-0 border-0 shadow-none bg-[rgba(222,233,214,0.96)] text-foreground supports-backdrop-filter:backdrop-blur-[20px] dark:bg-[rgba(50,60,47,0.95)] [&_button]:text-foreground [&_button]:hover:bg-[rgba(118,146,106,0.16)] dark:[&_button]:hover:bg-[rgba(160,191,147,0.15)]"
       >
-        <SheetHeader className="@container border-b border-[rgba(88,66,48,0.24)] px-4 pb-6 pt-14 text-center dark:border-[rgba(226,204,180,0.2)] sm:px-6">
+        <SheetHeader className="@container border-b border-[rgba(72,90,68,0.22)] px-4 pb-6 pt-14 text-center dark:border-[rgba(169,194,158,0.2)] sm:px-6">
           <SheetTitle
             className="font-heading text-black text-center leading-[0.82] font-black tracking-[0.065em] uppercase select-none drop-shadow-[0_2px_20px_rgba(0,0,0,0.08)]"
             style={wordmarkStyle}
@@ -80,16 +80,16 @@ export function MobileNav({
               href={item.href}
               onClick={() => setOpen(false)}
               className={cn(
-                "flex min-h-[4.5rem] w-full items-center justify-center text-center text-2xl font-semibold leading-tight tracking-wide text-foreground transition-colors hover:bg-[rgba(158,126,95,0.16)] dark:hover:bg-[rgba(225,203,178,0.14)] sm:min-h-[5rem] sm:text-3xl",
+                "flex min-h-[4.5rem] w-full items-center justify-center text-center text-2xl font-semibold leading-tight tracking-wide text-foreground transition-colors hover:bg-[rgba(118,146,106,0.16)] dark:hover:bg-[rgba(160,191,147,0.15)] sm:min-h-[5rem] sm:text-3xl",
                 index > 0 &&
-                  "border-t border-[rgba(88,66,48,0.24)] dark:border-[rgba(226,204,180,0.2)]",
+                  "border-t border-[rgba(72,90,68,0.22)] dark:border-[rgba(169,194,158,0.2)]",
               )}
             >
               {item.label}
             </Link>
           ))}
         </nav>
-        <div className="border-t border-[rgba(88,66,48,0.24)] px-3 py-4 dark:border-[rgba(226,204,180,0.2)] sm:px-4">
+        <div className="border-t border-[rgba(72,90,68,0.22)] px-3 py-4 dark:border-[rgba(169,194,158,0.2)] sm:px-4">
           <Link
             href={appCtaUrl}
             onClick={() => setOpen(false)}

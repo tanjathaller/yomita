@@ -89,9 +89,9 @@
   --sidebar-accent-foreground: oklch(0.31 0.042 146);
   --sidebar-border: oklch(0.892 0.02 112);
   --sidebar-ring: oklch(0.59 0.046 146);
-  /** Helles, warmes Sand/Braun mit stabiler Browser-Darstellung. */
-  --surface-muted-band: #e6d8c6;
-  --surface-muted-footer: #efe5d8;
+  /** Dezentes Grün-Beige: sichtbar natürlicher, weiterhin soft. */
+  --surface-muted-band: #d3ddc8;
+  --surface-muted-footer: #e2ead9;
 }
 
 .dark {
@@ -127,8 +127,8 @@
   --sidebar-accent-foreground: oklch(0.944 0.018 100);
   --sidebar-border: oklch(0.95 0.02 95 / 12%);
   --sidebar-ring: oklch(0.65 0.055 146);
-  --surface-muted-band: #463b31;
-  --surface-muted-footer: #3b3129;
+  --surface-muted-band: #364034;
+  --surface-muted-footer: #2f392d;
 }
 
 @layer base {
