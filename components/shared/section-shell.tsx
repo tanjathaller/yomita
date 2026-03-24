@@ -37,7 +37,12 @@ export function SectionShell({
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {children}
       </div>
-      {waveInto ? <SectionWaveBottom into={waveInto} /> : null}
+      {waveInto ? (
+        <SectionWaveBottom
+          into={waveInto}
+          from={variant === "muted" ? "muted-band" : "background"}
+        />
+      ) : null}
     </section>
   );
 }

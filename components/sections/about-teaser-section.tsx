@@ -103,7 +103,7 @@ export function AboutTeaserSection({
           </div>
         </div>
       </div>
-      <SectionWaveBottom into={waveInto} />
+      <SectionWaveBottom from="muted-band" into={waveInto} />
     </section>
   );
 }
