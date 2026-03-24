@@ -23,7 +23,7 @@ export function HeroSection({ hero, businessName }: HeroSectionProps) {
       id="hero"
       className="relative scroll-mt-[calc(var(--site-header-clearance-mobile)+0.5rem)] bg-[var(--surface-muted-band)] pb-8 sm:scroll-mt-[calc(var(--site-header-clearance)+0.5rem)] sm:pb-12 md:pb-16"
     >
-      <div className="relative z-10 mx-auto max-w-6xl px-4 pt-1 pb-0 sm:px-6 sm:pt-4 lg:px-8 lg:pt-6">
+      <div className="relative z-10 mx-auto max-w-6xl bg-[var(--surface-muted-band)] px-4 pt-1 pb-0 sm:px-6 sm:pt-4 lg:px-8 lg:pt-6">
         <div
           data-hero-shell
           className={cn(
@@ -49,9 +49,12 @@ export function HeroSection({ hero, businessName }: HeroSectionProps) {
                 fetchPriority="high"
               />
             </picture>
-            <div className="absolute inset-0 border-0 bg-black/30 ring-0" aria-hidden />
             <div
-              className="absolute inset-0 border-0 bg-gradient-to-t from-black/40 via-black/18 to-black/12 ring-0"
+              className="absolute inset-0 border-0 bg-[color-mix(in_oklab,oklch(0.3_0.022_72)_30%,transparent)] ring-0"
+              aria-hidden
+            />
+            <div
+              className="absolute inset-0 border-0 bg-gradient-to-t from-[color-mix(in_oklab,oklch(0.28_0.02_70)_44%,transparent)] via-[color-mix(in_oklab,oklch(0.28_0.02_70)_22%,transparent)] to-[color-mix(in_oklab,oklch(0.3_0.018_72)_10%,transparent)] ring-0"
               aria-hidden
             />
             <div

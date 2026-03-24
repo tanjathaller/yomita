@@ -16,7 +16,7 @@ type SiteHeaderProps = {
 };
 
 const pillShell =
-  "pointer-events-auto flex w-full items-center rounded-xl border border-border/35 bg-[var(--surface-muted-band)] px-4 py-2 shadow-[0_2px_20px_rgba(0,0,0,0.06)] sm:px-5 sm:py-2.5";
+  "pointer-events-auto flex w-full items-center rounded-xl border border-[color-mix(in_oklab,var(--foreground)_16%,transparent)] bg-[color-mix(in_oklab,var(--surface-muted-band)_88%,white_12%)] px-4 py-2 shadow-[0_6px_24px_rgba(50,35,20,0.12)] backdrop-blur-[2px] sm:px-5 sm:py-2.5";
 
 export function SiteHeader({ settings, hero, hasAktuellesItems }: SiteHeaderProps) {
   const navItems = resolveNavigation(
@@ -42,7 +42,7 @@ export function SiteHeader({ settings, hero, hasAktuellesItems }: SiteHeaderProp
             appCtaLabel={hero.primaryCtaLabel}
             appCtaUrl={hero.primaryCtaUrl}
             menuButtonVariant="ghost"
-            menuButtonClassName="-me-1 rounded-lg text-foreground hover:bg-foreground/6"
+            menuButtonClassName="-me-1 rounded-lg text-foreground hover:bg-[color-mix(in_oklab,var(--surface-muted-band)_74%,var(--foreground)_8%)]"
           />
         </div>
 

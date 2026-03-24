@@ -59,10 +59,10 @@ export function MobileNav({
       </SheetTrigger>
       <SheetContent
         side="right"
-        overlayClassName="bg-foreground/14 supports-backdrop-filter:backdrop-blur-none"
-        className="w-[min(100%,75vw)] max-w-none gap-0 border-0 shadow-none bg-[color-mix(in_oklch,var(--background)_74%,var(--foreground)_11%)]/92 text-foreground supports-backdrop-filter:backdrop-blur-[20px] [&_button]:text-foreground [&_button]:hover:bg-muted"
+        overlayClassName="bg-[color-mix(in_oklab,oklch(0.24_0.02_72)_28%,transparent)] supports-backdrop-filter:backdrop-blur-none"
+        className="w-[min(100%,75vw)] max-w-none gap-0 border-0 shadow-none bg-[color-mix(in_oklab,var(--surface-muted-band)_92%,white_8%)]/95 text-foreground supports-backdrop-filter:backdrop-blur-[20px] [&_button]:text-foreground [&_button]:hover:bg-[color-mix(in_oklab,var(--surface-muted-band)_80%,var(--foreground)_8%)]"
       >
-        <SheetHeader className="@container border-b border-foreground/22 px-4 pb-6 pt-14 text-center sm:px-6">
+        <SheetHeader className="@container border-b border-[color-mix(in_oklab,var(--foreground)_20%,transparent)] px-4 pb-6 pt-14 text-center sm:px-6">
           <SheetTitle
             className="font-heading text-black text-center leading-[0.82] font-black tracking-[0.065em] uppercase select-none drop-shadow-[0_2px_20px_rgba(0,0,0,0.08)]"
             style={wordmarkStyle}
@@ -80,15 +80,16 @@ export function MobileNav({
               href={item.href}
               onClick={() => setOpen(false)}
               className={cn(
-                "flex min-h-[4.5rem] w-full items-center justify-center text-center text-2xl font-semibold leading-tight tracking-wide text-foreground transition-colors hover:bg-muted/60 sm:min-h-[5rem] sm:text-3xl",
-                index > 0 && "border-t border-foreground/22",
+                "flex min-h-[4.5rem] w-full items-center justify-center text-center text-2xl font-semibold leading-tight tracking-wide text-foreground transition-colors hover:bg-[color-mix(in_oklab,var(--surface-muted-band)_80%,var(--foreground)_8%)] sm:min-h-[5rem] sm:text-3xl",
+                index > 0 &&
+                  "border-t border-[color-mix(in_oklab,var(--foreground)_20%,transparent)]",
               )}
             >
               {item.label}
             </Link>
           ))}
         </nav>
-        <div className="border-t border-foreground/22 px-3 py-4 sm:px-4">
+        <div className="border-t border-[color-mix(in_oklab,var(--foreground)_20%,transparent)] px-3 py-4 sm:px-4">
           <Link
             href={appCtaUrl}
             onClick={() => setOpen(false)}
