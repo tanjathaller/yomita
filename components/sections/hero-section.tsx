@@ -38,13 +38,13 @@ export function HeroSection({ hero, businessName }: HeroSectionProps) {
             <picture>
               <source
                 media="(min-width: 585px)"
-                srcSet="/images/hero-desktop.jpg"
-                type="image/jpeg"
+                srcSet="/images/tanja-10-mobile.webp"
+                type="image/webp"
               />
               <img
-                src="/images/hero.png"
-                alt="Portrait in ruhiger Sitzpose vor heller Wand – Yogastudio und Achtsamkeit"
-                className="absolute inset-0 block size-full max-h-none max-w-none border-0 object-cover object-[center_22%] p-0 outline-none ring-0 min-[585px]:object-left"
+                src="/images/tanja-10-mobile.webp"
+                alt="Portrait – Yogastudio und Achtsamkeit"
+                className="absolute inset-0 block size-full max-h-none max-w-none border-0 object-cover object-center p-0 outline-none ring-0"
                 decoding="async"
                 fetchPriority="high"
               />
