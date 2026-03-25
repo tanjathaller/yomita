@@ -5,6 +5,7 @@ import type { GeneralSettings, HeroSection } from "@/types/site-content";
 
 import { buttonVariants } from "@/components/ui/button-variants";
 import { HeaderNavLinks } from "@/components/layout/header-nav-links";
+import { HashScrollLink } from "@/components/layout/hash-scroll-link";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { resolveNavigation } from "@/lib/resolve-navigation";
 import { cn } from "@/lib/utils";
@@ -30,12 +31,12 @@ export function SiteHeader({ settings, hero, hasAktuellesItems }: SiteHeaderProp
       <div className="mx-auto max-w-6xl px-4 py-1.5 sm:px-6 sm:py-2.5 lg:px-8">
         {/* Mobile: nur Marke + Burger im Pill */}
         <div className={cn(pillShell, "justify-between gap-3 md:hidden")}>
-          <Link
+          <HashScrollLink
             href="/#hero"
             className="min-w-0 truncate text-2xl font-semibold leading-none tracking-tight text-foreground"
           >
             {headerTitle}
-          </Link>
+          </HashScrollLink>
           <MobileNav
             items={navItems}
             businessName={headerTitle}
@@ -48,7 +49,7 @@ export function SiteHeader({ settings, hero, hasAktuellesItems }: SiteHeaderProp
 
         {/* Desktop: Logo, Marke, Navigation, CTA im Pill */}
         <div className={cn(pillShell, "hidden min-h-[3rem] gap-4 md:flex md:items-center md:justify-between")}>
-          <Link
+          <HashScrollLink
             href="/#hero"
             className="flex min-w-0 shrink-0 items-center gap-2.5 text-foreground"
           >
@@ -65,7 +66,7 @@ export function SiteHeader({ settings, hero, hasAktuellesItems }: SiteHeaderProp
             <span className="truncate text-base font-semibold tracking-tight sm:text-lg">
               {headerTitle}
             </span>
-          </Link>
+          </HashScrollLink>
 
           <nav
             className="flex min-w-0 flex-1 justify-center px-2"

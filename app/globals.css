@@ -140,6 +140,20 @@
   }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
+    scroll-padding-top: var(--site-header-clearance-mobile);
+  }
+}
+
+@media (min-width: 640px) {
+  html {
+    scroll-padding-top: var(--site-header-clearance);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
