@@ -27,7 +27,7 @@ export function HeroSection({
   return (
     <section
       id="hero"
-      className="relative scroll-mt-[calc(var(--site-header-clearance-mobile)+0.5rem)] bg-[var(--surface-muted-band)] pb-10 sm:scroll-mt-[calc(var(--site-header-clearance)+0.5rem)] sm:pb-14 md:pb-[4.5rem]"
+      className="relative scroll-mt-[calc(var(--site-header-clearance-mobile)+0.5rem)] bg-[var(--surface-muted-band)] pb-9 sm:scroll-mt-[calc(var(--site-header-clearance)+0.5rem)] sm:pb-13 md:pb-[4.25rem]"
     >
       <div className="relative z-10 mx-auto max-w-6xl bg-[var(--surface-muted-band)] px-4 pt-1 pb-0 sm:px-6 sm:pt-4 lg:px-8 lg:pt-6">
         <div
@@ -39,7 +39,7 @@ export function HeroSection({
           {/* Explizite Höhen (ohne min() mit Komma in Tailwind-Arbitrary) — sonst kann die Box 0px hoch werden */}
           <div
             data-hero-media
-            className="relative min-h-[280px] h-[75vh] w-full max-h-[36rem] overflow-hidden rounded-t-3xl rounded-b-none border-0 bg-[var(--surface-muted-band)] ring-0 sm:max-h-[40rem] md:h-[48vh] md:max-h-[32rem] lg:max-h-[36rem]"
+            className="relative min-h-[280px] h-[76vh] w-full max-h-[36rem] overflow-hidden rounded-t-3xl rounded-b-none border-0 bg-[var(--surface-muted-band)] ring-0 sm:max-h-[40rem] md:h-[49vh] md:max-h-[32rem] lg:max-h-[36rem]"
           >
             <picture>
               <source
