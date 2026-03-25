@@ -60,7 +60,7 @@ export function MobileNav({
       <SheetContent
         side="right"
         overlayClassName="bg-[rgba(30,40,28,0.26)] supports-backdrop-filter:backdrop-blur-none"
-        className="w-[min(100%,75vw)] max-w-none gap-0 border-0 shadow-none bg-[rgba(222,233,214,0.68)] text-foreground supports-backdrop-filter:backdrop-blur-[20px] dark:bg-[rgba(50,60,47,0.66)] [&_button]:text-foreground [&_button]:hover:bg-[rgba(118,146,106,0.16)] dark:[&_button]:hover:bg-[rgba(160,191,147,0.15)]"
+        className="w-[min(100%,75vw)] max-w-none gap-0 border-0 shadow-none overflow-hidden rounded-l-[min(var(--radius-md),12px)] bg-[rgba(222,233,214,0.68)] text-foreground supports-backdrop-filter:backdrop-blur-[20px] dark:bg-[rgba(50,60,47,0.66)] [&_button]:text-foreground [&_button]:hover:bg-[rgba(118,146,106,0.16)] dark:[&_button]:hover:bg-[rgba(160,191,147,0.15)]"
       >
         <SheetHeader className="@container border-b border-[rgba(72,90,68,0.22)] px-4 pb-6 pt-14 text-center dark:border-[rgba(169,194,158,0.2)] sm:px-6">
           <SheetTitle
