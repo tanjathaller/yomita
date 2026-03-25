@@ -1,5 +1,4 @@
 import { getSiteContent } from "@/lib/get-site-content";
-import { AboutTeaserSection } from "@/components/sections/about-teaser-section";
 import { AboutSection } from "@/components/sections/about-section";
 import { AktuellesSection } from "@/components/sections/aktuell-section";
 import { ContactSection } from "@/components/sections/contact-section";
@@ -17,16 +16,14 @@ export default async function HomePage() {
       <HeroSection
         hero={content.hero}
         businessName={content.settings.businessName}
-      />
-      <HeroSeamDebug />
-      <AboutTeaserSection
         waveInto={hasAktuelles ? "background" : "muted-band"}
       />
+      <HeroSeamDebug />
       <AktuellesSection aktuell={content.aktuell} afterAboutTeaser={hasAktuelles} />
       <CoursesSection
         courses={content.courses}
         afterAktuelles={hasAktuelles}
-        afterAboutTeaser={!hasAktuelles}
+        afterAboutTeaser={false}
       />
       <PricesSection prices={content.prices} />
       <AboutSection about={content.about} />

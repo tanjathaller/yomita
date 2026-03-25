@@ -14,9 +14,15 @@ type HeroSectionProps = {
   hero: HeroModel;
   /** Erscheint als dezente Zeile über der Headline (z. B. Marken- oder Studioname). */
   businessName?: string;
+  /** Surface-Farbe der folgenden Sektion für sauberen Wave-Übergang. */
+  waveInto?: "background" | "muted-band" | "muted-footer";
 };
 
-export function HeroSection({ hero, businessName }: HeroSectionProps) {
+export function HeroSection({
+  hero,
+  businessName,
+  waveInto = "muted-band",
+}: HeroSectionProps) {
   const eyebrow = businessName?.trim();
   return (
     <section
@@ -102,7 +108,7 @@ export function HeroSection({ hero, businessName }: HeroSectionProps) {
           </div>
         </div>
       </div>
-      <SectionWaveBottom into="muted-band" />
+      <SectionWaveBottom from="muted-band" into={waveInto} />
     </section>
   );
 }

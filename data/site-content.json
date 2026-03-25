@@ -1,9 +1,9 @@
 {
   "hero": {
     "title": "Namaste und herzlich willkommen!",
-    "claim": "Sanfte Praxis, klare Anleitung – Kurse und Zeiten bequem in der App buchen, wenn es dir passt.",
-    "primaryCtaLabel": "Zur Kursbuchung",
-    "primaryCtaUrl": "https://example.com/app"
+    "claim": "Ich bin Tanja Thaller, freiberufliche Yogalehrerin im Raum Neuss/Duesseldorf und freue mich sehr, dass Du mich gefunden hast.",
+    "primaryCtaLabel": "Mehr ueber mich",
+    "primaryCtaUrl": "#ueber-mich"
   },
   "aktuell": {
     "title": "Aktuelles",

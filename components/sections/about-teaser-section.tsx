@@ -1,19 +1,8 @@
-import { ArrowRight } from "lucide-react";
-
 import {
   SectionWaveBottom,
   type SectionWaveTarget,
 } from "@/components/shared/section-wave";
-import {
-  buttonTrailingArrowClassName,
-  buttonVariants,
-} from "@/components/ui/button-variants";
 import { cn } from "@/lib/utils";
-
-const ctaClassName = cn(
-  buttonVariants({ variant: "secondary", size: "lg" }),
-  "min-h-11 gap-2 px-5 text-base font-semibold sm:min-h-12 sm:px-6 sm:text-[1.05rem]",
-);
 
 type AboutTeaserSectionProps = {
   /**
@@ -34,7 +23,7 @@ export function AboutTeaserSection({
     <section
       className={cn(
         "relative scroll-mt-[calc(var(--site-header-clearance-mobile)+0.5rem)] sm:scroll-mt-[calc(var(--site-header-clearance)+0.5rem)]",
-        "bg-[var(--surface-muted-band)] pt-3 pb-24 sm:pt-4 sm:pb-28 md:pt-5 md:pb-32",
+        "bg-[var(--surface-muted-band)] pt-2 pb-16 sm:pt-3 sm:pb-20 md:pt-4 md:pb-24",
       )}
     >
       <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -60,45 +49,14 @@ export function AboutTeaserSection({
             }}
             aria-hidden
           />
-          <div className="relative z-10 p-5 sm:p-7 lg:p-8">
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-12 md:items-stretch md:gap-8 lg:gap-10">
-              <header className="flex flex-col text-center md:col-span-5 md:h-full md:text-left">
-                <div className="space-y-2">
-                  <p className="text-muted-foreground text-[0.7rem] font-medium tracking-[0.18em] uppercase sm:text-xs">
-                    Ein paar Worte von mir
-                  </p>
-                  <h2 className="font-heading text-foreground text-balance text-2xl font-semibold tracking-tight sm:text-3xl lg:text-[2rem] lg:leading-snug">
-                    Yoga mit Ruhe und Präzision
-                  </h2>
-                </div>
-                <div className="hidden md:mt-auto md:block md:pt-8">
-                  <a href="#ueber-mich" className={cn(ctaClassName, "w-fit")}>
-                    Mehr über mich
-                    <ArrowRight
-                      className={cn(buttonTrailingArrowClassName, "size-[1.05rem]")}
-                      aria-hidden
-                    />
-                  </a>
-                </div>
-              </header>
-
-              <div className="text-center md:col-span-7 md:text-left">
-                <p className="text-foreground mx-auto max-w-xl text-base leading-relaxed font-medium md:mx-0 md:max-w-lg sm:text-[1.05rem] sm:leading-relaxed">
-                  Ich bin Tanja. Kurz gesagt: Yoga mit Ruhe, Atem und Raum für dich – wer ich bin und
-                  wie ich zu dieser Praxis stehe, erzähle ich gleich unten bei{" "}
-                  <span className="text-foreground whitespace-nowrap">Über mich</span>.
-                </p>
-              </div>
-
-              <div className="flex justify-center md:hidden">
-                <a href="#ueber-mich" className={ctaClassName}>
-                  Mehr über mich
-                  <ArrowRight
-                    className={cn(buttonTrailingArrowClassName, "size-[1.05rem]")}
-                    aria-hidden
-                  />
-                </a>
-              </div>
+          <div className="relative z-10 p-4 sm:p-5 lg:p-6">
+            <div className="mx-auto max-w-3xl text-center">
+              <h2 className="font-heading text-foreground text-balance text-xl font-semibold tracking-tight sm:text-2xl">
+                Yoga mit Ruhe und Praezision
+              </h2>
+              <p className="text-foreground/90 mx-auto mt-2 max-w-2xl text-sm leading-relaxed sm:text-base">
+                Ausfuehrlicher findest du meinen Weg und meine Haltung im Abschnitt Ueber mich.
+              </p>
             </div>
           </div>
         </div>
