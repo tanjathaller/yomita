@@ -44,7 +44,7 @@ export function HeroSection({ hero, businessName }: HeroSectionProps) {
               <img
                 src="/images/tanja-10-mobile.webp"
                 alt="Portrait – Yogastudio und Achtsamkeit"
-                className="absolute inset-0 block size-full max-h-none max-w-none border-0 object-cover object-center p-0 outline-none ring-0"
+                className="absolute inset-0 block size-full max-h-none max-w-none border-0 object-cover object-center p-0 outline-none ring-0 scale-[1.08] sm:scale-[1.06] lg:scale-[1.04] transform-gpu"
                 decoding="async"
                 fetchPriority="high"
               />
