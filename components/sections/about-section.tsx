@@ -26,6 +26,7 @@ export function AboutSection({ about }: AboutSectionProps) {
             className="object-cover"
             sizes="(min-width: 1024px) 40vw, 100vw"
             priority={false}
+            unoptimized={process.env.NODE_ENV === "development"}
           />
         </div>
         <div className="space-y-4">

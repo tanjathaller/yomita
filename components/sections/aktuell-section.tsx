@@ -69,6 +69,7 @@ export function AktuellesSection({
                   className="object-cover"
                   sizes="(min-width: 768px) 42vw, 100vw"
                   priority={index === 0}
+                  unoptimized={process.env.NODE_ENV === "development"}
                 />
               </div>
               <div className="space-y-3">
