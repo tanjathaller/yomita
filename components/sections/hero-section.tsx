@@ -33,7 +33,7 @@ export function HeroSection({ hero, businessName }: HeroSectionProps) {
           {/* Explizite Höhen (ohne min() mit Komma in Tailwind-Arbitrary) — sonst kann die Box 0px hoch werden */}
           <div
             data-hero-media
-            className="relative min-h-[280px] h-[75vh] w-full max-h-[36rem] border-0 bg-[var(--surface-muted-band)] ring-0 sm:max-h-[40rem] md:h-[48vh] md:max-h-[32rem] lg:max-h-[36rem]"
+            className="relative min-h-[280px] h-[75vh] w-full max-h-[36rem] overflow-hidden rounded-t-3xl rounded-b-none border-0 bg-[var(--surface-muted-band)] ring-0 sm:max-h-[40rem] md:h-[48vh] md:max-h-[32rem] lg:max-h-[36rem]"
           >
             <picture>
               <source
@@ -44,7 +44,7 @@ export function HeroSection({ hero, businessName }: HeroSectionProps) {
               <img
                 src="/images/tanja-10-mobile.webp"
                 alt="Portrait – Yogastudio und Achtsamkeit"
-                className="absolute inset-0 block size-full max-h-none max-w-none border-0 object-cover object-center p-0 outline-none ring-0 scale-[1.08] sm:scale-[1.06] lg:scale-[1.04] transform-gpu"
+                className="absolute -inset-[4%] block h-[108%] w-[108%] max-h-none max-w-none border-0 object-cover object-center p-0 outline-none ring-0 sm:-inset-[3%] sm:h-[106%] sm:w-[106%] lg:-inset-[2.5%] lg:h-[105%] lg:w-[105%]"
                 decoding="async"
                 fetchPriority="high"
               />
@@ -58,10 +58,13 @@ export function HeroSection({ hero, businessName }: HeroSectionProps) {
               aria-hidden
             />
             <div
-              className="pointer-events-none absolute inset-x-0 bottom-0 z-[6] h-44 border-0 ring-0 sm:h-52 md:h-60"
+              className="pointer-events-none absolute inset-x-0 -bottom-[2px] z-[6] h-52 border-0 ring-0 sm:h-60 md:h-72"
               style={{
                 background:
-                  "linear-gradient(to top, var(--surface-muted-band) 0%, color-mix(in oklab, var(--surface-muted-band) 82%, transparent) 22%, color-mix(in oklab, var(--surface-muted-band) 38%, transparent) 48%, transparent 74%)",
+                  "linear-gradient(to top, var(--surface-muted-band) 0%, color-mix(in oklab, var(--surface-muted-band) 90%, transparent) 34%, color-mix(in oklab, var(--surface-muted-band) 52%, transparent) 64%, transparent 100%)",
+                maskImage: "linear-gradient(to top, black 0%, black 88%, transparent 100%)",
+                WebkitMaskImage:
+                  "linear-gradient(to top, black 0%, black 88%, transparent 100%)",
               }}
               aria-hidden
             />

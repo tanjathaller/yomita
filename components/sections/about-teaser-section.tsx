@@ -41,7 +41,7 @@ export function AboutTeaserSection({
         <div
           className={cn(
             "relative isolate w-full overflow-hidden rounded-t-3xl rounded-b-2xl sm:rounded-b-3xl",
-            "border-border/50 border-x border-t border-b-0",
+            "border-0",
             /* Langer Fade: Kartenfläche löst sich unten in dasselbe Band wie die Sektion auf */
             "bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_42%,color-mix(in_oklab,var(--card)_82%,var(--surface-muted-band)_18%)_62%,color-mix(in_oklab,var(--card)_28%,var(--surface-muted-band)_72%)_84%,var(--surface-muted-band)_100%)]",
             "shadow-[0_2px_20px_rgba(0,0,0,0.04)]",

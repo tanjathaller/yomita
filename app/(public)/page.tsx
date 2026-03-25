@@ -6,6 +6,7 @@ import { ContactSection } from "@/components/sections/contact-section";
 import { CoursesSection } from "@/components/sections/courses-section";
 import { HeroSection } from "@/components/sections/hero-section";
 import { PricesSection } from "@/components/sections/prices-section";
+import { HeroSeamDebug } from "@/components/debug/hero-seam-debug";
 
 export default async function HomePage() {
   const content = await getSiteContent();
@@ -17,6 +18,7 @@ export default async function HomePage() {
         hero={content.hero}
         businessName={content.settings.businessName}
       />
+      <HeroSeamDebug />
       <AboutTeaserSection
         waveInto={hasAktuelles ? "background" : "muted-band"}
       />

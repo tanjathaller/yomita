@@ -97,10 +97,6 @@ export function SectionWaveBottom({
         <path d={wavePath} fill={intoCss} />
         {soften ? <path d={wavePath} fill={`url(#${gradId})`} /> : null}
       </svg>
-      <div
-        className="absolute -inset-x-[2px] bottom-0 z-[2] h-[3px]"
-        style={{ backgroundColor: intoCss }}
-      />
     </div>
   );
 }
