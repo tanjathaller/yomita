@@ -73,16 +73,14 @@ export function AktuellesSection({
         </div>
       </div>
       {intro?.trim() ? (
-        <div className="mt-4 flex justify-center sm:mt-5">
-          <div className="w-full max-w-xl px-4 py-3 sm:px-5">
-            <MarkdownContent
-              markdown={intro}
-              className={cn(
-                "relative max-w-none pl-4 text-left before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-1 before:rounded-full before:bg-[#7A956E]/60",
-                "[&_p]:text-sm [&_p]:leading-relaxed [&_p]:text-foreground/85 sm:[&_p]:text-base",
-              )}
-            />
-          </div>
+        <div className="mt-4 max-w-2xl pl-4 sm:mt-5 sm:pl-6">
+          <MarkdownContent
+            markdown={intro}
+            className={cn(
+              "max-w-prose text-left",
+              "[&_p]:text-sm [&_p]:leading-relaxed [&_p]:text-muted-foreground sm:[&_p]:text-base",
+            )}
+          />
         </div>
       ) : null}
       <div className="mt-10 grid gap-6 md:gap-8">
