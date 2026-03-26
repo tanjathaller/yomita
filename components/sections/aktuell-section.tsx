@@ -74,19 +74,11 @@ export function AktuellesSection({
       </div>
       {intro?.trim() ? (
         <div className="mt-4 flex justify-center sm:mt-5">
-          <div className="relative w-full max-w-xl overflow-hidden rounded-2xl bg-card/30 px-4 py-3 shadow-[0_2px_10px_rgba(24,35,24,0.05)] sm:px-5">
-            <span
-              aria-hidden
-              className="pointer-events-none absolute left-0 top-0 h-full w-px bg-border/45"
-            />
-            <span
-              aria-hidden
-              className="pointer-events-none absolute left-0 top-0 h-px w-full bg-gradient-to-r from-border/35 via-border/15 to-transparent"
-            />
+          <div className="w-full max-w-xl px-4 py-3 sm:px-5">
             <MarkdownContent
               markdown={intro}
               className={cn(
-                "max-w-none border-l-4 border-[#7A956E]/60 pl-3 text-center",
+                "relative max-w-none pl-4 text-left before:pointer-events-none before:absolute before:inset-y-0 before:left-0 before:w-1 before:rounded-full before:bg-[#7A956E]/60",
                 "[&_p]:text-sm [&_p]:leading-relaxed [&_p]:text-foreground/85 sm:[&_p]:text-base",
               )}
             />
