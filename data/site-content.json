@@ -11,11 +11,11 @@
     "items": [
       {
         "id": "aktuell-yin-workshop",
-        "title": "Yin & Entspannung",
-        "text": "Am **Wochenende 12./13. April** gibt es eine vertiefende Yin-Einheit mit viel Raum für Regeneration.",
+        "title": "Yoga-Retreat GOLDEN LIGHT (11.-13.09.2026)",
+        "text": "Gemeinsam mit der wunderbaren Yogalehrerin Michaela direkt buchen *(nur noch wenige Plätze frei)*.",
         "image": {
-          "url": "https://images.unsplash.com/photo-1545389336-cf090694435e?w=900&h=700&fit=crop",
-          "alt": "Ruhige Yogastimmung, Kerzenlicht"
+          "url": "/images/aktuelles-card-1.webp",
+          "alt": "Yoga-Retreat Golden Light mit Michaela"
         },
         "sortOrder": 10
       },

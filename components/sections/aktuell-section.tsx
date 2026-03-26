@@ -99,7 +99,7 @@ export function AktuellesSection({
                 src={item.image.url}
                 alt={item.image.alt}
                 fill
-                className="object-cover translate-y-px scale-[1.01]"
+                className="object-cover object-[center_24%] scale-[1.01]"
                 sizes="(min-width: 1024px) 58rem, (min-width: 640px) 90vw, 100vw"
                 priority={index === 0}
                 unoptimized={process.env.NODE_ENV === "development"}
