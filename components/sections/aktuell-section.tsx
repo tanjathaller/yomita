@@ -62,6 +62,9 @@ export function AktuellesSection({
     >
       <div className="max-w-2xl pl-4 sm:pl-6">
         <div className="relative inline-block pr-6 sm:pr-7">
+          <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#7A956E] uppercase sm:text-sm">
+            Journal
+          </p>
           <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight sm:text-6xl">
             {heading}
           </h2>
