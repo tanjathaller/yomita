@@ -67,7 +67,7 @@ export function AktuellesSection({
           </h2>
           <span
             aria-hidden
-            className="mt-2 ml-3 block h-0.5 w-20 bg-border/80"
+            className="mt-2 ml-3 block h-1 w-28 rounded-full bg-border/80"
           />
           <HeaderLeafIcon className="absolute left-[78%] -top-6 size-8 opacity-75 sm:left-[76%] sm:-top-7 sm:size-9" />
         </div>
