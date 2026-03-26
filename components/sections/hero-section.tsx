@@ -50,7 +50,7 @@ export function HeroSection({
               <img
                 src="/images/tanja-10-mobile.webp"
                 alt="Portrait – Yogastudio und Achtsamkeit"
-                className="absolute -inset-[7.5%] block h-[115%] w-[115%] max-h-none max-w-none border-0 object-cover object-[center_34%] p-0 outline-none ring-0 sm:-inset-[6%] sm:h-[112%] sm:w-[112%] lg:-inset-[5%] lg:h-[110%] lg:w-[110%]"
+                className="absolute -inset-[9.5%] block h-[119%] w-[119%] max-h-none max-w-none border-0 object-cover object-[center_33%] p-0 outline-none ring-0 sm:-inset-[8%] sm:h-[116%] sm:w-[116%] lg:-inset-[6.5%] lg:h-[113%] lg:w-[113%]"
                 decoding="async"
                 fetchPriority="high"
               />
