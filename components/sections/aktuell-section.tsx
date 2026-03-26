@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { Fragment } from "react";
+import Link from "next/link";
 
 import type { AktuellesSection as AktuellesModel } from "@/types/site-content";
 
@@ -15,6 +15,7 @@ type AktuellesSectionProps = {
 };
 
 const DEFAULT_TITLE = "Aktuelles";
+const DEFAULT_BADGE_LABEL = "Aktuell";
 
 export function AktuellesSection({
   aktuell,
@@ -44,45 +45,56 @@ export function AktuellesSection({
           <MarkdownContent markdown={intro} />
         </div>
       ) : null}
-      <div className="mt-10 space-y-0">
-        {items.map((item, index) => (
-          <Fragment key={item.id}>
-            {index > 0 ? (
-              <div
-                className="flex items-center py-7 sm:py-8 md:py-10"
-                aria-hidden
-              >
-                <div className="h-px w-full bg-border/10" />
+      <div className="mt-10 grid gap-6 md:gap-8">
+        {items.map((item, index) => {
+          const badgeLabel = item.title?.toLowerCase().includes("workshop")
+            ? "Workshop"
+            : DEFAULT_BADGE_LABEL;
+
+          return (
+          <article
+            key={item.id}
+            className={cn(
+              "overflow-hidden rounded-3xl border border-border/70 bg-card shadow-sm",
+              "transition-shadow duration-200 hover:shadow-md",
+            )}
+          >
+            <div className="relative aspect-[16/10] overflow-hidden bg-muted">
+              <Image
+                src={item.image.url}
+                alt={item.image.alt}
+                fill
+                className="object-cover"
+                sizes="(min-width: 1024px) 58rem, (min-width: 640px) 90vw, 100vw"
+                priority={index === 0}
+                unoptimized={process.env.NODE_ENV === "development"}
+              />
+              <div className="absolute left-4 top-4">
+                <span className="rounded-full bg-background/90 px-3 py-1 text-xs font-semibold tracking-widest text-[#7A956E] uppercase shadow-sm backdrop-blur-sm">
+                  {badgeLabel}
+                </span>
               </div>
-            ) : null}
-            <article
-              className={cn(
-                "grid gap-8 md:grid-cols-2 md:items-center md:gap-10 lg:gap-14",
-                index % 2 === 1 && "md:[&>*:first-child]:order-2",
-              )}
-            >
-              <div className="relative aspect-[4/3] max-h-[22rem] overflow-hidden rounded-3xl border border-border/60 bg-muted sm:aspect-[5/4] md:max-h-none md:min-h-[16rem]">
-                <Image
-                  src={item.image.url}
-                  alt={item.image.alt}
-                  fill
-                  className="object-cover"
-                  sizes="(min-width: 768px) 42vw, 100vw"
-                  priority={index === 0}
-                  unoptimized={process.env.NODE_ENV === "development"}
-                />
-              </div>
-              <div className="space-y-3">
-                {item.title?.trim() ? (
-                  <h3 className="text-foreground text-xl font-semibold tracking-tight sm:text-2xl">
-                    {item.title.trim()}
-                  </h3>
-                ) : null}
+            </div>
+            <div className="space-y-4 p-6 sm:p-8">
+              {item.title?.trim() ? (
+                <h3 className="text-[#2F3B2A] text-3xl font-semibold tracking-tight sm:text-4xl">
+                  {item.title.trim()}
+                </h3>
+              ) : null}
+              <div className="text-muted-foreground text-base leading-relaxed sm:text-lg">
                 <MarkdownContent markdown={item.text} />
               </div>
-            </article>
-          </Fragment>
-        ))}
+              <Link
+                href="/#kontakt"
+                className="text-primary inline-flex items-center gap-2 pt-1 text-lg font-medium tracking-tight underline-offset-4 transition-colors hover:underline"
+              >
+                Details ansehen
+                <span aria-hidden>→</span>
+              </Link>
+            </div>
+          </article>
+          );
+        })}
       </div>
     </SectionShell>
   );

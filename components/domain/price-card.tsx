@@ -14,7 +14,7 @@ export function PriceCard({ item }: { item: PriceItem }) {
       )}
     >
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg">{item.title}</CardTitle>
+        <CardTitle className="text-[#2F3B2A] text-xl">{item.title}</CardTitle>
         <p className="text-primary text-2xl font-semibold tracking-tight">{item.price}</p>
       </CardHeader>
       <CardContent>

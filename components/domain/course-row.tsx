@@ -15,7 +15,7 @@ export function CourseRow({ course }: { course: Course }) {
     <Card className="border-border/80 shadow-sm">
       <CardHeader className="flex flex-row flex-wrap items-start justify-between gap-3 space-y-0 pb-2">
         <div className="min-w-0 space-y-1">
-          <CardTitle className="text-lg leading-snug">{course.title}</CardTitle>
+          <CardTitle className="text-[#2F3B2A] text-xl leading-snug">{course.title}</CardTitle>
           <p className="text-muted-foreground text-sm">
             {course.day} · {course.time} · {course.location}
           </p>

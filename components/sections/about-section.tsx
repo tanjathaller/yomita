@@ -30,7 +30,7 @@ export function AboutSection({ about }: AboutSectionProps) {
           />
         </div>
         <div className="space-y-4">
-          <h2 className="text-foreground text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h2 className="text-[#2F3B2A] text-4xl font-semibold tracking-tight sm:text-5xl">
             {about.title}
           </h2>
           <MarkdownContent markdown={about.text} />
