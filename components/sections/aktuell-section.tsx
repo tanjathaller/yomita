@@ -16,6 +16,28 @@ type AktuellesSectionProps = {
 const DEFAULT_TITLE = "Aktuelles";
 const DEFAULT_BADGE_LABEL = "Aktuell";
 
+function HeaderLeafIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden
+      className={className}
+    >
+      <path
+        d="M53.5 11.5c-13.5-1.4-25.5 1.8-33.2 9.5C12.8 28.4 9.9 39.3 11.9 51.7c12.4 2 23.3-.9 30.7-8.4 7.7-7.8 10.9-19.7 10.9-31.8z"
+        fill="#D5DBD3"
+      />
+      <path
+        d="M19.2 48c8.9-9.3 17.9-16.8 31.2-24.7-6.1 6.1-13.1 15.1-19.2 26.8-4.3 1.1-7.4 1.1-12-.1z"
+        fill="#F7F9F5"
+        opacity="0.94"
+      />
+    </svg>
+  );
+}
+
 export function AktuellesSection({
   aktuell,
   afterAboutTeaser = false,
@@ -34,21 +56,24 @@ export function AktuellesSection({
       waveInto="muted-band"
       className={cn(
         afterAboutTeaser
-          ? "-mt-px pt-10 sm:pt-12 md:pt-14"
-          : "-mt-px pt-7 sm:pt-9 md:pt-10",
+          ? "-mt-px pt-7 sm:pt-9 md:pt-10"
+          : "-mt-px pt-6 sm:pt-7 md:pt-8",
       )}
     >
-      <div className="max-w-2xl text-center">
-        <h2 className="text-[#2F3B2A] text-4xl font-semibold tracking-tight sm:text-5xl">
-          {heading}
-        </h2>
-        <span
-          aria-hidden
-          className="mx-auto mt-4 block h-0.5 w-16 bg-border/70"
-        />
+      <div className="max-w-2xl pl-4 sm:pl-6">
+        <div className="relative inline-block pr-6 sm:pr-7">
+          <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight sm:text-6xl">
+            {heading}
+          </h2>
+          <span
+            aria-hidden
+            className="mt-2 ml-3 block h-0.5 w-20 bg-border/80"
+          />
+          <HeaderLeafIcon className="absolute left-[78%] -top-6 size-8 opacity-75 sm:left-[76%] sm:-top-7 sm:size-9" />
+        </div>
       </div>
       {intro?.trim() ? (
-        <div className="text-muted-foreground mt-6 max-w-xl text-center text-sm leading-relaxed sm:mt-7 sm:text-base">
+        <div className="text-muted-foreground mt-4 max-w-xl pl-3 text-left text-sm leading-relaxed sm:mt-5 sm:pl-4 sm:text-base">
           <MarkdownContent
             markdown={intro}
             className="max-w-none [&_p]:italic [&_p]:leading-relaxed [&_p]:text-muted-foreground"
