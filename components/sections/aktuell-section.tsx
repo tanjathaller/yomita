@@ -94,7 +94,7 @@ export function AktuellesSection({
               "transition-shadow duration-200 hover:shadow-md",
             )}
           >
-            <div className="relative -mb-px aspect-[16/10] overflow-hidden bg-muted">
+            <div className="relative aspect-[16/10] overflow-hidden bg-muted">
               <Image
                 src={item.image.url}
                 alt={item.image.alt}
@@ -106,7 +106,11 @@ export function AktuellesSection({
               />
               <div
                 aria-hidden
-                className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-b from-transparent to-[#F3F0E8]/60"
+                className="absolute inset-x-0 -bottom-px h-24 bg-gradient-to-b from-transparent via-[#F3F0E8]/20 to-card"
+              />
+              <div
+                aria-hidden
+                className="absolute inset-x-0 bottom-0 h-px bg-card"
               />
               <div className="absolute left-4 top-4">
                 <span className="rounded-full bg-background/90 px-3 py-1 text-xs font-semibold tracking-widest text-[#7A956E] uppercase shadow-sm backdrop-blur-sm">
@@ -114,7 +118,7 @@ export function AktuellesSection({
                 </span>
               </div>
             </div>
-            <div className="relative space-y-4 p-6 sm:p-8 before:pointer-events-none before:absolute before:inset-x-0 before:-top-14 before:h-14 before:bg-gradient-to-b before:from-transparent before:to-card/70">
+            <div className="space-y-4 p-6 sm:p-8">
               {item.title?.trim() ? (
                 <h3 className="text-[#2F3B2A] text-3xl font-semibold tracking-tight sm:text-4xl">
                   {item.title.trim()}
