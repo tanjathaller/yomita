@@ -94,7 +94,7 @@ export function AktuellesSection({
               "transition-shadow duration-200 hover:shadow-md",
             )}
           >
-            <div className="relative aspect-[7/5] overflow-hidden bg-muted">
+            <div className="relative aspect-[4/3] overflow-hidden bg-muted">
               <Image
                 src={item.image.url}
                 alt={item.image.alt}
