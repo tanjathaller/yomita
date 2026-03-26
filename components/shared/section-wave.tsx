@@ -72,19 +72,29 @@ export function SectionWaveBottom({
               id={gradId}
               gradientUnits="userSpaceOnUse"
               x1="0"
-              y1="34"
+              y1="18"
               x2="0"
-              y2="108"
+              y2="116"
             >
               <stop
                 offset="0%"
                 stopColor="var(--wave-soft-from)"
-                stopOpacity="0.4"
+                stopOpacity="0.85"
               />
               <stop
-                offset="40%"
+                offset="22%"
                 stopColor="var(--wave-soft-from)"
-                stopOpacity="0.14"
+                stopOpacity="0.58"
+              />
+              <stop
+                offset="52%"
+                stopColor="var(--wave-soft-from)"
+                stopOpacity="0.28"
+              />
+              <stop
+                offset="80%"
+                stopColor="var(--wave-soft-from)"
+                stopOpacity="0.08"
               />
               <stop
                 offset="100%"
