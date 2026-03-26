@@ -22,6 +22,7 @@ export default async function HomePage() {
       <AktuellesSection aktuell={content.aktuell} afterAboutTeaser={hasAktuelles} />
       <CoursesSection
         courses={content.courses}
+        appUrl={content.settings.appUrl}
         afterAktuelles={hasAktuelles}
         afterAboutTeaser={false}
       />

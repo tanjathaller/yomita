@@ -16,28 +16,6 @@ type AktuellesSectionProps = {
 const DEFAULT_TITLE = "Aktuelles";
 const DEFAULT_BADGE_LABEL = "Aktuell";
 
-function HeaderLeafIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 64 64"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden
-      className={className}
-    >
-      <path
-        d="M53.5 11.5c-13.5-1.4-25.5 1.8-33.2 9.5C12.8 28.4 9.9 39.3 11.9 51.7c12.4 2 23.3-.9 30.7-8.4 7.7-7.8 10.9-19.7 10.9-31.8z"
-        fill="#D5DBD3"
-      />
-      <path
-        d="M19.2 48c8.9-9.3 17.9-16.8 31.2-24.7-6.1 6.1-13.1 15.1-19.2 26.8-4.3 1.1-7.4 1.1-12-.1z"
-        fill="#F7F9F5"
-        opacity="0.94"
-      />
-    </svg>
-  );
-}
-
 export function AktuellesSection({
   aktuell,
   afterAboutTeaser = false,
@@ -72,7 +50,6 @@ export function AktuellesSection({
             aria-hidden
             className="mt-2 ml-3 block h-1 w-28 rounded-full bg-border/80"
           />
-          <HeaderLeafIcon className="absolute left-[78%] -top-6 size-8 opacity-75 sm:left-[76%] sm:-top-7 sm:size-9" />
         </div>
       </div>
       {intro?.trim() ? (
