@@ -4,7 +4,6 @@ import Link from "next/link";
 import type { AktuellesSection as AktuellesModel } from "@/types/site-content";
 
 import { MarkdownContent } from "@/components/shared/markdown-content";
-import { SectionHeading } from "@/components/shared/section-heading";
 import { SectionShell } from "@/components/shared/section-shell";
 import { cn } from "@/lib/utils";
 
@@ -39,10 +38,21 @@ export function AktuellesSection({
           : "-mt-px pt-7 sm:pt-9 md:pt-10",
       )}
     >
-      <SectionHeading eyebrow="Neuigkeiten" title={heading} className="max-w-2xl" />
+      <div className="max-w-2xl text-center">
+        <h2 className="text-[#2F3B2A] text-4xl font-semibold tracking-tight sm:text-5xl">
+          {heading}
+        </h2>
+        <span
+          aria-hidden
+          className="mx-auto mt-4 block h-0.5 w-16 bg-border/70"
+        />
+      </div>
       {intro?.trim() ? (
-        <div className="text-muted-foreground mt-4 max-w-2xl text-sm leading-relaxed sm:text-base">
-          <MarkdownContent markdown={intro} />
+        <div className="text-muted-foreground mt-6 max-w-xl text-center text-sm leading-relaxed sm:mt-7 sm:text-base">
+          <MarkdownContent
+            markdown={intro}
+            className="max-w-none [&_p]:italic [&_p]:leading-relaxed [&_p]:text-muted-foreground"
+          />
         </div>
       ) : null}
       <div className="mt-10 grid gap-6 md:gap-8">
