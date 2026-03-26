@@ -27,9 +27,9 @@ export function HeroSection({
   return (
     <section
       id="hero"
-      className="relative scroll-mt-[calc(var(--site-header-clearance-mobile)+0.5rem)] bg-[var(--surface-muted-band)] pb-9 sm:scroll-mt-[calc(var(--site-header-clearance)+0.5rem)] sm:pb-13 md:pb-[4.25rem]"
+      className="relative scroll-mt-[calc(var(--site-header-clearance-mobile)+0.5rem)] bg-[var(--surface-muted-band)] pb-12 sm:scroll-mt-[calc(var(--site-header-clearance)+0.5rem)] sm:pb-16 md:pb-[5rem]"
     >
-      <div className="relative z-10 mx-auto max-w-6xl bg-[var(--surface-muted-band)] px-4 pt-1 pb-0 sm:px-6 sm:pt-4 lg:px-8 lg:pt-6">
+      <div className="relative z-10 mx-auto max-w-6xl bg-[var(--surface-muted-band)] px-4 pt-0 pb-0 sm:px-6 sm:pt-2 lg:px-8 lg:pt-4">
         <div
           data-hero-shell
           className={cn(
