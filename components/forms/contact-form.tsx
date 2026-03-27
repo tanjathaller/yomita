@@ -53,22 +53,39 @@ export function ContactForm({ successMessage }: ContactFormProps) {
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
-      className="bg-card text-card-foreground space-y-4 rounded-xl border border-border p-6 shadow-sm"
+      className="bg-card text-card-foreground space-y-5 rounded-2xl border border-border/80 p-6 shadow-sm sm:p-7"
       noValidate
     >
-      <div className="space-y-2">
-        <Label htmlFor="contact-name">Name</Label>
-        <Input
-          id="contact-name"
-          autoComplete="name"
-          aria-invalid={!!form.formState.errors.name}
-          {...form.register("name")}
-        />
-        {form.formState.errors.name ? (
-          <p className="text-destructive text-xs" role="alert">
-            {form.formState.errors.name.message}
-          </p>
-        ) : null}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div className="space-y-2">
+          <Label htmlFor="contact-name">Name</Label>
+          <Input
+            id="contact-name"
+            autoComplete="name"
+            aria-invalid={!!form.formState.errors.name}
+            {...form.register("name")}
+          />
+          {form.formState.errors.name ? (
+            <p className="text-destructive text-xs" role="alert">
+              {form.formState.errors.name.message}
+            </p>
+          ) : null}
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="contact-phone">Telefon</Label>
+          <Input
+            id="contact-phone"
+            type="tel"
+            autoComplete="tel"
+            aria-invalid={!!form.formState.errors.phone}
+            {...form.register("phone")}
+          />
+          {form.formState.errors.phone ? (
+            <p className="text-destructive text-xs" role="alert">
+              {form.formState.errors.phone.message}
+            </p>
+          ) : null}
+        </div>
       </div>
       <div className="space-y-2">
         <Label htmlFor="contact-email">E-Mail</Label>
@@ -86,25 +103,10 @@ export function ContactForm({ successMessage }: ContactFormProps) {
         ) : null}
       </div>
       <div className="space-y-2">
-        <Label htmlFor="contact-phone">Telefon</Label>
-        <Input
-          id="contact-phone"
-          type="tel"
-          autoComplete="tel"
-          aria-invalid={!!form.formState.errors.phone}
-          {...form.register("phone")}
-        />
-        {form.formState.errors.phone ? (
-          <p className="text-destructive text-xs" role="alert">
-            {form.formState.errors.phone.message}
-          </p>
-        ) : null}
-      </div>
-      <div className="space-y-2">
         <Label htmlFor="contact-message">Nachricht</Label>
         <Textarea
           id="contact-message"
-          rows={5}
+          rows={6}
           aria-invalid={!!form.formState.errors.message}
           {...form.register("message")}
         />
@@ -114,11 +116,11 @@ export function ContactForm({ successMessage }: ContactFormProps) {
           </p>
         ) : null}
       </div>
-      <Button type="submit" disabled={form.formState.isSubmitting}>
-        Nachricht senden
+      <Button type="submit" disabled={form.formState.isSubmitting} className="w-full sm:w-auto">
+        Unverbindlich anfragen
       </Button>
       <p className="text-muted-foreground text-xs">
-        Server-Versand ist noch nicht angebunden – Absenden zeigt nur die Demo-Meldung.
+        Ich melde mich in der Regel innerhalb von 1-2 Werktagen.
       </p>
     </form>
   );
