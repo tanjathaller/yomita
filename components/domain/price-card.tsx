@@ -38,9 +38,20 @@ export function PriceCard({ item }: { item: PriceItem }) {
       </CardHeader>
       <CardContent className="pt-0">
         {hasDescription ? (
-          <p className="text-foreground/75 whitespace-pre-line text-sm leading-relaxed">
-            {item.description}
-          </p>
+          hasLink && !hasPrice && !item.linkLabel ? (
+            <a
+              href={item.linkUrl}
+              target={isExternalLink ? "_blank" : undefined}
+              rel={isExternalLink ? "noreferrer noopener" : undefined}
+              className="text-foreground/75 inline-flex whitespace-pre-line text-sm leading-relaxed underline-offset-4 hover:underline"
+            >
+              {item.description}
+            </a>
+          ) : (
+            <p className="text-foreground/75 whitespace-pre-line text-sm leading-relaxed">
+              {item.description}
+            </p>
+          )
         ) : null}
       </CardContent>
     </Card>
