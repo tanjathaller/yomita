@@ -41,6 +41,8 @@ export function SiteFooter({ settings }: SiteFooterProps) {
               <li className="col-span-2 w-full sm:col-span-1 sm:w-auto">
                 <Link
                   href={settings.appUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="bg-primary text-primary-foreground hover:bg-primary/85 inline-flex w-full justify-center rounded-full px-4 py-2.5 text-base font-semibold tracking-wide uppercase transition-colors sm:w-auto"
                 >
                   Zur App

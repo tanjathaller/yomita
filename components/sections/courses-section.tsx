@@ -61,6 +61,8 @@ export function CoursesSection({
         <div className="mt-4">
           <Link
             href={appUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             className={cn(
               buttonVariants({ size: "lg" }),
               "min-h-11 min-w-36 rounded-lg border border-[#6F8B63]/30 bg-[#7A956E] px-6 text-base font-semibold text-white shadow-sm hover:bg-[#6F8B63] hover:text-white",
