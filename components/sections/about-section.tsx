@@ -32,6 +32,10 @@ export function AboutSection({ about }: AboutSectionProps) {
               />
               <div
                 aria-hidden
+                className="pointer-events-none absolute inset-0 rounded-[calc(1.5rem-3px)] border-2 border-[#2F3B2A] [mask-image:linear-gradient(to_bottom,black_0%,black_32%,transparent_72%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_32%,transparent_72%)]"
+              />
+              <div
+                aria-hidden
                 className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[rgba(34,48,34,0.34)] via-[rgba(44,60,43,0.16)] to-[rgba(58,76,56,0.05)]"
               />
               <div
