@@ -16,7 +16,7 @@ export default async function HomePage() {
       <HeroSection
         hero={content.hero}
         businessName={content.settings.businessName}
-        waveInto={hasAktuelles ? "background" : "muted-band"}
+        waveInto={hasAktuelles ? undefined : "muted-band"}
       />
       <HeroSeamDebug />
       <AktuellesSection aktuell={content.aktuell} afterAboutTeaser={hasAktuelles} />

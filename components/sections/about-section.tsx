@@ -14,8 +14,7 @@ export function AboutSection({ about }: AboutSectionProps) {
     <SectionShell
       id="ueber-mich"
       variant="muted"
-      waveInto="background"
-      className="-mt-2 pt-12 sm:pt-20"
+      className="-mt-2 pt-12 pb-28 sm:pt-20 sm:pb-36 md:pb-44 bg-[linear-gradient(to_bottom,var(--surface-muted-band)_0%,var(--surface-muted-band)_68%,color-mix(in_oklab,var(--surface-muted-band)_86%,var(--background)_14%)_80%,color-mix(in_oklab,var(--surface-muted-band)_64%,var(--background)_36%)_90%,color-mix(in_oklab,var(--surface-muted-band)_34%,var(--background)_66%)_97%,var(--background)_100%)]"
     >
       <div className="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
         <div className="relative w-[92%] ml-auto lg:w-full">

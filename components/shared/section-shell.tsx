@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 
 import {
   SectionWaveBottom,
+  type SectionTransitionStyle,
   type SectionWaveTarget,
 } from "@/components/shared/section-wave";
 
@@ -13,6 +14,8 @@ type SectionShellProps = {
   variant?: "default" | "muted";
   /** Weicher Wellenübergang zum **nächsten** Abschnitt (Füllfarbe = dessen Hintergrund). */
   waveInto?: SectionWaveTarget;
+  /** Übergangsart: organische Welle oder reine Farbverschmelzung. */
+  transitionStyle?: SectionTransitionStyle;
 };
 
 export function SectionShell({
@@ -21,6 +24,7 @@ export function SectionShell({
   className,
   variant = "default",
   waveInto,
+  transitionStyle = "wave",
 }: SectionShellProps) {
   return (
     <section
@@ -41,6 +45,7 @@ export function SectionShell({
         <SectionWaveBottom
           into={waveInto}
           from={variant === "muted" ? "muted-band" : "background"}
+          style={transitionStyle}
         />
       ) : null}
     </section>

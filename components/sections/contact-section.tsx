@@ -28,7 +28,10 @@ export function ContactSection({ contact }: ContactSectionProps) {
   }
 
   return (
-    <SectionShell id="kontakt" waveInto="muted-footer" className="-mt-px">
+    <SectionShell
+      id="kontakt"
+      className="pb-24 sm:pb-30 md:pb-34 bg-[linear-gradient(to_bottom,var(--background)_0%,var(--background)_58%,color-mix(in_oklab,var(--background)_84%,var(--surface-muted-footer)_16%)_74%,color-mix(in_oklab,var(--background)_60%,var(--surface-muted-footer)_40%)_88%,color-mix(in_oklab,var(--background)_32%,var(--surface-muted-footer)_68%)_97%,var(--surface-muted-footer)_100%)]"
+    >
       <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
         <div className="space-y-6 lg:col-start-1 lg:row-start-1">
           <div className="max-w-2xl pl-4 sm:pl-6">

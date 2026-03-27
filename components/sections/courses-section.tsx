@@ -27,12 +27,11 @@ export function CoursesSection({
     <SectionShell
       id="kurse"
       variant="muted"
-      waveInto="background"
       className={cn(
-        "-mt-px",
         afterAktuelles || afterAboutTeaser
-          ? "-mt-px pt-12 sm:pt-14 md:pt-16"
-          : "pt-8 sm:pt-10 md:pt-12",
+          ? "pt-12 pb-24 sm:pt-14 sm:pb-30 md:pt-16 md:pb-34"
+          : "pt-8 pb-24 sm:pt-10 sm:pb-30 md:pt-12 md:pb-34",
+        "bg-[linear-gradient(to_bottom,var(--surface-muted-band)_0%,var(--surface-muted-band)_66%,color-mix(in_oklab,var(--surface-muted-band)_84%,var(--background)_16%)_78%,color-mix(in_oklab,var(--surface-muted-band)_60%,var(--background)_40%)_89%,color-mix(in_oklab,var(--surface-muted-band)_30%,var(--background)_70%)_97%,var(--background)_100%)]",
       )}
     >
       <div className="max-w-2xl pl-4 sm:pl-6">

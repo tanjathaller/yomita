@@ -21,7 +21,7 @@ type HeroSectionProps = {
 export function HeroSection({
   hero,
   businessName,
-  waveInto = "muted-band",
+  waveInto,
 }: HeroSectionProps) {
   const eyebrow = businessName?.trim();
   return (
@@ -108,7 +108,7 @@ export function HeroSection({
           </div>
         </div>
       </div>
-      <SectionWaveBottom from="muted-band" into={waveInto} />
+      {waveInto ? <SectionWaveBottom from="muted-band" into={waveInto} /> : null}
     </section>
   );
 }

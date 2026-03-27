@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 
 /** Matches the following section’s surface so the curve reads as one continuous band. */
 export type SectionWaveTarget = "background" | "muted-band" | "muted-footer";
+export type SectionTransitionStyle = "wave" | "blend";
 
 /** Inline fill — Tailwind utility classes on `<path>` are unreliable here (default fill = black). */
 function waveFill(target: SectionWaveTarget): string {
@@ -31,24 +32,28 @@ const wavePath =
 export function SectionWaveBottom({
   into,
   from,
+  style = "wave",
   className,
 }: {
   into: SectionWaveTarget;
   /** Surface direkt über der Welle (meist Sektions-Hintergrund). Fehlt → nur `into`, wie zuvor. */
   from?: SectionWaveTarget;
+  /** "wave" = organische Kante, "blend" = reine Farbverschmelzung ohne sichtbare Kante. */
+  style?: SectionTransitionStyle;
   className?: string;
 }) {
   const intoCss = waveFill(into);
   const fromTarget = from ?? into;
   const fromCss = waveFill(fromTarget);
   const soften = fromCss !== intoCss;
-  const gradId = `wave-soft-${useId().replace(/:/g, "")}`;
+  const blendGradId = `wave-blend-${useId().replace(/:/g, "")}`;
+  const edgeBlurId = `wave-blend-soft-${useId().replace(/:/g, "")}`;
 
   return (
     <div
       aria-hidden
       className={cn(
-        "pointer-events-none absolute -inset-x-px -bottom-px z-[1] h-[calc(3.75rem+2px)] overflow-hidden sm:h-[calc(4.5rem+2px)] md:h-[calc(6.25rem+2px)]",
+        "pointer-events-none absolute -inset-x-px -bottom-px z-[1] h-[calc(10.5rem+2px)] overflow-hidden sm:h-[calc(13rem+2px)] md:h-[calc(16rem+2px)]",
         className
       )}
       style={
@@ -58,6 +63,20 @@ export function SectionWaveBottom({
         } as CSSProperties
       }
     >
+      {style === "blend" ? (
+        <div
+          className="absolute inset-0"
+          style={
+            {
+              background:
+                "linear-gradient(to bottom, var(--wave-soft-from) 0%, color-mix(in oklab, var(--wave-soft-from) 88%, var(--wave-soft-into) 12%) 16%, color-mix(in oklab, var(--wave-soft-from) 74%, var(--wave-soft-into) 26%) 32%, color-mix(in oklab, var(--wave-soft-from) 58%, var(--wave-soft-into) 42%) 48%, color-mix(in oklab, var(--wave-soft-from) 42%, var(--wave-soft-into) 58%) 62%, color-mix(in oklab, var(--wave-soft-from) 28%, var(--wave-soft-into) 72%) 74%, color-mix(in oklab, var(--wave-soft-from) 16%, var(--wave-soft-into) 84%) 86%, color-mix(in oklab, var(--wave-soft-from) 7%, var(--wave-soft-into) 93%) 94%, var(--wave-soft-into) 100%)",
+              filter: "blur(16px)",
+              transform: "translateY(8px) scaleX(1.03)",
+            } as CSSProperties
+          }
+        />
+      ) : null}
+      {style === "blend" ? null : (
       <svg
         className="relative z-[1] block h-full w-full"
         viewBox="0 0 1440 120"
@@ -69,44 +88,57 @@ export function SectionWaveBottom({
         {soften ? (
           <defs>
             <linearGradient
-              id={gradId}
+              id={blendGradId}
               gradientUnits="userSpaceOnUse"
               x1="0"
-              y1="18"
+              y1="20"
               x2="0"
-              y2="116"
+              y2="120"
             >
+              <stop offset="0%" stopColor="var(--wave-soft-from)" />
               <stop
-                offset="0%"
-                stopColor="var(--wave-soft-from)"
-                stopOpacity="0.85"
+                offset="24%"
+                stopColor="color-mix(in oklab, var(--wave-soft-from) 76%, var(--wave-soft-into) 24%)"
               />
               <stop
-                offset="22%"
-                stopColor="var(--wave-soft-from)"
-                stopOpacity="0.58"
+                offset="48%"
+                stopColor="color-mix(in oklab, var(--wave-soft-from) 54%, var(--wave-soft-into) 46%)"
               />
               <stop
-                offset="52%"
-                stopColor="var(--wave-soft-from)"
-                stopOpacity="0.28"
+                offset="70%"
+                stopColor="color-mix(in oklab, var(--wave-soft-from) 30%, var(--wave-soft-into) 70%)"
               />
-              <stop
-                offset="80%"
-                stopColor="var(--wave-soft-from)"
-                stopOpacity="0.08"
-              />
-              <stop
-                offset="100%"
-                stopColor="var(--wave-soft-from)"
-                stopOpacity="0"
-              />
+              <stop offset="100%" stopColor="var(--wave-soft-into)" />
             </linearGradient>
+            <filter
+              id={edgeBlurId}
+              x="-8%"
+              y="-58%"
+              width="116%"
+              height="220%"
+              colorInterpolationFilters="sRGB"
+            >
+              <feGaussianBlur stdDeviation="9" />
+            </filter>
           </defs>
         ) : null}
-        <path d={wavePath} fill={intoCss} />
-        {soften ? <path d={wavePath} fill={`url(#${gradId})`} /> : null}
+        {soften ? (
+          <path d={wavePath} fill={`url(#${blendGradId})`} filter={`url(#${edgeBlurId})`} />
+        ) : (
+          <path d={wavePath} fill={intoCss} />
+        )}
+        {soften ? (
+          <path
+            d={wavePath}
+            fill="none"
+            stroke="var(--wave-soft-from)"
+            strokeWidth="34"
+            strokeOpacity="0.12"
+            filter={`url(#${edgeBlurId})`}
+          />
+        ) : null}
       </svg>
+      )}
     </div>
   );
 }

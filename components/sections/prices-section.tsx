@@ -9,7 +9,10 @@ type PricesSectionProps = {
 
 export function PricesSection({ prices }: PricesSectionProps) {
   return (
-    <SectionShell id="preise" waveInto="muted-band" className="-mt-px">
+    <SectionShell
+      id="preise"
+      className="pb-24 sm:pb-30 md:pb-34 bg-[linear-gradient(to_bottom,var(--background)_0%,var(--background)_70%,color-mix(in_oklab,var(--background)_78%,var(--surface-muted-band)_22%)_84%,color-mix(in_oklab,var(--background)_48%,var(--surface-muted-band)_52%)_94%,var(--surface-muted-band)_100%)]"
+    >
       <div className="max-w-2xl pl-4 sm:pl-6">
         <div className="relative inline-block pr-6 sm:pr-7">
           <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#7A956E] uppercase sm:text-sm">

@@ -31,11 +31,10 @@ export function AktuellesSection({
     <SectionShell
       id="aktuelles"
       variant={afterAboutTeaser ? "default" : "muted"}
-      waveInto="muted-band"
       className={cn(
         afterAboutTeaser
-          ? "-mt-px pt-7 sm:pt-9 md:pt-10"
-          : "-mt-px pt-6 sm:pt-7 md:pt-8",
+          ? "pt-7 pb-24 sm:pt-9 sm:pb-30 md:pt-10 md:pb-34 bg-[linear-gradient(to_bottom,var(--surface-muted-band)_0%,color-mix(in_oklab,var(--surface-muted-band)_62%,var(--background)_38%)_14%,var(--background)_30%,var(--background)_72%,color-mix(in_oklab,var(--background)_74%,var(--surface-muted-band)_26%)_86%,color-mix(in_oklab,var(--background)_44%,var(--surface-muted-band)_56%)_95%,var(--surface-muted-band)_100%)]"
+          : "pt-6 sm:pt-7 md:pt-8",
       )}
     >
       <div className="max-w-2xl pl-4 sm:pl-6">
