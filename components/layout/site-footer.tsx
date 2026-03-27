@@ -22,21 +22,26 @@ export function SiteFooter({ settings }: SiteFooterProps) {
       >
         <div className="mx-auto flex w-max max-w-full min-w-0 flex-col items-start">
           <nav className="flex w-full justify-center pb-6" aria-label="Footer Navigation">
-            <ul className="grid w-full max-w-[22rem] grid-cols-2 gap-2.5 sm:flex sm:max-w-none sm:flex-wrap sm:justify-center">
-              {navItems.map((item) => (
-                <li key={item.href} className="w-full">
+            <ul className="grid w-full max-w-[24rem] grid-cols-2 gap-3 sm:flex sm:max-w-none sm:flex-wrap sm:justify-center">
+              {navItems.map((item, index) => {
+                const isLastOddItem = navItems.length % 2 === 1 && index === navItems.length - 1;
+                return (
+                <li
+                  key={item.href}
+                  className={isLastOddItem ? "col-span-2 flex justify-center" : "w-full"}
+                >
                   <Link
                     href={item.href}
-                    className="text-foreground/85 hover:text-foreground hover:border-primary/35 hover:bg-card/75 inline-flex w-full justify-center rounded-full border border-border/70 bg-card/55 px-3.5 py-2 text-sm font-semibold tracking-wide uppercase transition-colors sm:w-auto"
+                    className="text-foreground/85 hover:text-foreground hover:border-primary/35 hover:bg-card/75 inline-flex w-full justify-center rounded-full border border-border/70 bg-card/55 px-4 py-2.5 text-base font-semibold tracking-wide uppercase transition-colors sm:w-auto"
                   >
                     {item.label}
                   </Link>
                 </li>
-              ))}
+              )})}
               <li className="col-span-2 w-full sm:col-span-1 sm:w-auto">
                 <Link
                   href={settings.appUrl}
-                  className="bg-primary text-primary-foreground hover:bg-primary/85 inline-flex w-full justify-center rounded-full px-3.5 py-2 text-sm font-semibold tracking-wide uppercase transition-colors sm:w-auto"
+                  className="bg-primary text-primary-foreground hover:bg-primary/85 inline-flex w-full justify-center rounded-full px-4 py-2.5 text-base font-semibold tracking-wide uppercase transition-colors sm:w-auto"
                 >
                   Zur App
                 </Link>
