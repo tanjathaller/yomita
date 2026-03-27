@@ -47,7 +47,7 @@ export function AktuellesSection({
           </h2>
           <span
             aria-hidden
-            className="mt-2 ml-3 block h-1 w-28 rounded-full bg-[#6F8B63]/70"
+            className="mt-2 ml-3 block h-1 w-28 rounded-full bg-[#D8C9AF]"
           />
         </div>
       </div>

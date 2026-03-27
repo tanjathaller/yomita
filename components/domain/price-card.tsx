@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
 export function PriceCard({ item }: { item: PriceItem }) {
-  const highlighted = item.highlighted === true;
   const hasPrice = item.price.trim().length > 0;
   const hasDescription = item.description.trim().length > 0;
   const hasLink = Boolean(item.linkUrl);
@@ -13,8 +12,7 @@ export function PriceCard({ item }: { item: PriceItem }) {
   return (
     <Card
       className={cn(
-        "border-primary/20 bg-primary/[0.07] shadow-sm transition-[box-shadow,background-color,border-color] hover:border-primary/30 hover:bg-primary/[0.1] hover:shadow-md",
-        highlighted && "border-primary/40 ring-primary/20 ring-2"
+        "border-primary/20 bg-[color-mix(in_oklab,var(--surface-muted-band)_62%,var(--background)_38%)] shadow-sm transition-[box-shadow,border-color] hover:border-primary/30 hover:shadow-md"
       )}
     >
       <CardHeader className="pb-2">
@@ -26,12 +24,12 @@ export function PriceCard({ item }: { item: PriceItem }) {
             href={item.linkUrl}
             target={isExternalLink ? "_blank" : undefined}
             rel={isExternalLink ? "noreferrer noopener" : undefined}
-            className="text-primary mt-2 inline-flex w-fit rounded-full border border-primary/25 bg-primary/15 px-3 py-1 text-base font-semibold tracking-tight underline-offset-4 transition-colors hover:bg-primary/20 hover:underline"
+            className="text-primary mt-2 inline-flex w-fit rounded-full border border-primary/25 bg-transparent px-3 py-1 text-base font-semibold tracking-tight underline-offset-4 transition-colors hover:border-primary/35 hover:underline"
           >
             {item.linkLabel || item.price || "Mehr erfahren"}
           </a>
         ) : hasPrice ? (
-          <p className="text-primary mt-2 inline-flex w-fit rounded-full border border-primary/25 bg-primary/15 px-3 py-1 text-base font-semibold tracking-tight">
+          <p className="text-primary mt-2 inline-flex w-fit rounded-full border border-primary/25 bg-transparent px-3 py-1 text-base font-semibold tracking-tight">
             {item.price}
           </p>
         ) : null}

@@ -39,7 +39,7 @@ export function ContactSection({ contact }: ContactSectionProps) {
               <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight sm:text-6xl">
                 {contact.formHeadline}
               </h2>
-              <span aria-hidden className="mt-2 ml-3 block h-1 w-28 rounded-full bg-border/80" />
+              <span aria-hidden className="mt-2 ml-3 block h-1 w-28 rounded-full bg-[#6F8B63]" />
             </div>
           </div>
           <p className="text-muted-foreground max-w-prose text-sm leading-relaxed sm:text-base">

@@ -19,11 +19,11 @@ export function PricesSection({ prices }: PricesSectionProps) {
             Investition
           </p>
           <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight sm:text-6xl">
-            Meine Angebote
+            Preise
           </h2>
           <span
             aria-hidden
-            className="mt-2 ml-3 block h-1 w-28 rounded-full bg-border/80"
+            className="mt-2 ml-3 block h-1 w-28 rounded-full bg-[#6F8B63]"
           />
         </div>
       </div>

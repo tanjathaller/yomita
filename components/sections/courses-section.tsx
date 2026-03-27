@@ -44,7 +44,7 @@ export function CoursesSection({
           </h2>
           <span
             aria-hidden
-            className="mt-2 ml-3 block h-1 w-40 rounded-full bg-[#7A956E]/55"
+            className="mt-2 ml-3 block h-1 w-40 rounded-full bg-[#D8C9AF]"
           />
         </div>
       </div>
