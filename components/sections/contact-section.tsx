@@ -1,4 +1,7 @@
+"use client";
+
 import type { ContactSection as ContactModel } from "@/types/site-content";
+import type { MouseEvent } from "react";
 
 import { ContactForm } from "@/components/forms/contact-form";
 import { SectionShell } from "@/components/shared/section-shell";
@@ -8,6 +11,18 @@ type ContactSectionProps = {
 };
 
 export function ContactSection({ contact }: ContactSectionProps) {
+  function handleEmailClick(event: MouseEvent<HTMLAnchorElement>) {
+    if (window.matchMedia("(max-width: 1023px)").matches) {
+      const proceed = window.confirm(
+        "Möchtest du zur E-Mail-App weitergeleitet werden?\n\nDu kannst alternativ auch einfach das Kontaktformular hier auf der Seite verwenden."
+      );
+
+      if (!proceed) {
+        event.preventDefault();
+      }
+    }
+  }
+
   return (
     <SectionShell id="kontakt" waveInto="muted-footer" className="-mt-px">
       <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
@@ -34,6 +49,7 @@ export function ContactSection({ contact }: ContactSectionProps) {
             <dd>
               <a
                 href={`mailto:${contact.email}`}
+                onClick={handleEmailClick}
                 className="group block rounded-xl border border-border/70 bg-card/70 p-4 transition-colors hover:border-primary/40 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
               >
                 <span className="text-foreground text-sm font-medium">E-Mail</span>
