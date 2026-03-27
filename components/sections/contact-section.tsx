@@ -80,12 +80,16 @@ export function ContactSection({ contact }: ContactSectionProps) {
         </dl>
       </div>
       {showEmailConfirm ? (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-[#1F2A22]/45 p-4 backdrop-blur-[1px] sm:items-center sm:p-6">
+        <div
+          className="fixed inset-0 z-50 flex items-end justify-center bg-[#1F2A22]/45 p-4 backdrop-blur-[1px] sm:items-center sm:p-6"
+          onClick={() => setShowEmailConfirm(false)}
+        >
           <div
             role="dialog"
             aria-modal="true"
             aria-labelledby="email-confirm-title"
             className="w-full max-w-sm rounded-2xl border border-primary/25 bg-[var(--surface-muted-band)] p-5 text-foreground shadow-xl"
+            onClick={(event) => event.stopPropagation()}
           >
             <h3 id="email-confirm-title" className="text-[#2F3B2A] text-lg font-semibold tracking-tight">
               Zur E-Mail-App wechseln?
@@ -94,10 +98,12 @@ export function ContactSection({ contact }: ContactSectionProps) {
               Du kannst auch einfach das Kontaktformular auf dieser Seite verwenden.
             </p>
             <div className="mt-5 flex justify-end gap-2">
-              <Button variant="ghost" onClick={() => setShowEmailConfirm(false)}>
+              <Button size="lg" variant="ghost" onClick={() => setShowEmailConfirm(false)}>
                 Abbrechen
               </Button>
-              <Button onClick={proceedToEmailApp}>Weiter zur E-Mail</Button>
+              <Button size="lg" onClick={proceedToEmailApp}>
+                Weiter zur E-Mail
+              </Button>
             </div>
           </div>
         </div>
