@@ -32,7 +32,7 @@ export function AboutSection({ about }: AboutSectionProps) {
               />
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-0 rounded-[calc(1.5rem-3px)] border-2 border-[#2F3B2A] [mask-image:linear-gradient(to_bottom,black_0%,black_32%,transparent_72%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_32%,transparent_72%)]"
+                className="pointer-events-none absolute inset-x-0 top-0 h-[62%] rounded-t-[calc(1.5rem-3px)] border-2 border-b-0 border-[#2F3B2A] [mask-image:linear-gradient(to_bottom,black_0%,black_35%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_35%,transparent_100%)]"
               />
               <div
                 aria-hidden
