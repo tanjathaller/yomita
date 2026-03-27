@@ -31,7 +31,7 @@ export function AboutSection({ about }: AboutSectionProps) {
             />
             <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent" />
           </div>
-          <h2 className="pointer-events-none absolute -bottom-[4%] -left-7 z-20 text-5xl font-semibold leading-[0.82] tracking-tight text-white drop-shadow-2xl sm:-left-8 sm:-bottom-[4%] sm:text-6xl md:-left-9 md:-bottom-[3%]">
+          <h2 className="pointer-events-none absolute -bottom-[5%] -left-7 z-20 text-[3.2rem] font-bold leading-[0.82] tracking-tight text-white drop-shadow-md sm:-left-8 sm:-bottom-[5%] sm:text-[3.95rem] md:-left-9 md:-bottom-[4%]">
             <span className="block whitespace-nowrap">Über</span>
             <span className="ml-[0.22em] block whitespace-nowrap">mich</span>
           </h2>
