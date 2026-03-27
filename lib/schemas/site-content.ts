@@ -35,6 +35,8 @@ export const priceItemSchema = z.object({
   title: z.string(),
   price: z.string(),
   description: z.string(),
+  linkUrl: z.string().min(1).optional(),
+  linkLabel: z.string().min(1).optional(),
   sortOrder: z.number(),
   highlighted: z.boolean().optional(),
 });

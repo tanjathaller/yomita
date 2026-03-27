@@ -136,6 +136,8 @@ Kein Feld `externalUrl`.
 | `title`        | string   | z. B. „10er-Karte“ |
 | `price`        | string   | Anzeige, z. B. „120 €“ oder „ab 15 € / Stunde“ |
 | `description`  | string   | Erläuterung |
+| `linkUrl`      | string?  | optionaler externer Link (z. B. Anbieter-Seite) |
+| `linkLabel`    | string?  | optionales Link-Label; Fallback ist `linkUrl` |
 | `sortOrder`    | number   | Reihenfolge |
 | `highlighted`  | boolean? | optional hervorgehobene Karte in der UI |
 

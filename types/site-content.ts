@@ -46,6 +46,8 @@ export type PriceItem = {
   title: string;
   price: string;
   description: string;
+  linkUrl?: string;
+  linkLabel?: string;
   sortOrder: number;
   highlighted?: boolean;
 };

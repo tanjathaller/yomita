@@ -5,20 +5,43 @@ import { cn } from "@/lib/utils";
 
 export function PriceCard({ item }: { item: PriceItem }) {
   const highlighted = item.highlighted === true;
+  const hasPrice = item.price.trim().length > 0;
+  const hasDescription = item.description.trim().length > 0;
+  const hasLink = Boolean(item.linkUrl);
+  const isExternalLink = item.linkUrl?.startsWith("http");
 
   return (
     <Card
       className={cn(
-        "border-border/80 shadow-sm transition-shadow",
-        highlighted && "border-primary/40 ring-primary/20 shadow-md ring-2"
+        "border-primary/20 bg-primary/[0.07] shadow-sm transition-[box-shadow,background-color,border-color] hover:border-primary/30 hover:bg-primary/[0.1] hover:shadow-md",
+        highlighted && "border-primary/40 ring-primary/20 ring-2"
       )}
     >
       <CardHeader className="pb-2">
-        <CardTitle className="text-[#2F3B2A] text-xl">{item.title}</CardTitle>
-        <p className="text-primary text-2xl font-semibold tracking-tight">{item.price}</p>
+        <CardTitle className="text-foreground text-lg leading-snug sm:text-xl">
+          {item.title}
+        </CardTitle>
+        {hasLink ? (
+          <a
+            href={item.linkUrl}
+            target={isExternalLink ? "_blank" : undefined}
+            rel={isExternalLink ? "noreferrer noopener" : undefined}
+            className="text-primary mt-2 inline-flex w-fit rounded-full border border-primary/25 bg-primary/15 px-3 py-1 text-base font-semibold tracking-tight underline-offset-4 transition-colors hover:bg-primary/20 hover:underline"
+          >
+            {item.linkLabel || item.price || "Mehr erfahren"}
+          </a>
+        ) : hasPrice ? (
+          <p className="text-primary mt-2 inline-flex w-fit rounded-full border border-primary/25 bg-primary/15 px-3 py-1 text-base font-semibold tracking-tight">
+            {item.price}
+          </p>
+        ) : null}
       </CardHeader>
-      <CardContent>
-        <p className="text-muted-foreground text-sm leading-relaxed">{item.description}</p>
+      <CardContent className="pt-0">
+        {hasDescription ? (
+          <p className="text-foreground/75 whitespace-pre-line text-sm leading-relaxed">
+            {item.description}
+          </p>
+        ) : null}
       </CardContent>
     </Card>
   );

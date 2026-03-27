@@ -82,26 +82,42 @@
   ],
   "prices": [
     {
-      "id": "price-dropin",
-      "title": "Einzelstunde",
-      "price": "18 €",
-      "description": "Pro Termin, nach Verfügbarkeit. [Platzhalter]",
+      "id": "price-neuss-90",
+      "title": "Yogastunde · 90 Minuten · Neuss",
+      "price": "12 €",
+      "description": "Kleingruppe\noder 5er-Karte für 50 €",
       "sortOrder": 10
     },
     {
-      "id": "price-10",
-      "title": "10er-Karte",
-      "price": "160 €",
-      "description": "Flexibel einlösbar innerhalb der Laufzeit. [Platzhalter]",
-      "sortOrder": 20,
-      "highlighted": true
+      "id": "price-zons-60",
+      "title": "Yogastunde · 60 Minuten · Zons",
+      "price": "Probestunde auf Anfrage",
+      "description": "Bestehende Yogagruppe",
+      "linkUrl": "#kontakt",
+      "sortOrder": 20
     },
     {
-      "id": "price-month",
-      "title": "Monatsabo (Beispiel)",
-      "price": "59 € / Monat",
-      "description": "Regelmäßige Teilnahme zum Vorteilspreis. [Platzhalter]",
+      "id": "price-duesseldorf-90",
+      "title": "Yoga Sanskriti · 90 Minuten · Düsseldorf",
+      "price": "",
+      "description": "Kurs im Studio Yoga Sanskriti",
+      "linkUrl": "https://www.yogasanskriti.de",
+      "linkLabel": "Zum Studio",
       "sortOrder": 30
+    },
+    {
+      "id": "price-private-firmen",
+      "title": "Privatstunde / Firmenyoga",
+      "price": "99 €",
+      "description": "Individuell abgestimmt",
+      "sortOrder": 40
+    },
+    {
+      "id": "price-retreats",
+      "title": "Yoga-Retreats",
+      "price": "",
+      "description": "Weitere Informationen unter „Aktuelles“",
+      "sortOrder": 50
     }
   ],
   "about": {
