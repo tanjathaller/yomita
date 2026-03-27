@@ -41,6 +41,10 @@ export function AboutSection({ about }: AboutSectionProps) {
               aria-hidden
               className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-[var(--surface-muted-band)]"
             />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-[2px] rounded-b-3xl bg-[var(--surface-muted-band)]"
+            />
           </div>
           <h2 className="pointer-events-none absolute -bottom-[4%] -left-7 z-20 text-[3.2rem] font-bold leading-[0.82] tracking-tight text-[#2F3B2A] drop-shadow-md sm:-left-8 sm:-bottom-[4%] sm:text-[3.95rem] md:-left-9 md:-bottom-[3%]">
             <span className="block whitespace-nowrap">Über</span>
