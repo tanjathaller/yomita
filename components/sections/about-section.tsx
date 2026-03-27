@@ -43,7 +43,7 @@ export function AboutSection({ about }: AboutSectionProps) {
             <span className="ml-[0.22em] block whitespace-nowrap">mich</span>
           </h2>
         </div>
-        <div className="rounded-3xl border border-border/60 bg-background/80 p-5 shadow-sm backdrop-blur-sm sm:p-7">
+        <div className="rounded-3xl bg-background/80 p-5 shadow-sm backdrop-blur-sm sm:p-7">
           <MarkdownContent markdown={about.text} />
         </div>
       </div>
