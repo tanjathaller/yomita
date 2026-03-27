@@ -39,7 +39,7 @@ export function AktuellesSection({
     >
       <div className="max-w-2xl pl-4 sm:pl-6">
         <div className="relative inline-block pr-6 sm:pr-7">
-          <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#7A956E] uppercase sm:text-sm">
+          <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#5F7F53] uppercase sm:text-sm">
             Journal
           </p>
           <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight sm:text-6xl">
@@ -47,7 +47,7 @@ export function AktuellesSection({
           </h2>
           <span
             aria-hidden
-            className="mt-2 ml-3 block h-1 w-28 rounded-full bg-border/80"
+            className="mt-2 ml-3 block h-1 w-28 rounded-full bg-[#6F8B63]/70"
           />
         </div>
       </div>
