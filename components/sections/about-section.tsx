@@ -19,8 +19,8 @@ export function AboutSection({ about }: AboutSectionProps) {
     >
       <div className="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
         <div className="relative w-[92%] ml-auto lg:w-full">
-          <div className="relative aspect-[4/5] max-h-[26rem] rounded-3xl bg-[var(--surface-muted-band)] outline-none ring-0 sm:max-h-[28rem]">
-            <div className="absolute inset-[3px] overflow-hidden rounded-[calc(1.5rem-3px)]">
+          <div className="relative aspect-[4/5] max-h-[26rem] rounded-t-3xl rounded-b-none bg-[var(--surface-muted-band)] outline-none ring-0 sm:max-h-[28rem]">
+            <div className="absolute inset-[3px] overflow-hidden rounded-t-[calc(1.5rem-3px)] rounded-b-none">
               <Image
                 src={about.image.url}
                 alt={about.image.alt}
