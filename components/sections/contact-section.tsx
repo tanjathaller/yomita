@@ -2,25 +2,29 @@
 
 import type { ContactSection as ContactModel } from "@/types/site-content";
 import type { MouseEvent } from "react";
+import { useState } from "react";
 
 import { ContactForm } from "@/components/forms/contact-form";
 import { SectionShell } from "@/components/shared/section-shell";
+import { Button } from "@/components/ui/button";
 
 type ContactSectionProps = {
   contact: ContactModel;
 };
 
 export function ContactSection({ contact }: ContactSectionProps) {
+  const [showEmailConfirm, setShowEmailConfirm] = useState(false);
+
   function handleEmailClick(event: MouseEvent<HTMLAnchorElement>) {
     if (window.matchMedia("(max-width: 1023px)").matches) {
-      const proceed = window.confirm(
-        "Möchtest du zur E-Mail-App weitergeleitet werden?\n\nDu kannst alternativ auch einfach das Kontaktformular hier auf der Seite verwenden."
-      );
-
-      if (!proceed) {
-        event.preventDefault();
-      }
+      event.preventDefault();
+      setShowEmailConfirm(true);
     }
+  }
+
+  function proceedToEmailApp() {
+    window.location.href = `mailto:${contact.email}`;
+    setShowEmailConfirm(false);
   }
 
   return (
@@ -75,6 +79,29 @@ export function ContactSection({ contact }: ContactSectionProps) {
           </div>
         </dl>
       </div>
+      {showEmailConfirm ? (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-[#1F2A22]/45 p-4 backdrop-blur-[1px] sm:items-center sm:p-6">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="email-confirm-title"
+            className="w-full max-w-sm rounded-2xl border border-primary/25 bg-[var(--surface-muted-band)] p-5 text-foreground shadow-xl"
+          >
+            <h3 id="email-confirm-title" className="text-[#2F3B2A] text-lg font-semibold tracking-tight">
+              Zur E-Mail-App wechseln?
+            </h3>
+            <p className="text-foreground/85 mt-2 text-sm leading-relaxed">
+              Du kannst auch einfach das Kontaktformular auf dieser Seite verwenden.
+            </p>
+            <div className="mt-5 flex justify-end gap-2">
+              <Button variant="ghost" onClick={() => setShowEmailConfirm(false)}>
+                Abbrechen
+              </Button>
+              <Button onClick={proceedToEmailApp}>Weiter zur E-Mail</Button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </SectionShell>
   );
 }
