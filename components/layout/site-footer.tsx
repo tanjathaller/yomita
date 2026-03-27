@@ -48,16 +48,24 @@ export function SiteFooter({ settings }: SiteFooterProps) {
               </li>
             </ul>
           </nav>
-          <nav
-            className="text-muted-foreground flex flex-col gap-2 pb-8 text-sm font-semibold lg:flex-row lg:gap-8"
-            aria-label="Rechtliches"
-          >
-            <Link href="/impressum" className="hover:text-foreground w-fit transition-colors">
-              Impressum
-            </Link>
-            <Link href="/datenschutz" className="hover:text-foreground w-fit transition-colors">
-              Datenschutz
-            </Link>
+          <nav className="flex w-full flex-col items-center pb-8" aria-label="Rechtliches">
+            <p className="text-muted-foreground mb-2 text-xs font-semibold tracking-[0.12em] uppercase">
+              Rechtliches
+            </p>
+            <div className="flex flex-wrap justify-center gap-2">
+              <Link
+                href="/impressum"
+                className="text-foreground/80 hover:text-foreground hover:border-primary/35 hover:bg-card/70 inline-flex rounded-full border border-border/60 bg-card/40 px-3 py-1.5 text-xs font-semibold tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+              >
+                Impressum
+              </Link>
+              <Link
+                href="/datenschutz"
+                className="text-foreground/80 hover:text-foreground hover:border-primary/35 hover:bg-card/70 inline-flex rounded-full border border-border/60 bg-card/40 px-3 py-1.5 text-xs font-semibold tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+              >
+                Datenschutz
+              </Link>
+            </div>
           </nav>
 
           {/* YOMITA mittig; @-Zeile rechts darunter (gleiche Blockbreite wie Wordmark) */}
