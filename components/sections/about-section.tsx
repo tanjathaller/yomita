@@ -19,7 +19,7 @@ export function AboutSection({ about }: AboutSectionProps) {
     >
       <div className="grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
         <div className="relative w-[92%] ml-auto lg:w-full">
-          <div className="relative aspect-[4/5] max-h-[26rem] overflow-hidden rounded-3xl border border-border/60 bg-muted sm:max-h-[28rem]">
+          <div className="relative aspect-[4/5] max-h-[26rem] overflow-hidden rounded-3xl bg-muted sm:max-h-[28rem]">
             <Image
               src={about.image.url}
               alt={about.image.alt}
