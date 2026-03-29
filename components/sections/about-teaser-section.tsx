@@ -22,14 +22,14 @@ export function AboutTeaserSection({
   return (
     <section
       className={cn(
-        "relative scroll-mt-[calc(var(--site-header-clearance-mobile)+0.5rem)] sm:scroll-mt-[calc(var(--site-header-clearance)+0.5rem)]",
-        "bg-[var(--surface-muted-band)] pt-2 pb-16 sm:pt-3 sm:pb-20 md:pt-4 md:pb-24",
+        "relative scroll-mt-[calc(var(--site-header-clearance-mobile)+0.5rem)] lg:scroll-mt-[calc(var(--site-header-clearance)+0.5rem)]",
+        "bg-[var(--surface-muted-band)] pt-2 pb-16 lg:pt-4 lg:pb-24",
       )}
     >
-      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-6xl px-4 lg:px-8 xl:max-w-7xl xl:px-10">
         <div
           className={cn(
-            "relative isolate w-full overflow-hidden rounded-t-3xl rounded-b-2xl sm:rounded-b-3xl",
+            "relative isolate w-full overflow-hidden rounded-t-3xl rounded-b-2xl lg:rounded-b-3xl",
             "border-0",
             /* Langer Fade: Kartenfläche löst sich unten in dasselbe Band wie die Sektion auf */
             "bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_42%,color-mix(in_oklab,var(--card)_82%,var(--surface-muted-band)_18%)_62%,color-mix(in_oklab,var(--card)_28%,var(--surface-muted-band)_72%)_84%,var(--surface-muted-band)_100%)]",
@@ -38,7 +38,7 @@ export function AboutTeaserSection({
         >
           {/* Weicher Übergang unten inkl. seitlicher Kanten (unter dem Inhalt, analog Hero) */}
           <div
-            className="pointer-events-none absolute inset-x-[-1px] bottom-0 z-[1] h-28 border-0 ring-0 sm:h-32 md:h-36"
+            className="pointer-events-none absolute inset-x-[-1px] bottom-0 z-[1] h-28 border-0 ring-0 lg:h-36"
             style={{
               /* Erste Schicht = oben: Ecken weicher; darunter linearer Fade über die volle Breite */
               background: [
@@ -49,12 +49,12 @@ export function AboutTeaserSection({
             }}
             aria-hidden
           />
-          <div className="relative z-10 p-4 sm:p-5 lg:p-6">
-            <div className="mx-auto max-w-3xl text-center">
-              <h2 className="font-heading text-foreground text-balance text-xl font-semibold tracking-tight sm:text-2xl">
+          <div className="relative z-10 p-4 lg:p-6 xl:p-8">
+            <div className="mx-auto max-w-3xl text-center lg:max-w-4xl">
+              <h2 className="font-heading text-foreground text-balance text-xl font-semibold tracking-tight lg:text-3xl xl:text-4xl">
                 Yoga mit Ruhe und Praezision
               </h2>
-              <p className="text-foreground/90 mx-auto mt-2 max-w-2xl text-sm leading-relaxed sm:text-base">
+              <p className="text-foreground/90 mx-auto mt-2 max-w-2xl text-sm leading-relaxed lg:text-base">
                 Ausfuehrlicher findest du meinen Weg und meine Haltung im Abschnitt Ueber mich.
               </p>
             </div>

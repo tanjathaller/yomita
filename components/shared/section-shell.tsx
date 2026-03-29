@@ -30,15 +30,15 @@ export function SectionShell({
     <section
       id={id}
       className={cn(
-        "scroll-mt-[calc(var(--site-header-clearance-mobile)+0.5rem)] sm:scroll-mt-[calc(var(--site-header-clearance)+0.5rem)]",
-        waveInto ? "relative pt-16 pb-24 sm:pt-24 sm:pb-28 md:pb-32" : "py-16 sm:py-24",
+        "scroll-mt-[calc(var(--site-header-clearance-mobile)+0.5rem)] lg:scroll-mt-[calc(var(--site-header-clearance)+0.5rem)]",
+        waveInto ? "relative pt-16 pb-24 lg:pt-24 lg:pb-32" : "py-16 lg:py-24",
         variant === "muted"
           ? "bg-[var(--surface-muted-band)]"
           : "bg-background",
         className
       )}
     >
-      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 mx-auto max-w-6xl px-4 lg:px-8 xl:max-w-7xl">
         {children}
       </div>
       {waveInto ? (

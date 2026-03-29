@@ -7,6 +7,8 @@ type HashScrollLinkProps = {
   href: string;
   className?: string;
   children: React.ReactNode;
+  /** Nach In-Page-Sprung und `history.replaceState` (z. B. aktive Nav synchronisieren). */
+  onAfterSamePageHashNavigate?: () => void;
 };
 
 function prefersReducedMotion(): boolean {
@@ -20,7 +22,12 @@ function parseHref(href: string): { path: string; hash: string } {
   return { path: href.slice(0, i) || "/", hash: href.slice(i + 1) };
 }
 
-export function HashScrollLink({ href, className, children }: HashScrollLinkProps) {
+export function HashScrollLink({
+  href,
+  className,
+  children,
+  onAfterSamePageHashNavigate,
+}: HashScrollLinkProps) {
   const onClick = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement>) => {
       const { path, hash } = parseHref(href);
@@ -41,8 +48,9 @@ export function HashScrollLink({ href, className, children }: HashScrollLinkProp
       // Hash aktualisieren, damit aktive Nav-States etc. stimmen.
       const nextUrl = path ? `${path}#${hash}` : `#${hash}`;
       window.history.replaceState(null, "", nextUrl);
+      onAfterSamePageHashNavigate?.();
     },
-    [href],
+    [href, onAfterSamePageHashNavigate],
   );
 
   return (

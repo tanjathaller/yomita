@@ -54,7 +54,7 @@ Empfehlung **Next.js App Router** mit **Route Groups**:
 | Schicht | Beispiele |
 |---------|-----------|
 | **shadcn** | Button, Input, Form, Card, Dialog (Legal), Sheet (Mobile-Nav). |
-| **Layout** | `SiteHeader` (`fixed`, transparent; Nav-Pill `bg-[var(--surface-muted-band)]` wie Hero/`#kurse`), `main` mit `pt`: mobil `--site-header-clearance-mobile`, ab `sm` `--site-header-clearance`; `HeroSection` Karte auf `bg-[var(--surface-muted-band)]`; `SiteFooter` (Marke + Legal-Links). |
+| **Layout** | `SiteHeader` (`fixed`, transparent; Nav-Pill `bg-[var(--surface-muted-band)]` wie Hero/`#kurse`), `main` mit `pt`: mobil `--site-header-clearance-mobile`, ab `lg` (1024px) `--site-header-clearance` und Desktop-Nav; `HeroSection` Karte auf `bg-[var(--surface-muted-band)]`; `SiteFooter` (Marke + Legal-Links). |
 | **Sektionen** | `HeroSection`, `AboutTeaserSection` (Kurzportrait, Text vorerst fest im Code; an `about` angleichen), `AktuellesSection`, `CoursesSection`, `PricesSection`, `AboutSection`, `ContactSection` – Props = Teilbäume von `SiteContent`, außer Teaser. |
 | **Domain** | `CourseCard` (intern/extern per `isExternalCourse` / `isInternalCourse`), `PriceCard`. |
 | **Admin** | Formulare pro Bereich oder klar getrennte Unterseiten; gleiche Typen wie `SiteContent`. |

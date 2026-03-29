@@ -30,7 +30,7 @@ export function SiteHeader({ settings, hero, hasAktuellesItems }: SiteHeaderProp
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50 bg-transparent">
       <div className="mx-auto max-w-6xl px-4 py-1.5 sm:px-6 sm:py-2.5 lg:px-8">
         {/* Mobile: nur Marke + Burger im Pill */}
-        <div className={cn(pillShell, "justify-between gap-3 md:hidden")}>
+        <div className={cn(pillShell, "justify-between gap-3 lg:hidden")}>
           <HashScrollLink
             href="/#hero"
             className="min-w-0 truncate text-2xl font-semibold leading-none tracking-tight text-foreground"
@@ -48,7 +48,7 @@ export function SiteHeader({ settings, hero, hasAktuellesItems }: SiteHeaderProp
         </div>
 
         {/* Desktop: Logo, Marke, Navigation, CTA im Pill */}
-        <div className={cn(pillShell, "hidden min-h-[3rem] gap-4 md:flex md:items-center md:justify-between")}>
+        <div className={cn(pillShell, "hidden min-h-[3rem] gap-4 lg:flex lg:items-center lg:justify-between")}>
           <HashScrollLink
             href="/#hero"
             className="flex min-w-0 shrink-0 items-center gap-2.5 text-foreground"
@@ -63,7 +63,7 @@ export function SiteHeader({ settings, hero, hasAktuellesItems }: SiteHeaderProp
                 unoptimized
               />
             ) : null}
-            <span className="truncate text-base font-semibold tracking-tight sm:text-lg">
+            <span className="truncate text-base font-semibold tracking-tight lg:text-lg">
               {headerTitle}
             </span>
           </HashScrollLink>

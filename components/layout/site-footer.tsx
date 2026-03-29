@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { GeneralSettings } from "@/types/site-content";
 import { resolveNavigation } from "@/lib/resolve-navigation";
 import { wordmarkFontSizeCss } from "@/lib/wordmark-font-size";
+import { cn } from "@/lib/utils";
 
 type SiteFooterProps = {
   settings: GeneralSettings;
@@ -18,32 +19,37 @@ export function SiteFooter({ settings }: SiteFooterProps) {
     <footer className="w-full min-w-0 overflow-x-clip bg-[var(--surface-muted-footer)]">
       {/* Eine Spalte: Links und Wordmark starten an derselben linken Kante (Y bündig mit Impressum). */}
       <div
-        className="@container w-full min-w-0 pt-14 pb-6 pl-[max(0.25rem,env(safe-area-inset-left,0px))] pr-[max(0.25rem,env(safe-area-inset-right,0px))] sm:pt-16 sm:pb-8"
+        className="@container w-full min-w-0 pt-14 pb-6 pl-[max(0.25rem,env(safe-area-inset-left,0px))] pr-[max(0.25rem,env(safe-area-inset-right,0px))] lg:pt-16 lg:pb-8"
       >
-        <div className="mx-auto flex w-max max-w-full min-w-0 flex-col items-start">
+        <div className="mx-auto flex w-max max-w-full min-w-0 flex-col items-start lg:w-full lg:max-w-4xl">
           <nav className="flex w-full justify-center pb-6" aria-label="Footer Navigation">
-            <ul className="grid w-full max-w-[24rem] grid-cols-2 gap-3 sm:flex sm:max-w-none sm:flex-wrap sm:justify-center">
+            <ul className="grid w-full max-w-[24rem] grid-cols-2 gap-3 lg:flex lg:max-w-none lg:flex-wrap lg:justify-center lg:gap-4">
               {navItems.map((item, index) => {
                 const isLastOddItem = navItems.length % 2 === 1 && index === navItems.length - 1;
                 return (
                 <li
                   key={item.href}
-                  className={isLastOddItem ? "col-span-2 flex justify-center" : "w-full"}
+                  className={cn(
+                    isLastOddItem
+                      ? "col-span-2 flex justify-center lg:basis-full lg:justify-center"
+                      : "w-full lg:w-auto",
+                  )}
                 >
                   <Link
                     href={item.href}
-                    className="text-foreground/85 hover:text-foreground hover:border-primary/35 hover:bg-card/75 inline-flex w-full justify-center rounded-full border border-border/70 bg-card/55 px-4 py-2.5 text-base font-semibold tracking-wide uppercase transition-colors sm:w-auto"
+                    className="text-foreground/85 hover:text-foreground hover:border-primary/35 hover:bg-card/75 inline-flex w-full justify-center rounded-full border border-border/70 bg-card/55 px-4 py-2.5 text-base font-semibold tracking-wide uppercase transition-colors lg:w-auto"
                   >
                     {item.label}
                   </Link>
                 </li>
-              )})}
-              <li className="col-span-2 w-full sm:col-span-1 sm:w-auto">
+              );
+              })}
+              <li className="col-span-2 w-full lg:col-span-1 lg:w-auto">
                 <Link
                   href={settings.appUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="bg-primary text-primary-foreground hover:bg-primary/85 inline-flex w-full justify-center rounded-full px-4 py-2.5 text-base font-semibold tracking-wide uppercase transition-colors sm:w-auto"
+                  className="bg-primary text-primary-foreground hover:bg-primary/85 inline-flex w-full justify-center rounded-full px-4 py-2.5 text-base font-semibold tracking-wide uppercase transition-colors lg:w-auto"
                 >
                   Zur App
                 </Link>
@@ -70,15 +76,15 @@ export function SiteFooter({ settings }: SiteFooterProps) {
             </div>
           </nav>
 
-          {/* YOMITA mittig; @-Zeile rechts darunter (gleiche Blockbreite wie Wordmark) */}
-          <div className="mx-auto flex w-max min-w-0 max-w-full flex-col items-stretch">
+          {/* Mobil: @-Zeile rechts bündig zum Wordmark-Block; Desktop: beides zentriert. */}
+          <div className="mx-auto flex w-max min-w-0 max-w-full flex-col items-stretch lg:w-full lg:max-w-none lg:items-center">
             <p
               className="font-heading text-footer-wordmark text-center leading-[0.82] font-black tracking-[0.065em] uppercase select-none"
               style={wordmarkStyle}
             >
               {name}
             </p>
-            <p className="text-muted-foreground mt-2 text-right text-xs tabular-nums">
+            <p className="text-muted-foreground mt-2 text-right text-xs tabular-nums lg:text-center">
               @Tanja Thaller {year}
             </p>
           </div>

@@ -145,7 +145,7 @@
   }
 }
 
-@media (min-width: 640px) {
+@media (min-width: 1024px) {
   html {
     scroll-padding-top: var(--site-header-clearance);
   }

@@ -41,7 +41,7 @@ export default async function PublicLayout({
       />
       <main
         id="main-content"
-        className="flex-1 bg-[var(--surface-muted-band)] pt-[var(--site-header-clearance-mobile)] sm:pt-[var(--site-header-clearance)]"
+        className="flex-1 bg-[var(--surface-muted-band)] pt-[var(--site-header-clearance-mobile)] lg:pt-[var(--site-header-clearance)]"
       >
         {children}
       </main>

@@ -16,7 +16,7 @@ export function PriceCard({ item }: { item: PriceItem }) {
       )}
     >
       <CardHeader className="pb-2">
-        <CardTitle className="text-foreground text-lg leading-snug sm:text-xl">
+        <CardTitle className="text-foreground text-lg leading-snug lg:text-xl">
           {item.title}
         </CardTitle>
         {hasLink ? (

@@ -33,16 +33,16 @@ export function AktuellesSection({
       variant={afterAboutTeaser ? "default" : "muted"}
       className={cn(
         afterAboutTeaser
-          ? "pt-7 pb-24 sm:pt-9 sm:pb-30 md:pt-10 md:pb-34 bg-[linear-gradient(to_bottom,var(--surface-muted-band)_0%,color-mix(in_oklab,var(--surface-muted-band)_62%,var(--background)_38%)_14%,var(--background)_30%,var(--background)_72%,color-mix(in_oklab,var(--background)_74%,var(--surface-muted-band)_26%)_86%,color-mix(in_oklab,var(--background)_44%,var(--surface-muted-band)_56%)_95%,var(--surface-muted-band)_100%)]"
-          : "pt-6 sm:pt-7 md:pt-8",
+          ? "pt-7 pb-24 lg:pt-10 lg:pb-34 bg-[linear-gradient(to_bottom,var(--surface-muted-band)_0%,color-mix(in_oklab,var(--surface-muted-band)_62%,var(--background)_38%)_14%,var(--background)_30%,var(--background)_72%,color-mix(in_oklab,var(--background)_74%,var(--surface-muted-band)_26%)_86%,color-mix(in_oklab,var(--background)_44%,var(--surface-muted-band)_56%)_95%,var(--surface-muted-band)_100%)]"
+          : "pt-6 lg:pt-8",
       )}
     >
-      <div className="max-w-2xl pl-4 sm:pl-6">
-        <div className="relative inline-block pr-6 sm:pr-7">
-          <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#5F7F53] uppercase sm:text-sm">
+      <div className="max-w-2xl pl-4 lg:pl-6">
+        <div className="relative inline-block pr-6 lg:pr-7">
+          <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#5F7F53] uppercase lg:text-sm">
             Journal
           </p>
-          <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight sm:text-6xl">
+          <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight lg:text-6xl">
             {heading}
           </h2>
           <span
@@ -52,17 +52,17 @@ export function AktuellesSection({
         </div>
       </div>
       {intro?.trim() ? (
-        <div className="mt-4 max-w-2xl pl-4 sm:mt-5 sm:pl-6">
+        <div className="mt-4 max-w-2xl pl-4 lg:mt-5 lg:pl-6">
           <MarkdownContent
             markdown={intro}
             className={cn(
               "max-w-prose text-left",
-              "[&_p]:text-sm [&_p]:leading-relaxed [&_p]:text-muted-foreground sm:[&_p]:text-base",
+              "[&_p]:text-sm [&_p]:leading-relaxed [&_p]:text-muted-foreground lg:[&_p]:text-base",
             )}
           />
         </div>
       ) : null}
-      <div className="mt-10 grid gap-6 md:gap-8">
+      <div className="mt-10 grid gap-6 lg:mx-auto lg:max-w-6xl lg:grid-cols-2 lg:gap-8 xl:max-w-7xl">
         {items.map((item, index) => {
           const badgeLabel = item.title?.toLowerCase().includes("workshop")
             ? "Workshop"
@@ -82,7 +82,7 @@ export function AktuellesSection({
                 alt={item.image.alt}
                 fill
                 className="object-cover object-[center_24%] scale-[1.01]"
-                sizes="(min-width: 1024px) 58rem, (min-width: 640px) 90vw, 100vw"
+                sizes="(min-width: 1024px) 45vw, (min-width: 640px) 90vw, 100vw"
                 priority={index === 0}
                 unoptimized={process.env.NODE_ENV === "development"}
               />
@@ -100,13 +100,13 @@ export function AktuellesSection({
                 </span>
               </div>
             </div>
-            <div className="relative space-y-4 p-7 sm:p-10 before:pointer-events-none before:absolute before:inset-x-0 before:-top-14 before:h-14 before:bg-gradient-to-b before:from-card/0 before:to-card/90">
+            <div className="relative space-y-4 p-7 lg:p-12 before:pointer-events-none before:absolute before:inset-x-0 before:-top-14 before:h-14 before:bg-gradient-to-b before:from-card/0 before:to-card/90">
               {item.title?.trim() ? (
-                <h3 className="text-[#2F3B2A] text-3xl font-semibold tracking-tight sm:text-4xl">
+                <h3 className="text-[#2F3B2A] text-3xl font-semibold tracking-tight lg:text-4xl xl:text-[2.5rem]">
                   {item.title.trim()}
                 </h3>
               ) : null}
-              <div className="text-muted-foreground text-base leading-relaxed sm:text-lg">
+              <div className="text-muted-foreground text-base leading-relaxed lg:text-lg">
                 <MarkdownContent markdown={item.text} />
               </div>
               <Link

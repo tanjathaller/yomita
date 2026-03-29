@@ -11,14 +11,14 @@ export function PricesSection({ prices }: PricesSectionProps) {
   return (
     <SectionShell
       id="preise"
-      className="pb-24 sm:pb-30 md:pb-34 bg-[linear-gradient(to_bottom,var(--background)_0%,var(--background)_70%,color-mix(in_oklab,var(--background)_78%,var(--surface-muted-band)_22%)_84%,color-mix(in_oklab,var(--background)_48%,var(--surface-muted-band)_52%)_94%,var(--surface-muted-band)_100%)]"
+      className="pb-24 lg:pb-34 bg-[linear-gradient(to_bottom,var(--background)_0%,var(--background)_70%,color-mix(in_oklab,var(--background)_78%,var(--surface-muted-band)_22%)_84%,color-mix(in_oklab,var(--background)_48%,var(--surface-muted-band)_52%)_94%,var(--surface-muted-band)_100%)]"
     >
-      <div className="max-w-2xl pl-4 sm:pl-6">
-        <div className="relative inline-block pr-6 sm:pr-7">
-          <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#7A956E] uppercase sm:text-sm">
+      <div className="max-w-2xl pl-4 lg:pl-6">
+        <div className="relative inline-block pr-6 lg:pr-7">
+          <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#7A956E] uppercase lg:text-sm">
             Teilnahme
           </p>
-          <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight sm:text-6xl">
+          <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight lg:text-6xl">
             Preise
           </h2>
           <span
@@ -27,11 +27,11 @@ export function PricesSection({ prices }: PricesSectionProps) {
           />
         </div>
       </div>
-      <p className="text-muted-foreground mt-4 max-w-2xl text-sm leading-relaxed sm:text-base">
+      <p className="text-muted-foreground mt-4 max-w-2xl text-sm leading-relaxed lg:text-base">
         Zahlung und Abwicklung erfolgen außerhalb dieser Website (z. B. vor Ort oder per Rechnung)
         – hier nur die Übersicht.
       </p>
-      <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 sm:gap-6">
+      <div className="mt-10 grid gap-5 lg:grid-cols-3 lg:gap-6 xl:gap-8">
         {prices.map((p) => (
           <PriceCard key={p.id} item={p} />
         ))}

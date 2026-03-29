@@ -30,27 +30,27 @@ export function ContactSection({ contact }: ContactSectionProps) {
   return (
     <SectionShell
       id="kontakt"
-      className="pb-24 sm:pb-30 md:pb-34 bg-[linear-gradient(to_bottom,var(--background)_0%,var(--background)_58%,color-mix(in_oklab,var(--background)_84%,var(--surface-muted-footer)_16%)_74%,color-mix(in_oklab,var(--background)_60%,var(--surface-muted-footer)_40%)_88%,color-mix(in_oklab,var(--background)_32%,var(--surface-muted-footer)_68%)_97%,var(--surface-muted-footer)_100%)]"
+      className="pb-24 lg:pb-34 bg-[linear-gradient(to_bottom,var(--background)_0%,var(--background)_58%,color-mix(in_oklab,var(--background)_84%,var(--surface-muted-footer)_16%)_74%,color-mix(in_oklab,var(--background)_60%,var(--surface-muted-footer)_40%)_88%,color-mix(in_oklab,var(--background)_32%,var(--surface-muted-footer)_68%)_97%,var(--surface-muted-footer)_100%)]"
     >
-      <div className="grid gap-10 lg:grid-cols-2 lg:gap-14">
+      <div className="grid gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-20">
         <div className="space-y-6 lg:col-start-1 lg:row-start-1">
-          <div className="max-w-2xl pl-4 sm:pl-6">
-            <div className="relative inline-block pr-6 sm:pr-7">
-              <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight sm:text-6xl">
+          <div className="max-w-2xl pl-4 lg:pl-6">
+            <div className="relative inline-block pr-6 lg:pr-7">
+              <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight lg:text-6xl">
                 {contact.formHeadline}
               </h2>
               <span aria-hidden className="mt-2 ml-3 block h-1 w-28 rounded-full bg-[#6F8B63]" />
             </div>
           </div>
-          <p className="text-muted-foreground max-w-prose text-sm leading-relaxed sm:text-base">
+          <p className="text-muted-foreground max-w-prose text-sm leading-relaxed lg:text-base">
             Für Fragen oder Anfragen kannst du dich gern über das Formular bei mir melden. Ich
             antworte dir zeitnah.
           </p>
         </div>
-        <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
+        <div className="lg:sticky lg:top-[calc(var(--site-header-clearance)+1rem)] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start">
           <ContactForm successMessage={contact.formSuccessMessage} />
         </div>
-        <dl className="grid gap-3 sm:grid-cols-2 lg:col-start-1 lg:row-start-2">
+        <dl className="grid gap-3 lg:col-start-1 lg:row-start-2 lg:grid-cols-2">
           <div>
             <dt className="sr-only">E-Mail</dt>
             <dd>
@@ -84,7 +84,7 @@ export function ContactSection({ contact }: ContactSectionProps) {
       </div>
       {showEmailConfirm ? (
         <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-[#1F2A22]/45 p-4 backdrop-blur-[1px] sm:items-center sm:p-6"
+          className="fixed inset-0 z-50 flex items-end justify-center bg-[#1F2A22]/45 p-4 backdrop-blur-[1px] lg:items-center lg:p-6"
           onClick={() => setShowEmailConfirm(false)}
         >
           <div
