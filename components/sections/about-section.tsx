@@ -49,7 +49,10 @@ export function AboutSection({ about }: AboutSectionProps) {
           </h2>
         </div>
         <div className="p-5 sm:p-7">
-          <MarkdownContent markdown={about.text} />
+          <MarkdownContent
+            markdown={about.text}
+            className="[&_strong]:font-bold"
+          />
         </div>
       </div>
     </SectionShell>
