@@ -57,6 +57,14 @@ function parseNumber(value: string): number {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function deriveAltFromFilename(filename: string): string {
+  return filename
+    .replace(/\.[^/.]+$/, "")
+    .replace(/[-_]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function scrollToCard(selector: string): void {
   requestAnimationFrame(() => {
     const element = document.querySelector<HTMLElement>(selector);
@@ -141,7 +149,16 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
         aktuell: {
           ...prev.aktuell,
           items: prev.aktuell.items.map((current) =>
-            current.id === itemId ? { ...current, image: { ...current.image, url: data.url! } } : current,
+            current.id === itemId
+              ? {
+                  ...current,
+                  image: {
+                    ...current.image,
+                    url: data.url!,
+                    alt: current.image.alt.trim() ? current.image.alt : deriveAltFromFilename(file.name),
+                  },
+                }
+              : current,
           ),
         },
       }));

@@ -95,8 +95,14 @@ export async function saveSiteContentAction(
   const parsedContent = siteContentSchema.safeParse(parsedJson);
   if (!parsedContent.success) {
     const firstIssue = parsedContent.error.issues[0];
+    const issuePath = firstIssue?.path.join(".") ?? "unknown";
+    if (issuePath.includes("image.alt")) {
+      return {
+        error: "Bitte einen Bild-Alt-Text eintragen (Pflichtfeld).",
+      };
+    }
     return {
-      error: `Validierung fehlgeschlagen (${firstIssue?.path.join(".") ?? "unknown"}).`,
+      error: `Validierung fehlgeschlagen (${issuePath}): ${firstIssue?.message ?? "ungueltiger Wert"}.`,
     };
   }
 
