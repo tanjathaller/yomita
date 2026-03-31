@@ -1,8 +1,8 @@
+import { get } from "@vercel/blob";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-  const token = process.env.BLOB_READ_WRITE_TOKEN;
-  if (!token) {
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
     return NextResponse.json(
       { error: "BLOB_READ_WRITE_TOKEN fehlt. Private Bildauslieferung ist nicht konfiguriert." },
       { status: 500 },
@@ -26,22 +26,31 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Nur private Blob-URLs sind erlaubt." }, { status: 400 });
   }
 
-  const upstream = await fetch(parsedUrl.toString(), {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    cache: "no-store",
-  });
+  try {
+    const blob = (await get(parsedUrl.toString(), { access: "private" })) as
+      | {
+          stream?: ReadableStream<Uint8Array> | (() => ReadableStream<Uint8Array>);
+          contentType?: string;
+        }
+      | null;
+    if (!blob) {
+      return NextResponse.json({ error: "Bild nicht gefunden." }, { status: 404 });
+    }
 
-  if (!upstream.ok) {
-    return NextResponse.json({ error: `Bild konnte nicht geladen werden (HTTP ${upstream.status}).` }, { status: 502 });
+    const stream = typeof blob.stream === "function" ? blob.stream() : blob.stream;
+    if (!stream) {
+      return NextResponse.json({ error: "Blob-Stream ist leer." }, { status: 502 });
+    }
+
+    return new NextResponse(stream, {
+      status: 200,
+      headers: {
+        "Content-Type": blob.contentType || "image/webp",
+        "Cache-Control": "public, max-age=60, s-maxage=300, stale-while-revalidate=600",
+      },
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Private Bildauslieferung fehlgeschlagen.";
+    return NextResponse.json({ error: message }, { status: 502 });
   }
-
-  return new NextResponse(upstream.body, {
-    status: 200,
-    headers: {
-      "Content-Type": upstream.headers.get("content-type") ?? "image/webp",
-      "Cache-Control": "public, max-age=60, s-maxage=300, stale-while-revalidate=600",
-    },
-  });
 }
