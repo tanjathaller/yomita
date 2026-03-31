@@ -5,6 +5,7 @@ import type { AktuellesSection as AktuellesModel } from "@/types/site-content";
 
 import { MarkdownContent } from "@/components/shared/markdown-content";
 import { SectionShell } from "@/components/shared/section-shell";
+import { resolveImageUrl } from "@/lib/resolve-image-url";
 import { cn } from "@/lib/utils";
 
 type AktuellesSectionProps = {
@@ -78,7 +79,7 @@ export function AktuellesSection({
           >
             <div className="relative aspect-[4/3] overflow-hidden bg-muted">
               <Image
-                src={item.image.url}
+                src={resolveImageUrl(item.image.url)}
                 alt={item.image.alt}
                 fill
                 className="object-cover object-[center_24%] scale-[1.01]"

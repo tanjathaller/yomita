@@ -4,6 +4,7 @@ import type { AboutSection as AboutModel } from "@/types/site-content";
 
 import { MarkdownContent } from "@/components/shared/markdown-content";
 import { SectionShell } from "@/components/shared/section-shell";
+import { resolveImageUrl } from "@/lib/resolve-image-url";
 
 type AboutSectionProps = {
   about: AboutModel;
@@ -21,7 +22,7 @@ export function AboutSection({ about }: AboutSectionProps) {
           <div className="relative aspect-[4/5] max-h-[26rem] rounded-t-3xl rounded-b-none bg-[var(--surface-muted-band)] outline-none ring-0 lg:max-h-[30rem] xl:max-h-[32rem]">
             <div className="absolute inset-[3px] overflow-hidden rounded-t-[calc(1.5rem-3px)] rounded-b-none">
               <Image
-                src={about.image.url}
+                src={resolveImageUrl(about.image.url)}
                 alt={about.image.alt}
                 fill
                 className="object-cover scale-[1.015]"
