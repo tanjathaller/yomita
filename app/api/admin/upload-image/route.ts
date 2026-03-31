@@ -14,6 +14,25 @@ function sanitizeFilename(filename: string): string {
   return filename.toLowerCase().replace(/[^a-z0-9.\-_]+/g, "-");
 }
 
+type UploadedBlobResult = {
+  url: string;
+  downloadUrl?: string;
+};
+
+async function uploadImageToBlob(key: string, file: File): Promise<UploadedBlobResult> {
+  try {
+    return (await put(key, file, { access: "public" })) as UploadedBlobResult;
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    if (!message.toLowerCase().includes("private store")) {
+      throw error;
+    }
+
+    // Fallback for projects where the Blob store is configured as private.
+    return (await put(key, file, { access: "private" })) as UploadedBlobResult;
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const cookieStore = await cookies();
@@ -45,9 +64,10 @@ export async function POST(request: Request) {
 
     const safeName = sanitizeFilename(file.name || "image.webp");
     const key = `aktuelles/${new Date().toISOString().slice(0, 10)}/${randomUUID()}-${safeName}`;
-    const uploaded = await put(key, file, { access: "public" });
+    const uploaded = await uploadImageToBlob(key, file);
+    const imageUrl = uploaded.downloadUrl ?? uploaded.url;
 
-    return NextResponse.json({ url: uploaded.url });
+    return NextResponse.json({ url: imageUrl });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unbekannter Upload-Fehler.";
     return NextResponse.json({ error: message }, { status: 500 });
