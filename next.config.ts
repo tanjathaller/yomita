@@ -8,16 +8,12 @@ const nextConfig: NextConfig = {
         hostname: "images.unsplash.com",
         pathname: "/**",
       },
-    ],
-  },
-  async redirects() {
-    return [
       {
-        source: "/Admin",
-        destination: "/admin",
-        permanent: true,
+        protocol: "https",
+        hostname: "**.public.blob.vercel-storage.com",
+        pathname: "/**",
       },
-    ];
+    ],
   },
 };
 

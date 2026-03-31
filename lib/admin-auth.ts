@@ -74,6 +74,13 @@ function verifySessionToken(token: string): boolean {
   }
 }
 
+export function isAdminSessionTokenValid(token: string | undefined): boolean {
+  if (!token) {
+    return false;
+  }
+  return verifySessionToken(token);
+}
+
 export async function verifyOwnerPassword(password: string): Promise<boolean> {
   const hash = getPasswordHash();
   if (!hash) {
@@ -104,10 +111,7 @@ export async function clearAdminSession(): Promise<void> {
 export async function isAdminAuthenticated(): Promise<boolean> {
   const cookieStore = await cookies();
   const token = cookieStore.get(ADMIN_SESSION_COOKIE_NAME)?.value;
-  if (!token) {
-    return false;
-  }
-  return verifySessionToken(token);
+  return isAdminSessionTokenValid(token);
 }
 
 export async function requireAdminAuth(): Promise<void> {

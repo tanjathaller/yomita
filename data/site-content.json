@@ -1,7 +1,7 @@
 {
   "hero": {
-    "title": "Namaste und herzlich willkommen!",
-    "claim": "Ich bin Tanja Thaller, freiberufliche Yogalehrerin im Raum Neuss/Duesseldorf und freue mich sehr, dass Du mich gefunden hast.",
+    "title": "Namaste und herzlich willkommen! TEST TEST",
+    "claim": "Ich bin Tanja Thaller, freiberufliche Yogalehrerin im Raum Neuss/Düsseldorf und freue mich sehr, dass Du mich gefunden hast.",
     "primaryCtaLabel": "Mehr über mich",
     "primaryCtaUrl": "#ueber-mich"
   },
@@ -34,7 +34,6 @@
   "courses": [
     {
       "id": "course-yoga-flow-mo",
-      "type": "internal",
       "title": "Yoga Flow",
       "description": "Für Anfänger und Fortgeschrittene geeignet.",
       "day": "Montag",
@@ -42,22 +41,22 @@
       "location": "Zons",
       "bookingStatus": "available",
       "sortOrder": 10,
+      "type": "internal",
       "scheduleNote": "wöchentlich"
     },
     {
       "id": "course-vinyasa-di",
-      "type": "internal",
       "title": "Vinyasa Yoga",
       "description": "Hier solltest du bereits etwas Yogaerfahrung mitbringen.",
       "day": "Dienstag",
       "time": "18:00-19:30 Uhr",
       "location": "Neuss",
       "bookingStatus": "available",
-      "sortOrder": 20
+      "sortOrder": 20,
+      "type": "internal"
     },
     {
       "id": "course-yoga-flow-mi",
-      "type": "internal",
       "title": "Yoga Flow",
       "description": "Für Anfänger und Fortgeschrittene geeignet.",
       "day": "Mittwoch",
@@ -65,11 +64,11 @@
       "location": "Neuss",
       "bookingStatus": "full",
       "sortOrder": 30,
+      "type": "internal",
       "scheduleNote": "Zur Zeit keine Neuaufnahmen."
     },
     {
       "id": "course-yin-yang-so",
-      "type": "internal",
       "title": "Yin & Yang Yoga",
       "description": "Für Anfänger und Fortgeschrittene geeignet.",
       "day": "Sonntag",
@@ -77,6 +76,7 @@
       "location": "Yoga Sanskriti in Düsseldorf",
       "bookingStatus": "available",
       "sortOrder": 40,
+      "type": "internal",
       "scheduleNote": "Anmeldung direkt über www.yogasanskriti.de."
     }
   ],

@@ -1,0 +1,50 @@
+import { randomUUID } from "node:crypto";
+
+import { put } from "@vercel/blob";
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
+
+import { ADMIN_SESSION_COOKIE_NAME } from "@/lib/admin-auth-constants";
+import { isAdminSessionTokenValid } from "@/lib/admin-auth";
+
+const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
+const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+
+function sanitizeFilename(filename: string): string {
+  return filename.toLowerCase().replace(/[^a-z0-9.\-_]+/g, "-");
+}
+
+export async function POST(request: Request) {
+  const cookieStore = await cookies();
+  const sessionToken = cookieStore.get(ADMIN_SESSION_COOKIE_NAME)?.value;
+
+  if (!isAdminSessionTokenValid(sessionToken)) {
+    return NextResponse.json({ error: "Nicht autorisiert." }, { status: 401 });
+  }
+
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    return NextResponse.json(
+      { error: "BLOB_READ_WRITE_TOKEN fehlt. Upload ist nicht konfiguriert." },
+      { status: 500 },
+    );
+  }
+
+  const formData = await request.formData();
+  const file = formData.get("file");
+
+  if (!(file instanceof File)) {
+    return NextResponse.json({ error: "Keine Datei übergeben." }, { status: 400 });
+  }
+  if (!ALLOWED_TYPES.has(file.type)) {
+    return NextResponse.json({ error: "Nur JPG, PNG oder WEBP sind erlaubt." }, { status: 400 });
+  }
+  if (file.size > MAX_IMAGE_SIZE_BYTES) {
+    return NextResponse.json({ error: "Datei ist zu groß (max. 5 MB)." }, { status: 400 });
+  }
+
+  const safeName = sanitizeFilename(file.name || "image.webp");
+  const key = `aktuelles/${new Date().toISOString().slice(0, 10)}/${randomUUID()}-${safeName}`;
+  const uploaded = await put(key, file, { access: "public" });
+
+  return NextResponse.json({ url: uploaded.url });
+}

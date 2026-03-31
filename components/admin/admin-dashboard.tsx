@@ -57,6 +57,19 @@ function parseNumber(value: string): number {
   return Number.isFinite(parsed) ? parsed : 0;
 }
 
+function scrollToCard(selector: string): void {
+  requestAnimationFrame(() => {
+    const element = document.querySelector<HTMLElement>(selector);
+    if (!element) {
+      return;
+    }
+
+    element.scrollIntoView({ behavior: "smooth", block: "start" });
+    const firstField = element.querySelector<HTMLElement>("input, textarea, select, button");
+    firstField?.focus();
+  });
+}
+
 function MarkdownEditor({
   label,
   value,
@@ -88,10 +101,47 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
   const [draft, setDraft] = useState<SiteContent>(initialContent);
   const [activeSection, setActiveSection] = useState<SectionKey>("hero");
   const [saveState, saveFormAction, savePending] = useActionState(saveAction, {});
+  const [uploadingAktuellById, setUploadingAktuellById] = useState<Record<string, boolean>>({});
+  const [uploadErrorAktuellById, setUploadErrorAktuellById] = useState<Record<string, string>>({});
 
   const serializedContent = useMemo(() => JSON.stringify(draft), [draft]);
 
   const navigation = draft.settings.navigation ?? [];
+
+  const uploadAktuellImage = async (itemId: string, file: File) => {
+    setUploadingAktuellById((prev) => ({ ...prev, [itemId]: true }));
+    setUploadErrorAktuellById((prev) => ({ ...prev, [itemId]: "" }));
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("/api/admin/upload-image", {
+        method: "POST",
+        body: formData,
+      });
+      const data = (await response.json()) as { error?: string; url?: string };
+
+      if (!response.ok || !data.url) {
+        throw new Error(data.error ?? "Upload fehlgeschlagen.");
+      }
+
+      setDraft((prev) => ({
+        ...prev,
+        aktuell: {
+          ...prev.aktuell,
+          items: prev.aktuell.items.map((current) =>
+            current.id === itemId ? { ...current, image: { ...current.image, url: data.url! } } : current,
+          ),
+        },
+      }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Upload fehlgeschlagen.";
+      setUploadErrorAktuellById((prev) => ({ ...prev, [itemId]: message }));
+    } finally {
+      setUploadingAktuellById((prev) => ({ ...prev, [itemId]: false }));
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -105,7 +155,9 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
           </div>
           <div className="flex gap-2">
             <form action={logoutAction}>
-              <Button variant="outline">Abmelden</Button>
+              <Button type="submit" variant="outline">
+                Abmelden
+              </Button>
             </form>
           </div>
         </CardHeader>
@@ -208,7 +260,8 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
                       type="button"
                       size="sm"
                       disabled={draft.aktuell.items.length >= MAX_ITEMS_PER_LIST}
-                      onClick={() =>
+                      onClick={() => {
+                        const newItemId = buildId("aktuell");
                         setDraft((prev) => ({
                           ...prev,
                           aktuell: {
@@ -216,7 +269,7 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
                             items: [
                               ...prev.aktuell.items,
                               {
-                                id: buildId("aktuell"),
+                                id: newItemId,
                                 title: "Neues Thema",
                                 text: "",
                                 image: { url: "", alt: "" },
@@ -224,23 +277,65 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
                               },
                             ],
                           },
-                        }))
-                      }
+                        }));
+                        scrollToCard(`[data-aktuell-card-id="${newItemId}"]`);
+                      }}
                     >
                       Card hinzufügen
                     </Button>
                   </div>
                   {draft.aktuell.items.map((item, index) => (
-                    <Card key={item.id} size="sm">
-                      <CardHeader>
-                        <CardTitle className="text-sm">Aktuelles Card {index + 1}</CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-3">
-                        <div className="grid gap-3 md:grid-cols-2">
+                    <div key={item.id} data-aktuell-card-id={item.id}>
+                      <Card size="sm">
+                        <CardHeader>
+                          <CardTitle className="text-sm">Aktuelles Card {index + 1}</CardTitle>
+                        </CardHeader>
+                        <CardContent className="space-y-3">
+                          <div className="grid gap-3 md:grid-cols-2">
+                            <div className="space-y-2">
+                              <Label>ID</Label>
+                              <Input
+                                value={item.id}
+                                onChange={(event) =>
+                                  setDraft((prev) => ({
+                                    ...prev,
+                                    aktuell: {
+                                      ...prev.aktuell,
+                                      items: prev.aktuell.items.map((current) =>
+                                        current.id === item.id
+                                          ? { ...current, id: event.target.value }
+                                          : current,
+                                      ),
+                                    },
+                                  }))
+                                }
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Sortierung</Label>
+                              <Input
+                                type="number"
+                                value={item.sortOrder}
+                                onChange={(event) =>
+                                  setDraft((prev) => ({
+                                    ...prev,
+                                    aktuell: {
+                                      ...prev.aktuell,
+                                      items: prev.aktuell.items.map((current) =>
+                                        current.id === item.id
+                                          ? { ...current, sortOrder: parseNumber(event.target.value) }
+                                          : current,
+                                      ),
+                                    },
+                                  }))
+                                }
+                              />
+                            </div>
+                          </div>
                           <div className="space-y-2">
-                            <Label>ID</Label>
+                            <Label>Titel</Label>
                             <Input
-                              value={item.id}
+                              value={item.title ?? ""}
                               onChange={(event) =>
                                 setDraft((prev) => ({
                                   ...prev,
@@ -248,7 +343,7 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
                                     ...prev.aktuell,
                                     items: prev.aktuell.items.map((current) =>
                                       current.id === item.id
-                                        ? { ...current, id: event.target.value }
+                                        ? { ...current, title: event.target.value || undefined }
                                         : current,
                                     ),
                                   },
@@ -256,121 +351,107 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
                               }
                             />
                           </div>
-                          <div className="space-y-2">
-                            <Label>Sortierung</Label>
-                            <Input
-                              type="number"
-                              value={item.sortOrder}
-                              onChange={(event) =>
-                                setDraft((prev) => ({
-                                  ...prev,
-                                  aktuell: {
-                                    ...prev.aktuell,
-                                    items: prev.aktuell.items.map((current) =>
-                                      current.id === item.id
-                                        ? { ...current, sortOrder: parseNumber(event.target.value) }
-                                        : current,
-                                    ),
-                                  },
-                                }))
-                              }
-                            />
-                          </div>
-                        </div>
-                        <div className="space-y-2">
-                          <Label>Titel</Label>
-                          <Input
-                            value={item.title ?? ""}
-                            onChange={(event) =>
+                          <MarkdownEditor
+                            label="Text (Markdown)"
+                            value={item.text}
+                            rows={4}
+                            onChange={(value) =>
                               setDraft((prev) => ({
                                 ...prev,
                                 aktuell: {
                                   ...prev.aktuell,
                                   items: prev.aktuell.items.map((current) =>
-                                    current.id === item.id
-                                      ? { ...current, title: event.target.value || undefined }
-                                      : current,
+                                    current.id === item.id ? { ...current, text: value } : current,
                                   ),
                                 },
                               }))
                             }
                           />
-                        </div>
-                        <MarkdownEditor
-                          label="Text (Markdown)"
-                          value={item.text}
-                          rows={4}
-                          onChange={(value) =>
-                            setDraft((prev) => ({
-                              ...prev,
-                              aktuell: {
-                                ...prev.aktuell,
-                                items: prev.aktuell.items.map((current) =>
-                                  current.id === item.id ? { ...current, text: value } : current,
-                                ),
-                              },
-                            }))
-                          }
-                        />
-                        <div className="grid gap-3 md:grid-cols-2">
-                          <div className="space-y-2">
-                            <Label>Bild URL</Label>
-                            <Input
-                              value={item.image.url}
-                              onChange={(event) =>
+                          <div className="grid gap-3 md:grid-cols-2">
+                            <div className="space-y-2">
+                              <Label>Bild URL</Label>
+                              <Input
+                                value={item.image.url}
+                                onChange={(event) =>
+                                  setDraft((prev) => ({
+                                    ...prev,
+                                    aktuell: {
+                                      ...prev.aktuell,
+                                      items: prev.aktuell.items.map((current) =>
+                                        current.id === item.id
+                                          ? { ...current, image: { ...current.image, url: event.target.value } }
+                                          : current,
+                                      ),
+                                    },
+                                  }))
+                                }
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Bild hochladen</Label>
+                              <Input
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp"
+                                disabled={uploadingAktuellById[item.id] ?? false}
+                                onChange={async (event) => {
+                                  const file = event.target.files?.[0];
+                                  if (!file) {
+                                    return;
+                                  }
+                                  await uploadAktuellImage(item.id, file);
+                                  event.target.value = "";
+                                }}
+                              />
+                              <p className="text-xs text-muted-foreground">
+                                Erlaubt: JPG, PNG, WEBP (max. 5 MB)
+                              </p>
+                              {uploadingAktuellById[item.id] ? (
+                                <p className="text-xs text-muted-foreground">Upload laeuft...</p>
+                              ) : null}
+                              {uploadErrorAktuellById[item.id] ? (
+                                <p className="text-xs text-destructive">{uploadErrorAktuellById[item.id]}</p>
+                              ) : null}
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Bild Alt-Text</Label>
+                              <Input
+                                value={item.image.alt}
+                                onChange={(event) =>
+                                  setDraft((prev) => ({
+                                    ...prev,
+                                    aktuell: {
+                                      ...prev.aktuell,
+                                      items: prev.aktuell.items.map((current) =>
+                                        current.id === item.id
+                                          ? { ...current, image: { ...current.image, alt: event.target.value } }
+                                          : current,
+                                      ),
+                                    },
+                                  }))
+                                }
+                              />
+                            </div>
+                          </div>
+                          <div className="flex justify-end">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() =>
                                 setDraft((prev) => ({
                                   ...prev,
                                   aktuell: {
                                     ...prev.aktuell,
-                                    items: prev.aktuell.items.map((current) =>
-                                      current.id === item.id
-                                        ? { ...current, image: { ...current.image, url: event.target.value } }
-                                        : current,
-                                    ),
+                                    items: prev.aktuell.items.filter((current) => current.id !== item.id),
                                   },
                                 }))
                               }
-                            />
+                            >
+                              Entfernen
+                            </Button>
                           </div>
-                          <div className="space-y-2">
-                            <Label>Bild Alt-Text</Label>
-                            <Input
-                              value={item.image.alt}
-                              onChange={(event) =>
-                                setDraft((prev) => ({
-                                  ...prev,
-                                  aktuell: {
-                                    ...prev.aktuell,
-                                    items: prev.aktuell.items.map((current) =>
-                                      current.id === item.id
-                                        ? { ...current, image: { ...current.image, alt: event.target.value } }
-                                        : current,
-                                    ),
-                                  },
-                                }))
-                              }
-                            />
-                          </div>
-                        </div>
-                        <div className="flex justify-end">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() =>
-                              setDraft((prev) => ({
-                                ...prev,
-                                aktuell: {
-                                  ...prev.aktuell,
-                                  items: prev.aktuell.items.filter((current) => current.id !== item.id),
-                                },
-                              }))
-                            }
-                          >
-                            Entfernen
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
+                        </CardContent>
+                      </Card>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -384,13 +465,14 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
                     type="button"
                     size="sm"
                     disabled={draft.courses.length >= MAX_ITEMS_PER_LIST}
-                    onClick={() =>
+                    onClick={() => {
+                      const newCourseId = buildId("course");
                       setDraft((prev) => ({
                         ...prev,
                         courses: [
                           ...prev.courses,
                           {
-                            id: buildId("course"),
+                            id: newCourseId,
                             type: "internal",
                             title: "Neuer Kurs",
                             description: "",
@@ -401,30 +483,34 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
                             sortOrder: getNextSortOrder(prev.courses),
                           },
                         ],
-                      }))
-                    }
+                      }));
+                      scrollToCard(`[data-course-card-id="${newCourseId}"]`);
+                    }}
                   >
                     Kurs hinzufügen
                   </Button>
                 </div>
                 {draft.courses.map((course, index) => (
-                  <CourseEditor
-                    key={course.id}
-                    course={course}
-                    index={index}
-                    onChange={(nextCourse) =>
-                      setDraft((prev) => ({
-                        ...prev,
-                        courses: prev.courses.map((current) => (current.id === course.id ? nextCourse : current)),
-                      }))
-                    }
-                    onRemove={() =>
-                      setDraft((prev) => ({
-                        ...prev,
-                        courses: prev.courses.filter((current) => current.id !== course.id),
-                      }))
-                    }
-                  />
+                  <div key={course.id} data-course-card-id={course.id}>
+                    <CourseEditor
+                      course={course}
+                      index={index}
+                      onChange={(nextCourse) =>
+                        setDraft((prev) => ({
+                          ...prev,
+                          courses: prev.courses.map((current) =>
+                            current.id === course.id ? nextCourse : current,
+                          ),
+                        }))
+                      }
+                      onRemove={() =>
+                        setDraft((prev) => ({
+                          ...prev,
+                          courses: prev.courses.filter((current) => current.id !== course.id),
+                        }))
+                      }
+                    />
+                  </div>
                 ))}
               </div>
             ) : null}
@@ -437,43 +523,48 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
                     type="button"
                     size="sm"
                     disabled={draft.prices.length >= MAX_ITEMS_PER_LIST}
-                    onClick={() =>
+                    onClick={() => {
+                      const newPriceId = buildId("price");
                       setDraft((prev) => ({
                         ...prev,
                         prices: [
                           ...prev.prices,
                           {
-                            id: buildId("price"),
+                            id: newPriceId,
                             title: "Neuer Tarif",
                             price: "",
                             description: "",
                             sortOrder: getNextSortOrder(prev.prices),
                           },
                         ],
-                      }))
-                    }
+                      }));
+                      scrollToCard(`[data-price-card-id="${newPriceId}"]`);
+                    }}
                   >
                     Preis-Card hinzufügen
                   </Button>
                 </div>
                 {draft.prices.map((price, index) => (
-                  <PriceEditor
-                    key={price.id}
-                    item={price}
-                    index={index}
-                    onChange={(nextPrice) =>
-                      setDraft((prev) => ({
-                        ...prev,
-                        prices: prev.prices.map((current) => (current.id === price.id ? nextPrice : current)),
-                      }))
-                    }
-                    onRemove={() =>
-                      setDraft((prev) => ({
-                        ...prev,
-                        prices: prev.prices.filter((current) => current.id !== price.id),
-                      }))
-                    }
-                  />
+                  <div key={price.id} data-price-card-id={price.id}>
+                    <PriceEditor
+                      item={price}
+                      index={index}
+                      onChange={(nextPrice) =>
+                        setDraft((prev) => ({
+                          ...prev,
+                          prices: prev.prices.map((current) =>
+                            current.id === price.id ? nextPrice : current,
+                          ),
+                        }))
+                      }
+                      onRemove={() =>
+                        setDraft((prev) => ({
+                          ...prev,
+                          prices: prev.prices.filter((current) => current.id !== price.id),
+                        }))
+                      }
+                    />
+                  </div>
                 ))}
               </div>
             ) : null}
