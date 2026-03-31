@@ -1,11 +1,12 @@
 "use client";
 
 import { useActionState, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 
 import type { SaveContentActionState } from "@/app/(admin)/admin/actions";
 import type { Course, NavItem, PriceItem, SiteContent } from "@/types/site-content";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -181,6 +182,14 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
             </CardDescription>
           </div>
           <div className="flex gap-2">
+            <Link
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={buttonVariants({ variant: "outline" })}
+            >
+              Webseite oeffnen
+            </Link>
             <form action={logoutAction}>
               <Button type="submit" variant="outline">
                 Abmelden
