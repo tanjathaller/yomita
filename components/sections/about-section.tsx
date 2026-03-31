@@ -4,13 +4,16 @@ import type { AboutSection as AboutModel } from "@/types/site-content";
 
 import { MarkdownContent } from "@/components/shared/markdown-content";
 import { SectionShell } from "@/components/shared/section-shell";
-import { resolveImageUrl } from "@/lib/resolve-image-url";
+import { isBlobProxyUrl, resolveImageUrl } from "@/lib/resolve-image-url";
 
 type AboutSectionProps = {
   about: AboutModel;
 };
 
 export function AboutSection({ about }: AboutSectionProps) {
+  const imageSrc = resolveImageUrl(about.image.url);
+  const useUnoptimized = process.env.NODE_ENV === "development" || isBlobProxyUrl(imageSrc);
+
   return (
     <SectionShell
       id="ueber-mich"
@@ -22,13 +25,13 @@ export function AboutSection({ about }: AboutSectionProps) {
           <div className="relative aspect-[4/5] max-h-[26rem] rounded-t-3xl rounded-b-none bg-[var(--surface-muted-band)] outline-none ring-0 lg:max-h-[30rem] xl:max-h-[32rem]">
             <div className="absolute inset-[3px] overflow-hidden rounded-t-[calc(1.5rem-3px)] rounded-b-none">
               <Image
-                src={resolveImageUrl(about.image.url)}
+                src={imageSrc}
                 alt={about.image.alt}
                 fill
                 className="object-cover scale-[1.015]"
                 sizes="(min-width: 1024px) 40vw, 100vw"
                 priority={false}
-                unoptimized={process.env.NODE_ENV === "development"}
+                unoptimized={useUnoptimized}
               />
               <div
                 aria-hidden

@@ -15,3 +15,7 @@ export function resolveImageUrl(url: string): string {
     return url;
   }
 }
+
+export function isBlobProxyUrl(url: string): boolean {
+  return url.startsWith("/api/blob-image?src=");
+}

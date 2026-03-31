@@ -5,7 +5,7 @@ import type { AktuellesSection as AktuellesModel } from "@/types/site-content";
 
 import { MarkdownContent } from "@/components/shared/markdown-content";
 import { SectionShell } from "@/components/shared/section-shell";
-import { resolveImageUrl } from "@/lib/resolve-image-url";
+import { isBlobProxyUrl, resolveImageUrl } from "@/lib/resolve-image-url";
 import { cn } from "@/lib/utils";
 
 type AktuellesSectionProps = {
@@ -69,6 +69,9 @@ export function AktuellesSection({
             ? "Workshop"
             : DEFAULT_BADGE_LABEL;
 
+          const imageSrc = resolveImageUrl(item.image.url);
+          const useUnoptimized = process.env.NODE_ENV === "development" || isBlobProxyUrl(imageSrc);
+
           return (
           <article
             key={item.id}
@@ -79,13 +82,13 @@ export function AktuellesSection({
           >
             <div className="relative aspect-[4/3] overflow-hidden bg-muted">
               <Image
-                src={resolveImageUrl(item.image.url)}
+                src={imageSrc}
                 alt={item.image.alt}
                 fill
                 className="object-cover object-[center_24%] scale-[1.01]"
                 sizes="(min-width: 1024px) 45vw, (min-width: 640px) 90vw, 100vw"
                 priority={index === 0}
-                unoptimized={process.env.NODE_ENV === "development"}
+                unoptimized={useUnoptimized}
               />
               <div
                 aria-hidden
