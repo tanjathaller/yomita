@@ -1,12 +1,12 @@
 "use client";
 
-import { useActionState, useMemo, useRef, useState } from "react";
-import Link from "next/link";
+import { type ReactNode, useActionState, useEffect, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import { AlertCircle } from "lucide-react";
 
 import type { SaveContentActionState } from "@/app/(admin)/admin/actions";
 import type { Course, NavItem, PriceItem, SiteContent } from "@/types/site-content";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 
 const MAX_ITEMS_PER_LIST = 10;
+const SORT_ORDER_HELP_TEXT = "Niedrige Zahl = weiter oben auf der öffentlichen Website.";
 
 type SectionKey =
   | "hero"
@@ -42,7 +43,6 @@ type AdminDashboardProps = {
     prevState: SaveContentActionState,
     formData: FormData,
   ) => Promise<SaveContentActionState>;
-  logoutAction: () => Promise<void>;
 };
 
 function buildId(prefix: string): string {
@@ -56,6 +56,21 @@ function getNextSortOrder(items: Array<{ sortOrder: number }>): number {
 function parseNumber(value: string): number {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : 0;
+}
+
+function SortOrderLabel() {
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      Reihenfolge
+      <span
+        className="inline-flex cursor-help items-center"
+        title={SORT_ORDER_HELP_TEXT}
+        aria-label={SORT_ORDER_HELP_TEXT}
+      >
+        <AlertCircle className="size-3.5 text-muted-foreground" />
+      </span>
+    </span>
+  );
 }
 
 function deriveAltFromFilename(filename: string): string {
@@ -106,16 +121,37 @@ function MarkdownEditor({
   );
 }
 
-export function AdminDashboard({ initialContent, saveAction, logoutAction }: AdminDashboardProps) {
+export function AdminDashboard({ initialContent, saveAction }: AdminDashboardProps) {
   const [draft, setDraft] = useState<SiteContent>(initialContent);
   const [activeSection, setActiveSection] = useState<SectionKey>("hero");
   const [saveState, saveFormAction, savePending] = useActionState(saveAction, {});
+  const [sectionTabsTop, setSectionTabsTop] = useState(104);
   const [uploadingAktuellById, setUploadingAktuellById] = useState<Record<string, boolean>>({});
   const [uploadErrorAktuellById, setUploadErrorAktuellById] = useState<Record<string, string>>({});
   const [selectedAktuellFileById, setSelectedAktuellFileById] = useState<Record<string, string>>({});
   const aktuellFileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const serializedContent = useMemo(() => JSON.stringify(draft), [draft]);
+  useEffect(() => {
+    const header = document.querySelector<HTMLElement>("[data-admin-header]");
+    if (!header) {
+      return;
+    }
+
+    const updateTopOffset = () => {
+      setSectionTabsTop(Math.max(0, header.offsetHeight - 1));
+    };
+
+    updateTopOffset();
+    const observer = new ResizeObserver(updateTopOffset);
+    observer.observe(header);
+    window.addEventListener("resize", updateTopOffset);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateTopOffset);
+    };
+  }, []);
 
   const navigation = draft.settings.navigation ?? [];
 
@@ -173,6 +209,26 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
 
   return (
     <div className="space-y-6">
+      <div className="sticky z-30" style={{ top: `${sectionTabsTop}px` }}>
+        <div className="-mx-4 border-b border-border/80 bg-background/90 px-4 py-2 backdrop-blur sm:-mx-6 sm:px-6">
+          <div className="overflow-x-auto">
+            <div className="flex w-max min-w-full gap-2">
+              {sections.map((section) => (
+                <Button
+                  key={section.id}
+                  type="button"
+                  variant={activeSection === section.id ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => setActiveSection(section.id)}
+                >
+                  {section.label}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <Card>
         <CardHeader className="gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -181,37 +237,8 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
               Es werden nur Texte und Bilder gepflegt. Struktur und Reihenfolge der Website bleiben fix.
             </CardDescription>
           </div>
-          <div className="flex gap-2">
-            <Link
-              href="/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={buttonVariants({ variant: "outline" })}
-            >
-              Webseite oeffnen
-            </Link>
-            <form action={logoutAction}>
-              <Button type="submit" variant="outline">
-                Abmelden
-              </Button>
-            </form>
-          </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="flex gap-2 overflow-x-auto pb-2">
-            {sections.map((section) => (
-              <Button
-                key={section.id}
-                type="button"
-                variant={activeSection === section.id ? "default" : "outline"}
-                size="sm"
-                onClick={() => setActiveSection(section.id)}
-              >
-                {section.label}
-              </Button>
-            ))}
-          </div>
-
           <form action={saveFormAction} className="space-y-5">
             <input type="hidden" name="content" value={serializedContent} />
 
@@ -291,7 +318,7 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
                 />
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium">Cards ({draft.aktuell.items.length}/10)</p>
+                    <p className="text-sm font-bold">Cards ({draft.aktuell.items.length}/10)</p>
                     <Button
                       type="button"
                       size="sm"
@@ -320,11 +347,12 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
                       Card hinzufügen
                     </Button>
                   </div>
-                  {draft.aktuell.items.map((item, index) => (
+                  <div className="grid gap-3 lg:grid-cols-2 lg:items-start">
+                    {draft.aktuell.items.map((item, index) => (
                     <div key={item.id} data-aktuell-card-id={item.id}>
                       <Card size="sm">
-                        <CardHeader>
-                          <CardTitle className="text-sm">Aktuelles Card {index + 1}</CardTitle>
+                        <CardHeader className="-mx-3 -mt-3 rounded-t-xl border-b border-border/60 bg-gradient-to-b from-muted/75 via-muted/35 to-transparent px-3 pt-3 pb-2">
+                          <CardTitle className="pl-1 text-sm font-bold">Card {index + 1}</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-3">
                           <div className="grid gap-3 md:grid-cols-2">
@@ -348,7 +376,9 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
                               />
                             </div>
                             <div className="space-y-2">
-                              <Label>Sortierung</Label>
+                              <Label>
+                                <SortOrderLabel />
+                              </Label>
                               <Input
                                 type="number"
                                 value={item.sortOrder}
@@ -509,6 +539,7 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
                       </Card>
                     </div>
                   ))}
+                  </div>
                 </div>
               </div>
             ) : null}
@@ -873,7 +904,7 @@ function Field({
   value,
   onChange,
 }: {
-  label: string;
+  label: ReactNode;
   value: string;
   onChange: (value: string) => void;
 }) {
@@ -938,7 +969,7 @@ function CourseEditor({
           </div>
           <Field label="Titel" value={course.title} onChange={(value) => onChange({ ...course, title: value })} />
           <Field
-            label="Sortierung"
+            label={<SortOrderLabel />}
             value={String(course.sortOrder)}
             onChange={(value) => onChange({ ...course, sortOrder: parseNumber(value) })}
           />
@@ -1028,7 +1059,7 @@ function PriceEditor({
         <div className="grid gap-3 md:grid-cols-2">
           <Field label="ID" value={item.id} onChange={(value) => onChange({ ...item, id: value })} />
           <Field
-            label="Sortierung"
+            label={<SortOrderLabel />}
             value={String(item.sortOrder)}
             onChange={(value) => onChange({ ...item, sortOrder: parseNumber(value) })}
           />

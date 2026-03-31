@@ -3,7 +3,7 @@ import { requireAdminAuth } from "@/lib/admin-auth";
 import { getSiteContent } from "@/lib/get-site-content";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { logoutOwnerAction, saveSiteContentAction } from "./actions";
+import { saveSiteContentAction } from "./actions";
 
 export default async function AdminHomePage() {
   await requireAdminAuth();
@@ -14,7 +14,6 @@ export default async function AdminHomePage() {
       <AdminDashboard
         initialContent={content}
         saveAction={saveSiteContentAction}
-        logoutAction={logoutOwnerAction}
       />
     );
   } catch (error) {
