@@ -107,7 +107,14 @@ export async function saveSiteContentAction(
   }
 
   const normalized = withSortedLists(parsedContent.data);
-  await saveSiteContent(normalized);
+  try {
+    await saveSiteContent(normalized);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Speichern fehlgeschlagen.";
+    return {
+      error: `Speichern fehlgeschlagen: ${message}`,
+    };
+  }
 
   revalidatePath("/");
   revalidatePath("/impressum");

@@ -48,6 +48,12 @@ export async function saveSiteContent(content: SiteContent): Promise<SiteContent
     return parsed;
   }
 
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(
+      "KV_REST_API_URL/KV_REST_API_TOKEN fehlen in Production. Speichern in Datei ist dort nicht verfuegbar.",
+    );
+  }
+
   await writeSiteContentToFile(parsed);
   return parsed;
 }
