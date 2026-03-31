@@ -101,14 +101,14 @@ export const aktuellesItemSchema = z.object({
 export const aktuellesSectionSchema = z.object({
   title: z.string().optional(),
   intro: z.string().optional(),
-  items: z.array(aktuellesItemSchema),
+  items: z.array(aktuellesItemSchema).max(10),
 });
 
 export const siteContentSchema = z.object({
   hero: heroSectionSchema,
   aktuell: aktuellesSectionSchema,
-  courses: z.array(courseSchema),
-  prices: z.array(priceItemSchema),
+  courses: z.array(courseSchema).max(10),
+  prices: z.array(priceItemSchema).max(10),
   about: aboutSectionSchema,
   contact: contactSectionSchema,
   settings: generalSettingsSchema,

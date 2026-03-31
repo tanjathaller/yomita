@@ -1,12 +1,18 @@
-export default function AdminHomePage() {
+import { AdminDashboard } from "@/components/admin/admin-dashboard";
+import { requireAdminAuth } from "@/lib/admin-auth";
+import { getSiteContent } from "@/lib/get-site-content";
+
+import { logoutOwnerAction, saveSiteContentAction } from "./actions";
+
+export default async function AdminHomePage() {
+  await requireAdminAuth();
+  const content = await getSiteContent();
+
   return (
-    <div className="mx-auto max-w-xl space-y-3 text-sm">
-      <h1 className="text-foreground text-2xl font-semibold tracking-tight">Dashboard</h1>
-      <p className="text-muted-foreground leading-relaxed">
-        Die Bearbeitung von <code className="text-foreground">SiteContent</code> folgt in einer
-        späteren Phase (siehe{" "}
-        <span className="text-foreground font-medium">build-plan.md</span>, Phasen 5–6).
-      </p>
-    </div>
+    <AdminDashboard
+      initialContent={content}
+      saveAction={saveSiteContentAction}
+      logoutAction={logoutOwnerAction}
+    />
   );
 }

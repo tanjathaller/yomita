@@ -23,9 +23,12 @@
 ## Content rendering (fest für diese Codebasis)
 - `legal.imprintText` / `legal.privacyText` und Markdown in `about.text`: **react-markdown** (Komponente `MarkdownContent`). Kein rohes HTML aus dem JSON ohne weitere Absicherung.
 
+## Admin/Auth/Persistenz (festgelegt)
+- Owner-only Login unter `/admin/login` mit Session-Cookie.
+- Route-Guard für `/admin/*` über `proxy.ts` (+ serverseitige Prüfung in Actions).
+- `SiteContent` wird in Produktion in Vercel KV gespeichert (Key `site:content`), lokal mit Fallback auf `data/site-content.json`.
+
 ## To Decide Later
-- auth for admin
 - image upload solution
-- storage/database solution
 - contact form backend
 - cookie consent implementation

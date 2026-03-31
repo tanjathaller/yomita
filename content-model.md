@@ -219,6 +219,8 @@ Ein Dokument (JSON, CMS-Record, eine Zeile), das die gesamte Seite speist:
 ## Hinweise für Admin & Implementierung
 
 - **Sortierung:** `sortOrder` bei Aktuelles-Einträgen, Kursen und Preisen im Dashboard pflegen; öffentliche Liste danach sortieren.  
+- **Listen-Limit:** In `aktuell.items`, `courses` und `prices` sind maximal **10** Cards erlaubt.  
 - **Validierung:** Bei `type: "internal"` kein `externalUrl`; bei `type: "external"` muss `externalUrl` gesetzt sein.  
+- **Struktur-Schutz:** Sektionen, Reihenfolge und Layout-Templates bleiben fest; im Admin sind nur Inhalte/Felder innerhalb von `SiteContent` editierbar.  
 - **Brief:** Keine Zahlungsabwicklung, kein Buchungssystem auf der Webseite, keine App-Neuregistrierung – das Content-Model spiegelt das wider (App nur per Link, Kontakt per Formular).  
 - **Logo:** optional per URL; keine verpflichtende Logo-Produktion im Projekt.

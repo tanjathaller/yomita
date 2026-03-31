@@ -26,9 +26,9 @@ Empfehlung **Next.js App Router** mit **Route Groups**:
 
 ### Admin
 
-- `/admin` – Einstieg oder Redirect zum Haupt-Editor.
-- Entweder **eine Seite mit Tabs** oder Unterrouten (z. B. `/admin/courses`, `/admin/settings`); Datenmodell bleibt **ein** `SiteContent`.
-- `/admin/login` – sobald Auth steht; bis dahin ggf. nur lokal, Vercel Protection oder Basic Auth.
+- `/admin` – Haupt-Editor mit bereichsweisen Formularen (Tabs).
+- `/admin/login` – Owner-Login.
+- Datenmodell bleibt **ein** `SiteContent`; es werden nur Feldinhalte editiert, keine Sektionsstruktur.
 
 ### API (Beispiele)
 
@@ -36,16 +36,17 @@ Empfehlung **Next.js App Router** mit **Route Groups**:
 - `POST /api/revalidate` – On-Demand Revalidation nach Publish (geheimer Token/Header).
 - Später: authentifizierte Routen oder ausschließlich **Server Actions** für Content-Updates.
 
-### Middleware (später)
+### Route-Guard
 
-- `/admin/*` (außer Login) nur mit gültiger Session; öffentliche Routen unverändert.
+- `/admin/*` (außer Login) ist über `proxy.ts` geschützt und prüft auf Session-Cookie.
+- Serverseitige Prüfung erfolgt zusätzlich in den Admin-Actions/Page-Guards.
 
 ## 3. Datenfluss
 
-1. **Single source of truth:** ein persistiertes `SiteContent` (JSON in DB, KV, oder externes CMS – siehe offene Tech-Entscheidung).
+1. **Single source of truth:** ein persistiertes `SiteContent` in Vercel KV (Key `site:content`), lokal mit Dateifallback (`data/site-content.json`).
 2. **Öffentliche Seiten:** Server Components laden Inhalt serverseitig (`getSiteContent()`), rendern Sektionen; Listen nach `sortOrder` sortieren.
 3. **Caching:** `fetch` mit `revalidate` (ISR) oder On-Demand Revalidation nach Speichern im Admin (Vercel-tauglich).
-4. **Admin:** Formulare (z. B. React Hook Form + Zod), Speichern per **Server Actions** oder geschützte API; Validierung wie im Content-Model (z. B. kein `externalUrl` bei `internal`).
+4. **Admin:** Formulare pro Bereich; Speichern per **Server Action** (`siteContentSchema`), danach `revalidatePath` für öffentliche Routen.
 5. **Kontakt:** POST → API → Versand/Weiterleitung; `contact.formRecipientEmail` optional, sonst Env.
 6. **Medien:** vorerst URLs in Content (`aktuell.items[].image`, `about.image`, `logoUrl`, `ogImageUrl`); Upload-Lösung später ohne Änderung der Sektions-Architektur.
 
@@ -63,7 +64,8 @@ Keine Zahlungs- oder Buchungslogik in diesen Komponenten – App-Link und Kontak
 
 ## 5. Spätere Erweiterbarkeit
 
-- **Auth:** Middleware + Session; nur Admin-Routen schützen.
+- **Auth-Härtung:** bestehendes Owner-Login + Session um Rate-Limit, 2FA oder Audit-Logs erweitern.
+- **Kurs-Sync:** `courses[]` kann später durch Yoga-App-Sync befüllt/überschrieben werden (separater Kanal).
 - **Draft/Publish:** zweites Dokument oder Versionierung; öffentliche Route liest nur Published.
 - **i18n:** optional `app/[locale]/` und lokalisierte Content-Struktur.
 - **Weitere Marketing-Seiten:** unter `(public)`; Sektionen wiederverwenden.
