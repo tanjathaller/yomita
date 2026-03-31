@@ -3,7 +3,7 @@ import "server-only";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-import { kv } from "@vercel/kv";
+import { createClient } from "@vercel/kv";
 
 import { siteContentSchema } from "@/lib/schemas/site-content";
 import type { SiteContent } from "@/types/site-content";
@@ -11,8 +11,18 @@ import type { SiteContent } from "@/types/site-content";
 const SITE_CONTENT_KV_KEY = "site:content";
 const SITE_CONTENT_FILE_PATH = path.join(process.cwd(), "data", "site-content.json");
 
+const kvRestUrl =
+  process.env.KV_REST_API_URL ??
+  process.env.UPSTASH_REDIS_REST_URL ??
+  process.env.yomita_KV_REST_API_URL;
+const kvRestToken =
+  process.env.KV_REST_API_TOKEN ??
+  process.env.UPSTASH_REDIS_REST_TOKEN ??
+  process.env.yomita_KV_REST_API_TOKEN;
+const kvClient = kvRestUrl && kvRestToken ? createClient({ url: kvRestUrl, token: kvRestToken }) : null;
+
 function hasKvConfig(): boolean {
-  return Boolean(process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN);
+  return Boolean(kvClient);
 }
 
 async function readSiteContentFromFile(): Promise<SiteContent> {
@@ -31,10 +41,10 @@ export async function readSiteContent(): Promise<SiteContent> {
     return readSiteContentFromFile();
   }
 
-  const record = await kv.get<unknown>(SITE_CONTENT_KV_KEY);
+  const record = await kvClient!.get<unknown>(SITE_CONTENT_KV_KEY);
   if (!record) {
     const fallback = await readSiteContentFromFile();
-    await kv.set(SITE_CONTENT_KV_KEY, fallback);
+    await kvClient!.set(SITE_CONTENT_KV_KEY, fallback);
     return fallback;
   }
 
@@ -44,13 +54,13 @@ export async function readSiteContent(): Promise<SiteContent> {
 export async function saveSiteContent(content: SiteContent): Promise<SiteContent> {
   const parsed = siteContentSchema.parse(content);
   if (hasKvConfig()) {
-    await kv.set(SITE_CONTENT_KV_KEY, parsed);
+    await kvClient!.set(SITE_CONTENT_KV_KEY, parsed);
     return parsed;
   }
 
   if (process.env.NODE_ENV === "production") {
     throw new Error(
-      "KV_REST_API_URL/KV_REST_API_TOKEN fehlen in Production. Speichern in Datei ist dort nicht verfuegbar.",
+      "KV/Redis REST-Variablen fehlen in Production (KV_REST_* oder UPSTASH_REDIS_REST_* oder yomita_KV_REST_*). Speichern in Datei ist dort nicht verfuegbar.",
     );
   }
 
@@ -60,10 +70,12 @@ export async function saveSiteContent(content: SiteContent): Promise<SiteContent
 
 export async function seedSiteContentFromFileToKv(): Promise<SiteContent> {
   if (!hasKvConfig()) {
-    throw new Error("KV_REST_API_URL und KV_REST_API_TOKEN sind nicht gesetzt.");
+    throw new Error(
+      "KV/Redis REST-Variablen fehlen (KV_REST_* oder UPSTASH_REDIS_REST_* oder yomita_KV_REST_*).",
+    );
   }
 
   const parsed = await readSiteContentFromFile();
-  await kv.set(SITE_CONTENT_KV_KEY, parsed);
+  await kvClient!.set(SITE_CONTENT_KV_KEY, parsed);
   return parsed;
 }
