@@ -10,7 +10,9 @@ export function resolveImageUrl(url: string): string {
       return url;
     }
 
-    return `/api/blob-image?src=${encodeURIComponent(url)}`;
+    // `download=1` URLs are meant for file download; for <img> we want the raw blob URL.
+    parsed.search = "";
+    return `/api/blob-image?src=${encodeURIComponent(parsed.toString())}`;
   } catch {
     return url;
   }

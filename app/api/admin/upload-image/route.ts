@@ -16,7 +16,6 @@ function sanitizeFilename(filename: string): string {
 
 type UploadedBlobResult = {
   url: string;
-  downloadUrl?: string;
 };
 
 async function uploadImageToBlob(key: string, file: File): Promise<UploadedBlobResult> {
@@ -65,7 +64,7 @@ export async function POST(request: Request) {
     const safeName = sanitizeFilename(file.name || "image.webp");
     const key = `aktuelles/${new Date().toISOString().slice(0, 10)}/${randomUUID()}-${safeName}`;
     const uploaded = await uploadImageToBlob(key, file);
-    const imageUrl = uploaded.downloadUrl ?? uploaded.url;
+    const imageUrl = uploaded.url;
 
     return NextResponse.json({ url: imageUrl });
   } catch (error) {
