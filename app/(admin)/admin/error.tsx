@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -33,8 +32,14 @@ export default function AdminErrorPage({ error, reset }: AdminErrorPageProps) {
             <Button type="button" onClick={reset}>
               Erneut versuchen
             </Button>
-            <Button asChild variant="outline">
-              <Link href="/admin/login">Zur Login-Seite</Link>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => {
+                window.location.href = "/admin/login";
+              }}
+            >
+              Zur Login-Seite
             </Button>
           </div>
         </CardContent>
