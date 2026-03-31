@@ -15,36 +15,41 @@ function sanitizeFilename(filename: string): string {
 }
 
 export async function POST(request: Request) {
-  const cookieStore = await cookies();
-  const sessionToken = cookieStore.get(ADMIN_SESSION_COOKIE_NAME)?.value;
+  try {
+    const cookieStore = await cookies();
+    const sessionToken = cookieStore.get(ADMIN_SESSION_COOKIE_NAME)?.value;
 
-  if (!isAdminSessionTokenValid(sessionToken)) {
-    return NextResponse.json({ error: "Nicht autorisiert." }, { status: 401 });
+    if (!isAdminSessionTokenValid(sessionToken)) {
+      return NextResponse.json({ error: "Nicht autorisiert." }, { status: 401 });
+    }
+
+    if (!process.env.BLOB_READ_WRITE_TOKEN) {
+      return NextResponse.json(
+        { error: "BLOB_READ_WRITE_TOKEN fehlt. Upload ist nicht konfiguriert." },
+        { status: 500 },
+      );
+    }
+
+    const formData = await request.formData();
+    const file = formData.get("file");
+
+    if (!(file instanceof File)) {
+      return NextResponse.json({ error: "Keine Datei uebergeben." }, { status: 400 });
+    }
+    if (!ALLOWED_TYPES.has(file.type)) {
+      return NextResponse.json({ error: "Nur JPG, PNG oder WEBP sind erlaubt." }, { status: 400 });
+    }
+    if (file.size > MAX_IMAGE_SIZE_BYTES) {
+      return NextResponse.json({ error: "Datei ist zu gross (max. 5 MB)." }, { status: 400 });
+    }
+
+    const safeName = sanitizeFilename(file.name || "image.webp");
+    const key = `aktuelles/${new Date().toISOString().slice(0, 10)}/${randomUUID()}-${safeName}`;
+    const uploaded = await put(key, file, { access: "public" });
+
+    return NextResponse.json({ url: uploaded.url });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unbekannter Upload-Fehler.";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
-
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    return NextResponse.json(
-      { error: "BLOB_READ_WRITE_TOKEN fehlt. Upload ist nicht konfiguriert." },
-      { status: 500 },
-    );
-  }
-
-  const formData = await request.formData();
-  const file = formData.get("file");
-
-  if (!(file instanceof File)) {
-    return NextResponse.json({ error: "Keine Datei übergeben." }, { status: 400 });
-  }
-  if (!ALLOWED_TYPES.has(file.type)) {
-    return NextResponse.json({ error: "Nur JPG, PNG oder WEBP sind erlaubt." }, { status: 400 });
-  }
-  if (file.size > MAX_IMAGE_SIZE_BYTES) {
-    return NextResponse.json({ error: "Datei ist zu groß (max. 5 MB)." }, { status: 400 });
-  }
-
-  const safeName = sanitizeFilename(file.name || "image.webp");
-  const key = `aktuelles/${new Date().toISOString().slice(0, 10)}/${randomUUID()}-${safeName}`;
-  const uploaded = await put(key, file, { access: "public" });
-
-  return NextResponse.json({ url: uploaded.url });
 }

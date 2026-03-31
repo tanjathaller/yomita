@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useMemo, useState } from "react";
+import { useActionState, useMemo, useRef, useState } from "react";
 import ReactMarkdown from "react-markdown";
 
 import type { SaveContentActionState } from "@/app/(admin)/admin/actions";
@@ -103,6 +103,8 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
   const [saveState, saveFormAction, savePending] = useActionState(saveAction, {});
   const [uploadingAktuellById, setUploadingAktuellById] = useState<Record<string, boolean>>({});
   const [uploadErrorAktuellById, setUploadErrorAktuellById] = useState<Record<string, string>>({});
+  const [selectedAktuellFileById, setSelectedAktuellFileById] = useState<Record<string, string>>({});
+  const aktuellFileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const serializedContent = useMemo(() => JSON.stringify(draft), [draft]);
 
@@ -120,7 +122,15 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
         method: "POST",
         body: formData,
       });
-      const data = (await response.json()) as { error?: string; url?: string };
+      const raw = await response.text();
+      let data: { error?: string; url?: string } = {};
+      if (raw.trim()) {
+        try {
+          data = JSON.parse(raw) as { error?: string; url?: string };
+        } catch {
+          throw new Error(`Upload-Antwort ungueltig (HTTP ${response.status}).`);
+        }
+      }
 
       if (!response.ok || !data.url) {
         throw new Error(data.error ?? "Upload fehlgeschlagen.");
@@ -389,19 +399,39 @@ export function AdminDashboard({ initialContent, saveAction, logoutAction }: Adm
                             </div>
                             <div className="space-y-2">
                               <Label>Bild hochladen</Label>
-                              <Input
+                              <input
+                                ref={(element) => {
+                                  aktuellFileInputRefs.current[item.id] = element;
+                                }}
                                 type="file"
                                 accept="image/jpeg,image/png,image/webp"
+                                className="sr-only"
                                 disabled={uploadingAktuellById[item.id] ?? false}
                                 onChange={async (event) => {
                                   const file = event.target.files?.[0];
                                   if (!file) {
                                     return;
                                   }
+
+                                  setSelectedAktuellFileById((prev) => ({ ...prev, [item.id]: file.name }));
                                   await uploadAktuellImage(item.id, file);
                                   event.target.value = "";
                                 }}
                               />
+                              <div className="flex flex-wrap items-center gap-2">
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  className="border-primary/40 bg-primary/5 text-primary transition-transform transition-shadow duration-150 hover:-translate-y-0.5 hover:bg-primary/10 hover:shadow-sm active:translate-y-0"
+                                  disabled={uploadingAktuellById[item.id] ?? false}
+                                  onClick={() => aktuellFileInputRefs.current[item.id]?.click()}
+                                >
+                                  Datei auswaehlen
+                                </Button>
+                                <span className="text-xs text-muted-foreground">
+                                  {selectedAktuellFileById[item.id] ?? "Keine Datei ausgewaehlt"}
+                                </span>
+                              </div>
                               <p className="text-xs text-muted-foreground">
                                 Erlaubt: JPG, PNG, WEBP (max. 5 MB)
                               </p>

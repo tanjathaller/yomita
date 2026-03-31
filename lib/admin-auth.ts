@@ -23,6 +23,12 @@ function getPasswordHash(): string {
   return process.env.ADMIN_PASSWORD_HASH ?? "";
 }
 
+function normalizePasswordHash(rawHash: string): string {
+  // Accept both plain bcrypt hashes and accidentally escaped/quoted env values.
+  const unquoted = rawHash.trim().replace(/^['"]|['"]$/g, "");
+  return unquoted.replace(/\\\$/g, "$");
+}
+
 function signPayload(payloadBase64: string, secret: string): string {
   return createHmac("sha256", secret).update(payloadBase64).digest("base64url");
 }
@@ -82,7 +88,7 @@ export function isAdminSessionTokenValid(token: string | undefined): boolean {
 }
 
 export async function verifyOwnerPassword(password: string): Promise<boolean> {
-  const hash = getPasswordHash();
+  const hash = normalizePasswordHash(getPasswordHash());
   if (!hash) {
     return false;
   }
