@@ -259,6 +259,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                 <div className="space-y-2 md:col-span-2">
                   <Label>Claim</Label>
                   <Textarea
+                    rows={4}
                     value={draft.hero.claim}
                     onChange={(event) =>
                       setDraft((prev) => ({ ...prev, hero: { ...prev.hero, claim: event.target.value } }))
@@ -757,6 +758,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                 <div className="space-y-2 md:col-span-2">
                   <Label>Success-Nachricht</Label>
                   <Textarea
+                    rows={4}
                     value={draft.contact.formSuccessMessage ?? ""}
                     onChange={(event) =>
                       setDraft((prev) => ({
@@ -808,6 +810,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                   <div className="space-y-2 md:col-span-2">
                     <Label>Meta Description</Label>
                     <Textarea
+                      rows={4}
                       value={draft.settings.metaDescription ?? ""}
                       onChange={(event) =>
                         setDraft((prev) => ({
@@ -1005,7 +1008,11 @@ function CourseEditor({
         </div>
         <div className="space-y-2">
           <Label>Beschreibung</Label>
-          <Textarea value={course.description} onChange={(event) => onChange({ ...course, description: event.target.value })} />
+          <Textarea
+            rows={4}
+            value={course.description}
+            onChange={(event) => onChange({ ...course, description: event.target.value })}
+          />
         </div>
         {course.type === "internal" ? (
           <div className="grid gap-3 md:grid-cols-3">
@@ -1081,7 +1088,11 @@ function PriceEditor({
         </div>
         <div className="space-y-2">
           <Label>Beschreibung</Label>
-          <Textarea value={item.description} onChange={(event) => onChange({ ...item, description: event.target.value })} />
+          <Textarea
+            rows={4}
+            value={item.description}
+            onChange={(event) => onChange({ ...item, description: event.target.value })}
+          />
         </div>
         <label className="flex items-center gap-2 text-sm">
           <input
