@@ -211,7 +211,10 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
     <div className="space-y-6">
       <div className="sticky z-30" style={{ top: `${sectionTabsTop}px` }}>
         <div className="-mx-4 border-b border-border/80 bg-background/90 px-4 py-2 backdrop-blur sm:-mx-6 sm:px-6">
-          <div className="overflow-x-auto">
+          <div
+            className="overflow-x-auto overflow-y-hidden overscroll-x-contain overscroll-y-none"
+            style={{ touchAction: "pan-x" }}
+          >
             <div className="flex w-max min-w-full gap-2">
               {sections.map((section) => (
                 <Button
