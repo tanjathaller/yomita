@@ -75,6 +75,11 @@ export function AktuellesSection({
 
           const imageSrc = resolveImageUrl(item.image.url);
           const useUnoptimized = process.env.NODE_ENV === "development" || isBlobProxyUrl(imageSrc);
+          const ctaEnabled = item.cta?.enabled ?? false;
+          const ctaLabel = item.cta?.label?.trim();
+          const ctaHref = item.cta?.href?.trim();
+          const shouldRenderCta = ctaEnabled && Boolean(ctaLabel) && Boolean(ctaHref);
+          const isExternalCta = Boolean(ctaHref && /^https?:\/\//i.test(ctaHref));
 
           return (
           <article
@@ -117,13 +122,17 @@ export function AktuellesSection({
               <div className="text-muted-foreground text-base leading-relaxed lg:text-lg">
                 <MarkdownContent markdown={item.text} />
               </div>
-              <Link
-                href="/#kontakt"
-                className="text-primary inline-flex items-center gap-2 pt-1 text-lg font-medium tracking-tight underline-offset-4 transition-colors hover:underline"
-              >
-                Details ansehen
-                <span aria-hidden>→</span>
-              </Link>
+              {shouldRenderCta ? (
+                <Link
+                  href={ctaHref!}
+                  className="text-primary inline-flex items-center gap-2 pt-1 text-lg font-medium tracking-tight underline-offset-4 transition-colors hover:underline"
+                  target={isExternalCta ? "_blank" : undefined}
+                  rel={isExternalCta ? "noopener noreferrer" : undefined}
+                >
+                  {ctaLabel}
+                  <span aria-hidden>→</span>
+                </Link>
+              ) : null}
             </div>
           </article>
           );

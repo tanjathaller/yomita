@@ -97,6 +97,49 @@ export const heroSectionSchema = z.object({
   primaryCtaUrl: z.string().min(1),
 });
 
+const aktuellCtaSchema = z
+  .object({
+    enabled: z.boolean().optional(),
+    label: z.string().optional(),
+    href: z.string().optional(),
+  })
+  .superRefine((value, ctx) => {
+    if (!value.enabled) {
+      return;
+    }
+
+    if (!value.label?.trim()) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["label"],
+        message: "Bitte einen Button-Text eintragen.",
+      });
+    }
+
+    const href = value.href?.trim();
+    if (!href) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["href"],
+        message: "Bitte eine Button-Link-URL eintragen.",
+      });
+      return;
+    }
+
+    const isValidHref =
+      /^https?:\/\/\S+$/i.test(href) ||
+      /^mailto:\S+@\S+\.\S+$/i.test(href) ||
+      /^#[a-z0-9-]+$/i.test(href) ||
+      /^\/\S*$/i.test(href);
+    if (!isValidHref) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["href"],
+        message: "Ungültiger Link. Erlaubt: https://, http://, mailto:, #anker oder /pfad.",
+      });
+    }
+  });
+
 export const aktuellesItemSchema = z.object({
   id: z.string(),
   title: z.string().optional(),
@@ -105,6 +148,7 @@ export const aktuellesItemSchema = z.object({
     url: z.string().min(1),
     alt: z.string().min(1),
   }),
+  cta: aktuellCtaSchema.optional(),
   sortOrder: z.number(),
 });
 

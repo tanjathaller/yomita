@@ -80,7 +80,16 @@ Kurzmeldungen, Saison-Hinweise oder Einzelthemen **oberhalb** der Kursübersicht
 | `id`        | string  | stabile ID |
 | `title`     | string? | optional: kurzer Thementitel |
 | `text`      | string  | Fließtext (Markdown möglich, je nach Renderer) |
+| `cta`       | object? | optionaler Link-Button pro Card (standardmäßig deaktiviert) |
 | `sortOrder` | number  | Reihenfolge (niedrig = weiter oben) |
+
+### Optionaler Card-Button (`items[].cta`)
+
+| Feld      | Typ      | Beschreibung |
+|-----------|----------|--------------|
+| `enabled` | boolean? | Button ein-/ausblenden (Default: aus) |
+| `label`   | string?  | Button-Beschriftung (Pflicht, wenn `enabled=true`) |
+| `href`    | string?  | Button-Link (Pflicht, wenn `enabled=true`; erlaubt: `https://`, `http://`, `mailto:`, `#anker`, `/pfad`) |
 
 ### Bild (`items[].image`)
 

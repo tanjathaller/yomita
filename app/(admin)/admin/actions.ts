@@ -106,6 +106,16 @@ export async function saveSiteContentAction(
         error: "Bitte einen Bild-Alt-Text eintragen (Pflichtfeld).",
       };
     }
+    if (issuePath.includes("aktuell.items") && issuePath.endsWith("cta.label")) {
+      return {
+        error: "Bitte einen Button-Text eintragen oder den Button deaktivieren.",
+      };
+    }
+    if (issuePath.includes("aktuell.items") && issuePath.endsWith("cta.href")) {
+      return {
+        error: "Bitte einen gültigen Button-Link eintragen oder den Button deaktivieren.",
+      };
+    }
     return {
       error: `Validierung fehlgeschlagen (${issuePath}): ${firstIssue?.message ?? "ungueltiger Wert"}.`,
     };

@@ -1168,6 +1168,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                 title: "Neues Thema",
                                 text: "",
                                 image: { url: "", alt: "" },
+                                cta: { enabled: false },
                                 sortOrder: getNextSortOrder(prev.aktuell.items),
                               },
                             ],
@@ -1349,6 +1350,93 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                 }
                               />
                             </div>
+                          </div>
+                          <div className="space-y-3 rounded-lg border border-border/70 bg-muted/20 p-3">
+                            <label className="flex items-center gap-2 text-sm font-medium">
+                              <input
+                                type="checkbox"
+                                checked={item.cta?.enabled ?? false}
+                                onChange={(event) =>
+                                  setDraft((prev) => ({
+                                    ...prev,
+                                    aktuell: {
+                                      ...prev.aktuell,
+                                      items: prev.aktuell.items.map((current) =>
+                                        current.id === item.id
+                                          ? {
+                                              ...current,
+                                              cta: {
+                                                ...current.cta,
+                                                enabled: event.target.checked,
+                                              },
+                                            }
+                                          : current,
+                                      ),
+                                    },
+                                  }))
+                                }
+                              />
+                              Link-Button anzeigen
+                            </label>
+                            <div className="grid gap-3 md:grid-cols-2">
+                              <div className="space-y-2">
+                                <Label>Button Text</Label>
+                                <Input
+                                  placeholder="Details ansehen"
+                                  value={item.cta?.label ?? ""}
+                                  disabled={!(item.cta?.enabled ?? false)}
+                                  onChange={(event) =>
+                                    setDraft((prev) => ({
+                                      ...prev,
+                                      aktuell: {
+                                        ...prev.aktuell,
+                                        items: prev.aktuell.items.map((current) =>
+                                          current.id === item.id
+                                            ? {
+                                                ...current,
+                                                cta: {
+                                                  ...current.cta,
+                                                  label: event.target.value || undefined,
+                                                },
+                                              }
+                                            : current,
+                                        ),
+                                      },
+                                    }))
+                                  }
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label>Button Link</Label>
+                                <Input
+                                  placeholder="/#kontakt oder https://..."
+                                  value={item.cta?.href ?? ""}
+                                  disabled={!(item.cta?.enabled ?? false)}
+                                  onChange={(event) =>
+                                    setDraft((prev) => ({
+                                      ...prev,
+                                      aktuell: {
+                                        ...prev.aktuell,
+                                        items: prev.aktuell.items.map((current) =>
+                                          current.id === item.id
+                                            ? {
+                                                ...current,
+                                                cta: {
+                                                  ...current.cta,
+                                                  href: event.target.value || undefined,
+                                                },
+                                              }
+                                            : current,
+                                        ),
+                                      },
+                                    }))
+                                  }
+                                />
+                              </div>
+                            </div>
+                            <p className="text-xs text-muted-foreground">
+                              Erlaubt: https://, http://, mailto:, #anker oder /pfad.
+                            </p>
                           </div>
                           <div className="flex justify-end">
                             <Button

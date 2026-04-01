@@ -127,6 +127,12 @@ export type AktuellesItem = {
     url: string;
     alt: string;
   };
+  /** Optional card CTA button; disabled by default. */
+  cta?: {
+    enabled?: boolean;
+    label?: string;
+    href?: string;
+  };
   /** Lower values appear first in lists. */
   sortOrder: number;
 };
