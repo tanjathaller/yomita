@@ -1,13 +1,13 @@
 {
   "hero": {
-    "title": "Namaste und herzlich willkommen! TEST TEST",
+    "title": "Namaste und herzlich willkommen! ",
     "claim": "Ich bin Tanja Thaller, freiberufliche Yogalehrerin im Raum Neuss/Düsseldorf und freue mich sehr, dass Du mich gefunden hast.",
     "primaryCtaLabel": "Mehr über mich",
     "primaryCtaUrl": "#ueber-mich"
   },
   "aktuell": {
     "title": "Aktuelles",
-    "intro": "Kurze Hinweise zu Workshops, Aktionen oder Saison-Themen.",
+    "intro": "Kurze Hinweise zu Workshops, Aktionen oder Saison-Themen. ",
     "items": [
       {
         "id": "aktuell-yin-workshop",
@@ -139,6 +139,14 @@
   "settings": {
     "businessName": "Tanja Thaller",
     "navWordmark": "YOMITA",
+    "sectionEyebrows": {
+      "hero": "Tanja Thaller",
+      "aktuell": "Journal",
+      "courses": "Angebot",
+      "prices": "Teilnahme"
+    },
+    "coursesSectionTitle": "Kurse & Termine",
+    "coursesSectionIntro": "Als Bestandskund:in buchst du deine Stunden ganz entspannt über die App. Wenn du neu bist oder Fragen hast, bin ich gern für dich da - schreib mir einfach über das Kontaktformular.",
     "appUrl": "https://andrethaller-ctrl-yo-gpke.bolt.host/auth",
     "siteTitle": "Tanja Thaller – Yoga & Achtsamkeit",
     "metaDescription": "Yoga-Kurse und Buchung über die App. Kontakt für Neukundinnen und Neukunden. Platzhalter-SEO-Text.",

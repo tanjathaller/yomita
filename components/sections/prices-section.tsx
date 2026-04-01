@@ -5,9 +5,12 @@ import { SectionShell } from "@/components/shared/section-shell";
 
 type PricesSectionProps = {
   prices: PriceItem[];
+  /** Kleines Label über der Headline (z. B. „Teilnahme“). */
+  eyebrowLabel?: string;
 };
 
-export function PricesSection({ prices }: PricesSectionProps) {
+export function PricesSection({ prices, eyebrowLabel }: PricesSectionProps) {
+  const eyebrow = eyebrowLabel?.trim() || "Teilnahme";
   return (
     <SectionShell
       id="preise"
@@ -16,7 +19,7 @@ export function PricesSection({ prices }: PricesSectionProps) {
       <div className="max-w-2xl pl-4 lg:pl-6">
         <div className="relative inline-block pr-6 lg:pr-7">
           <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#7A956E] uppercase lg:text-sm">
-            Teilnahme
+            {eyebrow}
           </p>
           <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight lg:text-6xl">
             Preise

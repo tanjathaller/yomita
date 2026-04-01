@@ -67,6 +67,16 @@ export const navItemSchema = z.object({
 export const generalSettingsSchema = z.object({
   businessName: z.string(),
   navWordmark: z.string().optional(),
+  sectionEyebrows: z
+    .object({
+      hero: z.string().optional(),
+      aktuell: z.string().optional(),
+      courses: z.string().optional(),
+      prices: z.string().optional(),
+    })
+    .optional(),
+  coursesSectionTitle: z.string().optional(),
+  coursesSectionIntro: z.string().optional(),
   appUrl: z.string().min(1),
   logoUrl: z.string().optional(),
   siteTitle: z.string().optional(),

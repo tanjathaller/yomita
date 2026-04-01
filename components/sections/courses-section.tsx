@@ -11,6 +11,12 @@ import { cn } from "@/lib/utils";
 type CoursesSectionProps = {
   courses: Course[];
   appUrl: string;
+  /** Kleines Label über der Headline (z. B. „Angebot“). */
+  eyebrowLabel?: string;
+  /** Optionaler Sektionstitel (Fallback: „Kurse & Termine“). */
+  sectionTitle?: string;
+  /** Optionaler Sektionstext (Fallback: Standardtext). */
+  sectionIntro?: string;
   /** When true, this block sits below „Aktuelles“ in the same muted band (spacing + divider). */
   afterAktuelles?: boolean;
   /** Wenn es kein Aktuelles gibt: unter dem Kurz-„Über mich“-Teaser (spacing + divider). */
@@ -20,9 +26,15 @@ type CoursesSectionProps = {
 export function CoursesSection({
   courses,
   appUrl,
+  eyebrowLabel,
+  sectionTitle,
+  sectionIntro,
   afterAktuelles = false,
   afterAboutTeaser = false,
 }: CoursesSectionProps) {
+  const eyebrow = eyebrowLabel?.trim() || "Angebot";
+  const heading = sectionTitle?.trim() || "Kurse & Termine";
+  const intro = sectionIntro?.trim() || "Als Bestandskund:in buchst du deine Stunden ganz entspannt über die App. Wenn du neu bist oder Fragen hast, bin ich gern für dich da - schreib mir einfach über das";
   return (
     <SectionShell
       id="kurse"
@@ -37,10 +49,10 @@ export function CoursesSection({
       <div className="max-w-2xl pl-4 lg:pl-6">
         <div className="relative inline-block pr-6 lg:pr-7">
           <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#7A956E] uppercase lg:text-sm">
-            Angebot
+            {eyebrow}
           </p>
           <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight lg:text-6xl">
-            Kurse & Termine
+            {heading}
           </h2>
           <span
             aria-hidden
@@ -50,8 +62,7 @@ export function CoursesSection({
       </div>
       <div className="mt-4 max-w-2xl pl-4 lg:mt-5 lg:pl-6">
         <p className="text-muted-foreground max-w-prose text-sm leading-relaxed lg:text-base">
-          Als Bestandskund:in buchst du deine Stunden ganz entspannt über die App. Wenn du neu
-          bist oder Fragen hast, bin ich gern für dich da - schreib mir einfach über das{" "}
+          {intro}{" "}
           <HashScrollLink href="/#kontakt" className="text-primary font-medium underline-offset-4 hover:underline">
             Kontaktformular
           </HashScrollLink>

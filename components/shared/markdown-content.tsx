@@ -1,6 +1,9 @@
 import ReactMarkdown from "react-markdown";
+import remarkBreaks from "remark-breaks";
 
 import { cn } from "@/lib/utils";
+
+const NEW_WINDOW_LINK_TITLE = "new-window";
 
 type MarkdownContentProps = {
   markdown: string;
@@ -16,7 +19,24 @@ export function MarkdownContent({ markdown, className }: MarkdownContentProps) {
         className
       )}
     >
-      <ReactMarkdown>{markdown}</ReactMarkdown>
+      <ReactMarkdown
+        remarkPlugins={[remarkBreaks]}
+        components={{
+          a: ({ title, ...props }) => {
+            const openInNewTab = title === NEW_WINDOW_LINK_TITLE;
+            return (
+              <a
+                {...props}
+                title={openInNewTab ? undefined : title}
+                target={openInNewTab ? "_blank" : undefined}
+                rel={openInNewTab ? "noopener noreferrer" : undefined}
+              />
+            );
+          },
+        }}
+      >
+        {markdown}
+      </ReactMarkdown>
     </div>
   );
 }

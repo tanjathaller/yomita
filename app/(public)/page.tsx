@@ -16,17 +16,25 @@ export default async function HomePage() {
       <HeroSection
         hero={content.hero}
         businessName={content.settings.businessName}
+        eyebrowLabel={content.settings.sectionEyebrows?.hero}
         waveInto={hasAktuelles ? undefined : "muted-band"}
       />
       <HeroSeamDebug />
-      <AktuellesSection aktuell={content.aktuell} afterAboutTeaser={hasAktuelles} />
+      <AktuellesSection
+        aktuell={content.aktuell}
+        afterAboutTeaser={hasAktuelles}
+        eyebrowLabel={content.settings.sectionEyebrows?.aktuell}
+      />
       <CoursesSection
         courses={content.courses}
         appUrl={content.settings.appUrl}
+        eyebrowLabel={content.settings.sectionEyebrows?.courses}
+        sectionTitle={content.settings.coursesSectionTitle}
+        sectionIntro={content.settings.coursesSectionIntro}
         afterAktuelles={hasAktuelles}
         afterAboutTeaser={false}
       />
-      <PricesSection prices={content.prices} />
+      <PricesSection prices={content.prices} eyebrowLabel={content.settings.sectionEyebrows?.prices} />
       <AboutSection about={content.about} />
       <ContactSection contact={content.contact} />
     </>

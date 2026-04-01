@@ -14,6 +14,8 @@ type HeroSectionProps = {
   hero: HeroModel;
   /** Erscheint als dezente Zeile über der Headline (z. B. Marken- oder Studioname). */
   businessName?: string;
+  /** Optionales explizites Hero-Label. Falls leer, wird `businessName` verwendet. */
+  eyebrowLabel?: string;
   /** Surface-Farbe der folgenden Sektion für sauberen Wave-Übergang. */
   waveInto?: "background" | "muted-band" | "muted-footer";
 };
@@ -21,9 +23,10 @@ type HeroSectionProps = {
 export function HeroSection({
   hero,
   businessName,
+  eyebrowLabel,
   waveInto,
 }: HeroSectionProps) {
-  const eyebrow = businessName?.trim();
+  const eyebrow = eyebrowLabel?.trim() || businessName?.trim();
   return (
     <section
       id="hero"

@@ -79,6 +79,21 @@ export type GeneralSettings = {
   businessName: string;
   /** Wenn gesetzt: Anzeige im Header und im mobilen Menü-Titel (z. B. Kurzmarke). Sonst `businessName`. */
   navWordmark?: string;
+  /** Optionale kleine Labels oberhalb von Sektions-Headlines. */
+  sectionEyebrows?: {
+    /** Hero-Eyebrow; Fallback ist `businessName`. */
+    hero?: string;
+    /** Label über der Aktuelles-Headline (z. B. „Journal“). */
+    aktuell?: string;
+    /** Label über der Kurse-Headline (z. B. „Angebot“). */
+    courses?: string;
+    /** Label über der Preise-Headline (z. B. „Teilnahme“). */
+    prices?: string;
+  };
+  /** Optionaler Titel der Kurse-Sektion (Fallback: „Kurse & Termine“). */
+  coursesSectionTitle?: string;
+  /** Optionaler Untertext der Kurse-Sektion (Fallback: bestehender Standardtext). */
+  coursesSectionIntro?: string;
   appUrl: string;
   logoUrl?: string;
   siteTitle?: string;

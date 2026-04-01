@@ -44,7 +44,7 @@ Optional. Wenn leer oder nicht gesetzt, kann die UI Default-Einträge aus der Ta
 | `primaryCtaLabel`  | string | Button-Text zum App-Einstieg |
 | `primaryCtaUrl`    | string | Link-Ziel; meist `settings.appUrl`, ggf. mit UTM-Parametern |
 
-**UI:** Über der Headline kann `settings.businessName` als kleine Eyebrow-Zeile erscheinen (optional, nur Darstellung; Text bleibt direkt auf dem Hero-Foto mit Schatten für Lesbarkeit).
+**UI:** Über der Headline kann `settings.sectionEyebrows.hero` als kleine Eyebrow-Zeile erscheinen; Fallback ist `settings.businessName` (optional, nur Darstellung; Text bleibt direkt auf dem Hero-Foto mit Schatten für Lesbarkeit).
 
 ---
 
@@ -178,6 +178,9 @@ Kein Feld `externalUrl`.
 |--------------------|----------|--------------|
 | `businessName`     | string   | u. a. Hero-Eyebrow, Metadaten-Template; Footer-Wordmark nur wenn `navWordmark` fehlt |
 | `navWordmark`      | string?  | optional; wenn gesetzt: Wordmark in **Header**, **Mobile-Menü** und **Footer** (z. B. „YOMITA“) |
+| `sectionEyebrows`  | object?  | optionale kleine Labels über Abschnitts-Headlines: `hero`, `aktuell`, `courses`, `prices`; Fallbacks: `businessName` bzw. „Journal“, „Angebot“, „Teilnahme“ |
+| `coursesSectionTitle` | string? | optionaler Titel der Kurse-Sektion; Fallback: „Kurse & Termine“ |
+| `coursesSectionIntro` | string? | optionaler Untertext der Kurse-Sektion vor dem Kontakt-Link; Fallback: bisheriger Standardtext |
 | `appUrl`           | string   | Hauptlink zur Kursbuchungs-App (Hero-CTA kann davon abweichen, z. B. Tracking) |
 | `logoUrl`          | string?  | optional; Logo-Erstellung ist nicht Projektbestandteil, Upload-URL ist erlaubt |
 | `siteTitle`        | string?  | `<title>` / Branding |

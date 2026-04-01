@@ -12,6 +12,8 @@ type AktuellesSectionProps = {
   aktuell: AktuellesModel;
   /** Direkt unter dem Kurz-„Über mich“-Block (gleiches Muted-Band wie nach dem Hero). */
   afterAboutTeaser?: boolean;
+  /** Kleines Label über der Headline (z. B. „Journal“). */
+  eyebrowLabel?: string;
 };
 
 const DEFAULT_TITLE = "Aktuelles";
@@ -20,6 +22,7 @@ const DEFAULT_BADGE_LABEL = "Aktuell";
 export function AktuellesSection({
   aktuell,
   afterAboutTeaser = false,
+  eyebrowLabel,
 }: AktuellesSectionProps) {
   const { items, title, intro } = aktuell;
   if (items.length === 0) {
@@ -27,6 +30,7 @@ export function AktuellesSection({
   }
 
   const heading = title?.trim() || DEFAULT_TITLE;
+  const eyebrow = eyebrowLabel?.trim() || "Journal";
 
   return (
     <SectionShell
@@ -41,7 +45,7 @@ export function AktuellesSection({
       <div className="max-w-2xl pl-4 lg:pl-6">
         <div className="relative inline-block pr-6 lg:pr-7">
           <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#5F7F53] uppercase lg:text-sm">
-            Journal
+            {eyebrow}
           </p>
           <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight lg:text-6xl">
             {heading}
