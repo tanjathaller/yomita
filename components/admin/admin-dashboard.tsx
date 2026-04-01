@@ -221,7 +221,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                   key={section.id}
                   type="button"
                   variant={activeSection === section.id ? "default" : "outline"}
-                  size="sm"
+                  size="default"
                   onClick={() => setActiveSection(section.id)}
                 >
                   {section.label}
