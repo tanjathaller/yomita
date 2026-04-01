@@ -89,14 +89,14 @@ export function AktuellesSection({
                 src={imageSrc}
                 alt={item.image.alt}
                 fill
-                className="object-cover object-[center_24%] scale-[1.01]"
+                className="object-cover object-center"
                 sizes="(min-width: 1024px) 45vw, (min-width: 640px) 90vw, 100vw"
                 priority={index === 0}
                 unoptimized={useUnoptimized}
               />
               <div
                 aria-hidden
-                className="absolute inset-x-0 -bottom-px h-40 bg-gradient-to-b from-transparent via-card/55 to-card"
+                className="absolute inset-x-0 -bottom-px h-14 bg-gradient-to-b from-transparent via-card/30 to-card/85"
               />
               <div
                 aria-hidden
@@ -108,7 +108,7 @@ export function AktuellesSection({
                 </span>
               </div>
             </div>
-            <div className="relative space-y-4 p-7 lg:p-12 before:pointer-events-none before:absolute before:inset-x-0 before:-top-14 before:h-14 before:bg-gradient-to-b before:from-card/0 before:to-card/90">
+            <div className="relative space-y-4 p-7 lg:p-12 before:pointer-events-none before:absolute before:inset-x-0 before:-top-6 before:h-6 before:bg-gradient-to-b before:from-card/0 before:to-card/85">
               {item.title?.trim() ? (
                 <h3 className="text-[#2F3B2A] text-3xl font-semibold tracking-tight lg:text-4xl xl:text-[2.5rem]">
                   {item.title.trim()}

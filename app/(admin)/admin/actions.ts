@@ -96,6 +96,11 @@ export async function saveSiteContentAction(
   if (!parsedContent.success) {
     const firstIssue = parsedContent.error.issues[0];
     const issuePath = firstIssue?.path.join(".") ?? "unknown";
+    if (issuePath.includes("aktuell.items") && issuePath.endsWith("image.url")) {
+      return {
+        error: "Bitte zuerst ein Bild auswählen, bevor du speicherst.",
+      };
+    }
     if (issuePath.includes("image.alt")) {
       return {
         error: "Bitte einen Bild-Alt-Text eintragen (Pflichtfeld).",

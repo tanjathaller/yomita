@@ -28,6 +28,16 @@
           "alt": "Yogamatten und ruhige Atmosphäre im Studio"
         },
         "sortOrder": 20
+      },
+      {
+        "id": "aktuell-e2b3bb2b-aaf9-4b96-8534-dcf977b156e5",
+        "title": "Neues Thema",
+        "text": "",
+        "image": {
+          "url": "https://3ym7pno5nt6e8eux.private.blob.vercel-storage.com/aktuelles/2026-04-01/fc75be26-bd0b-4a3a-a93a-8bb78e1821c7-tanja-9-mobile.webp",
+          "alt": "tanja 9 mobile"
+        },
+        "sortOrder": 30
       }
     ]
   },
