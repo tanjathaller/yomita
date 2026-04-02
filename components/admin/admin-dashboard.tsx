@@ -39,6 +39,11 @@ const INTERNAL_ANCHOR_OPTIONS = [
 ] as const;
 
 const VALID_INTERNAL_ANCHORS = new Set(INTERNAL_ANCHOR_OPTIONS.map((option) => option.href));
+type InternalAnchorHref = (typeof INTERNAL_ANCHOR_OPTIONS)[number]["href"];
+
+function isInternalAnchorHref(value: string): value is InternalAnchorHref {
+  return VALID_INTERNAL_ANCHORS.has(value as InternalAnchorHref);
+}
 
 type SectionKey =
   | "hero"
@@ -145,7 +150,7 @@ function collectMarkdownLinkWarnings(markdown: string): string[] {
     }
 
     if (href.startsWith("#")) {
-      if (!VALID_INTERNAL_ANCHORS.has(href)) {
+      if (!isInternalAnchorHref(href)) {
         warnings.add(
           `Unbekannter Anker-Link: "${href}". Erlaubt sind: ${Array.from(VALID_INTERNAL_ANCHORS).join(", ")}.`,
         );
@@ -425,7 +430,7 @@ function MarkdownEditor({
       setLinkInputError("Ungültige URL. Erlaubt: https://, http://, mailto: oder #anker.");
       return;
     }
-    if (trimmedUrl.startsWith("#") && !VALID_INTERNAL_ANCHORS.has(trimmedUrl)) {
+    if (trimmedUrl.startsWith("#") && !isInternalAnchorHref(trimmedUrl)) {
       setLinkInputError(`Unbekannter Anker: ${trimmedUrl}`);
       return;
     }
