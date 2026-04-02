@@ -10,13 +10,20 @@ export function PriceCard({ item }: { item: PriceItem }) {
   const hasLink = Boolean(item.linkUrl);
   const isExternalLink = item.linkUrl?.startsWith("http");
 
+  const highlighted = Boolean(item.highlighted);
+
   return (
     <Card
       className={cn(
-        "border-primary/20 bg-[color-mix(in_oklab,var(--surface-muted-band)_62%,var(--background)_38%)] shadow-sm transition-[box-shadow,border-color] hover:border-primary/30 hover:shadow-md"
+        "h-full w-full min-w-0 border-primary/20 bg-[color-mix(in_oklab,var(--surface-muted-band)_62%,var(--background)_38%)] shadow-sm transition-[box-shadow,border-color] hover:border-primary/30 hover:shadow-md",
+        highlighted &&
+          "relative border-[#6F8B63]/45 shadow-md shadow-[#2F3B2A]/10 ring-2 ring-[#7A956E]/35 hover:border-[#6F8B63]/55 hover:ring-[#7A956E]/45",
       )}
     >
-      <CardHeader className="pb-2">
+      <CardHeader className={cn("pb-2", highlighted && "pt-1")}>
+        {highlighted ? (
+          <p className="text-primary mb-2 text-xs font-semibold tracking-wide">Empfehlung</p>
+        ) : null}
         <CardTitle className="text-foreground text-lg leading-snug lg:text-xl">
           {item.title}
         </CardTitle>

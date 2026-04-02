@@ -50,9 +50,25 @@ export function PricesSection({ prices, eyebrowLabel, sectionTitle, sectionIntro
           )}
         />
       </div>
-      <div className="mt-10 grid gap-5 lg:grid-cols-3 lg:gap-6 xl:gap-8">
+      <div
+        className={cn(
+          "mt-10 flex flex-col gap-5",
+          /* Flex + zentrierte letzte Zeile(n), gleiche Kartenbreite wie früher 3-Spalten-Grid (nur lg+) */
+          "lg:flex-row lg:flex-wrap lg:justify-center lg:gap-6 xl:gap-8",
+        )}
+      >
         {prices.map((p) => (
-          <PriceCard key={p.id} item={p} />
+          <div
+            key={p.id}
+            className={cn(
+              "flex min-w-0 w-full flex-col",
+              /* flex-basis statt nur width: zuverlässig gleich breite Spalten im Flex-Wrap */
+              "lg:flex-[0_0_calc((100%_-_3rem)/3)]",
+              "xl:flex-[0_0_calc((100%_-_4rem)/3)]",
+            )}
+          >
+            <PriceCard item={p} />
+          </div>
         ))}
       </div>
     </SectionShell>

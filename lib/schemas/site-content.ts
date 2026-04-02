@@ -42,6 +42,7 @@ export const priceItemSchema = z.object({
 
 export const aboutSectionSchema = z.object({
   title: z.string(),
+  eyebrow: z.string().optional(),
   text: z.string(),
   image: z.object({
     url: z.string().min(1),

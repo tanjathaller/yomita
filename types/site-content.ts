@@ -54,7 +54,10 @@ export type PriceItem = {
 };
 
 export type AboutSection = {
+  /** Sektionsüberschrift (Desktop in der Textkarte; Mobil groß am Portrait). Zeilenumbruch optional: zwei Zeilen. */
   title: string;
+  /** Kleines Label über der Überschrift, nur Desktop („Eyebrow“). */
+  eyebrow?: string;
   text: string;
   image: {
     url: string;

@@ -84,9 +84,23 @@ export function CoursesSection({
           </Link>
         </div>
       </div>
-      <div className="mt-8 grid gap-4 lg:grid-cols-2 lg:gap-6 xl:gap-8">
+      <div
+        className={cn(
+          "mt-8 flex flex-col gap-4",
+          "lg:flex-row lg:flex-wrap lg:justify-center lg:gap-6 xl:gap-8",
+        )}
+      >
         {courses.map((course) => (
-          <CourseRow key={course.id} course={course} />
+          <div
+            key={course.id}
+            className={cn(
+              "flex min-w-0 w-full flex-col",
+              "lg:flex-[0_0_calc((100%_-_1.5rem)/2)]",
+              "xl:flex-[0_0_calc((100%_-_2rem)/2)]",
+            )}
+          >
+            <CourseRow course={course} />
+          </div>
         ))}
       </div>
     </SectionShell>

@@ -154,10 +154,11 @@ Kein Feld `externalUrl`.
 
 ## Über mich (`about`)
 
-| Feld    | Typ    | Beschreibung |
-|---------|--------|--------------|
-| `title` | string | Sektionsüberschrift |
-| `text`  | string | Fließtext (Markdown möglich, je nach Renderer) |
+| Feld     | Typ    | Beschreibung |
+|----------|--------|--------------|
+| `title`  | string | Überschrift: **Desktop** in der Textkarte; **Mobil** groß am Portrait. Optional zwei Zeilen: Zeilenumbruch im Text, sonst Aufteilung nach erstem Wort („Über“ / „mich …“). |
+| `eyebrow`| string?| optional; kleines Label **nur Desktop** über `title` (Fallback in der UI: „Kurz zu mir“, wenn leer/fehlend). |
+| `text`   | string | Fließtext (Markdown möglich, je nach Renderer) |
 
 ### Bild (`about.image`)
 

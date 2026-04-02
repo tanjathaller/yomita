@@ -67,7 +67,12 @@ export function AktuellesSection({
           />
         </div>
       ) : null}
-      <div className="mt-10 grid gap-6 lg:mx-auto lg:max-w-6xl lg:grid-cols-2 lg:gap-8 xl:max-w-7xl">
+      <div
+        className={cn(
+          "mt-10 flex flex-col gap-6",
+          "lg:flex-row lg:flex-wrap lg:justify-center lg:gap-6 xl:gap-8",
+        )}
+      >
         {items.map((item, index) => {
           const customBadge = item.badgeLabel?.trim();
           const badgeLabel = customBadge
@@ -85,59 +90,68 @@ export function AktuellesSection({
           const isExternalCta = Boolean(ctaHref && /^https?:\/\//i.test(ctaHref));
 
           return (
-          <article
-            key={item.id}
-            className={cn(
-              "overflow-hidden rounded-3xl border border-border/70 bg-card shadow-sm",
-              "transition-shadow duration-200 hover:shadow-md",
-            )}
-          >
-            <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-              <Image
-                src={imageSrc}
-                alt={item.image.alt}
-                fill
-                className="object-cover object-center"
-                sizes="(min-width: 1024px) 45vw, (min-width: 640px) 90vw, 100vw"
-                priority={index === 0}
-                unoptimized={useUnoptimized}
-              />
-              <div
-                aria-hidden
-                className="absolute inset-x-0 -bottom-px h-14 bg-gradient-to-b from-transparent via-card/30 to-card/85"
-              />
-              <div
-                aria-hidden
-                className="absolute inset-x-0 bottom-0 h-1 bg-card"
-              />
-              <div className="absolute left-4 top-4">
-                <span className="rounded-full bg-background/90 px-3 py-1 text-xs font-semibold tracking-widest text-[#7A956E] uppercase shadow-sm backdrop-blur-sm">
-                  {badgeLabel}
-                </span>
-              </div>
+            <div
+              key={item.id}
+              className={cn(
+                "flex min-w-0 w-full flex-col",
+                "lg:flex-[0_0_calc((100%_-_3rem)/3)]",
+                "xl:flex-[0_0_calc((100%_-_4rem)/3)]",
+              )}
+            >
+              <article
+                className={cn(
+                  "h-full w-full min-w-0 overflow-hidden rounded-3xl border border-border/70 bg-card shadow-sm",
+                  "lg:rounded-2xl",
+                  "transition-shadow duration-200 hover:shadow-md",
+                )}
+              >
+                <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                  <Image
+                    src={imageSrc}
+                    alt={item.image.alt}
+                    fill
+                    className="object-cover object-center"
+                    sizes="(min-width: 1280px) 28vw, (min-width: 1024px) 32vw, (min-width: 640px) 90vw, 100vw"
+                    priority={index === 0}
+                    unoptimized={useUnoptimized}
+                  />
+                  <div
+                    aria-hidden
+                    className="absolute inset-x-0 -bottom-px h-14 bg-gradient-to-b from-transparent via-card/30 to-card/85 lg:h-12"
+                  />
+                  <div
+                    aria-hidden
+                    className="absolute inset-x-0 bottom-0 h-1 bg-card"
+                  />
+                  <div className="absolute left-4 top-4 lg:left-3 lg:top-3">
+                    <span className="rounded-full bg-background/90 px-3 py-1 text-xs font-semibold tracking-widest text-[#7A956E] uppercase shadow-sm backdrop-blur-sm lg:px-2.5 lg:py-0.5">
+                      {badgeLabel}
+                    </span>
+                  </div>
+                </div>
+                <div className="relative space-y-4 p-7 before:pointer-events-none before:absolute before:inset-x-0 before:-top-6 before:h-6 before:bg-gradient-to-b before:from-card/0 before:to-card/85 lg:space-y-3 lg:p-8 lg:before:-top-5 lg:before:h-5">
+                  {item.title?.trim() ? (
+                    <h3 className="text-[#2F3B2A] text-3xl font-semibold tracking-tight lg:text-2xl lg:leading-snug xl:text-[1.65rem]">
+                      {item.title.trim()}
+                    </h3>
+                  ) : null}
+                  <div className="text-muted-foreground text-base leading-relaxed lg:text-sm lg:leading-relaxed xl:text-[0.95rem]">
+                    <MarkdownContent markdown={item.text} />
+                  </div>
+                  {shouldRenderCta ? (
+                    <Link
+                      href={ctaHref!}
+                      className="text-primary inline-flex items-center gap-2 pt-1 text-lg font-medium tracking-tight underline-offset-4 transition-colors hover:underline lg:text-base"
+                      target={isExternalCta ? "_blank" : undefined}
+                      rel={isExternalCta ? "noopener noreferrer" : undefined}
+                    >
+                      {ctaLabel}
+                      <span aria-hidden>→</span>
+                    </Link>
+                  ) : null}
+                </div>
+              </article>
             </div>
-            <div className="relative space-y-4 p-7 lg:p-12 before:pointer-events-none before:absolute before:inset-x-0 before:-top-6 before:h-6 before:bg-gradient-to-b before:from-card/0 before:to-card/85">
-              {item.title?.trim() ? (
-                <h3 className="text-[#2F3B2A] text-3xl font-semibold tracking-tight lg:text-4xl xl:text-[2.5rem]">
-                  {item.title.trim()}
-                </h3>
-              ) : null}
-              <div className="text-muted-foreground text-base leading-relaxed lg:text-lg">
-                <MarkdownContent markdown={item.text} />
-              </div>
-              {shouldRenderCta ? (
-                <Link
-                  href={ctaHref!}
-                  className="text-primary inline-flex items-center gap-2 pt-1 text-lg font-medium tracking-tight underline-offset-4 transition-colors hover:underline"
-                  target={isExternalCta ? "_blank" : undefined}
-                  rel={isExternalCta ? "noopener noreferrer" : undefined}
-                >
-                  {ctaLabel}
-                  <span aria-hidden>→</span>
-                </Link>
-              ) : null}
-            </div>
-          </article>
           );
         })}
       </div>

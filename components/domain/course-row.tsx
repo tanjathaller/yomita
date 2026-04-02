@@ -12,7 +12,7 @@ export function CourseRow({ course }: { course: Course }) {
   const external = isExternalCourse(course);
 
   return (
-    <Card className="border-border/80 shadow-sm lg:flex lg:flex-row lg:items-stretch lg:gap-0 lg:py-0">
+    <Card className="h-full w-full min-w-0 border-border/80 shadow-sm lg:flex lg:flex-row lg:items-stretch lg:gap-0 lg:py-0">
       <CardHeader className="flex flex-row flex-wrap items-start justify-between gap-3 space-y-0 pb-2 lg:min-w-0 lg:flex-1 lg:items-start lg:justify-between lg:self-stretch lg:border-border/60 lg:border-r lg:py-6 lg:pr-6 lg:pl-6">
         <div className="min-w-0 space-y-1">
           <CardTitle className="text-[#2F3B2A] text-xl leading-snug lg:text-[1.35rem]">

@@ -1842,13 +1842,39 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
             {activeSection === "about" ? (
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label>Titel</Label>
+                  <Label htmlFor="about-eyebrow">Eyebrow (nur Desktop)</Label>
                   <Input
+                    id="about-eyebrow"
+                    value={draft.about.eyebrow ?? ""}
+                    placeholder="Kurz zu mir"
+                    onChange={(event) =>
+                      setDraft((prev) => ({
+                        ...prev,
+                        about: { ...prev.about, eyebrow: event.target.value },
+                      }))
+                    }
+                  />
+                  <p className="text-muted-foreground text-sm">
+                    Kleines Label oberhalb der Überschrift in der Textkarte. Leer lassen für den Standard
+                    „Kurz zu mir“.
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="about-title">Titel</Label>
+                  <Textarea
+                    id="about-title"
+                    rows={2}
                     value={draft.about.title}
                     onChange={(event) =>
                       setDraft((prev) => ({ ...prev, about: { ...prev.about, title: event.target.value } }))
                     }
+                    className="min-h-[4.5rem] resize-y"
                   />
+                  <p className="text-muted-foreground text-sm">
+                    Wird auf dem Desktop in der Karte und auf Mobil am Portrait angezeigt. Optional Zeile 1 und
+                    Zeile 2 auf Mobil: Zeilenumbruch hier einfügen oder ein Leerzeichen (z. B. „Über mich“ wird
+                    zu zwei Zeilen wie bisher).
+                  </p>
                 </div>
                 <MarkdownEditor
                   label="Fließtext (Markdown)"
