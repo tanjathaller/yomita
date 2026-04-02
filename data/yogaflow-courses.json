@@ -1,5 +1,5 @@
 {
-  "syncedAt": "2026-04-02T14:19:36.599Z",
+  "syncedAt": "2026-04-02T14:57:27.175Z",
   "courses": [
     {
       "id": "b5ed1825-ce20-4303-9d22-1e9e833bc43d",
@@ -11,7 +11,7 @@
       "location": "Gagelweg",
       "bookingStatus": "available",
       "price": "12,00 €",
-      "remainingSpots": 8,
+      "remainingSpots": 99,
       "sortOrder": 10,
       "startsOn": "2026-04-07"
     },
@@ -25,7 +25,7 @@
       "location": "Gagelweg",
       "bookingStatus": "available",
       "price": "12,00 €",
-      "remainingSpots": 8,
+      "remainingSpots": 99,
       "sortOrder": 20,
       "startsOn": "2026-04-08"
     },
@@ -39,7 +39,7 @@
       "location": "Gagelweg",
       "bookingStatus": "available",
       "price": "12,00 €",
-      "remainingSpots": 8,
+      "remainingSpots": 99,
       "sortOrder": 30,
       "startsOn": "2026-04-14"
     },
@@ -53,7 +53,7 @@
       "location": "Gagelweg",
       "bookingStatus": "available",
       "price": "12,00 €",
-      "remainingSpots": 8,
+      "remainingSpots": 99,
       "sortOrder": 40,
       "startsOn": "2026-04-15"
     },
@@ -67,7 +67,7 @@
       "location": "Gagelweg",
       "bookingStatus": "available",
       "price": "12,00 €",
-      "remainingSpots": 8,
+      "remainingSpots": 99,
       "sortOrder": 50,
       "startsOn": "2026-04-21"
     },
@@ -81,7 +81,7 @@
       "location": "Gagelweg",
       "bookingStatus": "available",
       "price": "12,00 €",
-      "remainingSpots": 8,
+      "remainingSpots": 99,
       "sortOrder": 60,
       "startsOn": "2026-04-22"
     },
@@ -95,7 +95,7 @@
       "location": "Gagelweg",
       "bookingStatus": "available",
       "price": "12,00 €",
-      "remainingSpots": 8,
+      "remainingSpots": 99,
       "sortOrder": 70,
       "startsOn": "2026-04-28"
     },
@@ -109,7 +109,7 @@
       "location": "Gagelweg",
       "bookingStatus": "available",
       "price": "12,00 €",
-      "remainingSpots": 8,
+      "remainingSpots": 99,
       "sortOrder": 80,
       "startsOn": "2026-04-29"
     },
@@ -123,7 +123,7 @@
       "location": "Gagelweg",
       "bookingStatus": "available",
       "price": "12,00 €",
-      "remainingSpots": 8,
+      "remainingSpots": 99,
       "sortOrder": 90,
       "startsOn": "2026-05-05"
     },
@@ -137,7 +137,7 @@
       "location": "Gagelweg",
       "bookingStatus": "available",
       "price": "12,00 €",
-      "remainingSpots": 8,
+      "remainingSpots": 99,
       "sortOrder": 100,
       "startsOn": "2026-05-12"
     },
@@ -151,7 +151,7 @@
       "location": "Gagelweg",
       "bookingStatus": "available",
       "price": "12,00 €",
-      "remainingSpots": 8,
+      "remainingSpots": 99,
       "sortOrder": 110,
       "startsOn": "2026-05-13"
     }

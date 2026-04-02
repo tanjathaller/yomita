@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { courseSchema } from "@/lib/schemas/site-content";
+import { courseSchema } from "./site-content";
 
 /** Artefakt aus `scripts/sync-yogaflow-courses.mts`, von `getSiteContent` eingelesen. */
 export const yogaflowCoursesFileSchema = z.object({

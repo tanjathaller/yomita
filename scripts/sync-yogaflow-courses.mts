@@ -10,8 +10,11 @@
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
 
-import { yogaflowCoursesFileSchema } from "../lib/schemas/yogaflow-courses-file";
 import type { InternalCourse } from "../types/site-content";
+
+import yogaflowFile from "../lib/schemas/yogaflow-courses-file.ts";
+
+const { yogaflowCoursesFileSchema } = yogaflowFile;
 
 import { scrapeRemainingSpotsFromYogaflowApp } from "./yogaflow-playwright-status.mts";
 
