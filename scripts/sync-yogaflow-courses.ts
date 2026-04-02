@@ -5,6 +5,8 @@
  *
  * Env: YOGAFLOW_SUPABASE_URL, YOGAFLOW_SUPABASE_ANON_KEY, YOGAFLOW_SYNC_EMAIL,
  * YOGAFLOW_SYNC_PASSWORD; optional YOGAFLOW_APP_URL für korrekte Status-Anzeige.
+ *
+ * Als `.ts` (nicht `.mts`), damit `tsx`/Node benannte Imports aus `./yogaflow-playwright-status` zuverlässig auflösen.
  */
 
 import { writeFile } from "node:fs/promises";
