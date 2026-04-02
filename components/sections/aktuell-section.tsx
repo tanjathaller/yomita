@@ -69,9 +69,12 @@ export function AktuellesSection({
       ) : null}
       <div className="mt-10 grid gap-6 lg:mx-auto lg:max-w-6xl lg:grid-cols-2 lg:gap-8 xl:max-w-7xl">
         {items.map((item, index) => {
-          const badgeLabel = item.title?.toLowerCase().includes("workshop")
-            ? "Workshop"
-            : DEFAULT_BADGE_LABEL;
+          const customBadge = item.badgeLabel?.trim();
+          const badgeLabel = customBadge
+            ? customBadge
+            : item.title?.toLowerCase().includes("workshop")
+              ? "Workshop"
+              : DEFAULT_BADGE_LABEL;
 
           const imageSrc = resolveImageUrl(item.image.url);
           const useUnoptimized = process.env.NODE_ENV === "development" || isBlobProxyUrl(imageSrc);

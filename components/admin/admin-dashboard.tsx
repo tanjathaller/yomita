@@ -11,11 +11,17 @@ import {
   useRef,
   useState,
 } from "react";
+import { createPortal } from "react-dom";
 import ReactMarkdown from "react-markdown";
 import { Heading3, Link2, ListOrdered } from "lucide-react";
 import remarkBreaks from "remark-breaks";
 
 import type { SaveContentActionState } from "@/app/(admin)/admin/actions";
+import {
+  ADMIN_MOBILE_SAVE_PORTAL_ID,
+  ADMIN_SITE_CONTENT_FORM_ID,
+} from "@/lib/admin-dashboard-ui";
+import { cn } from "@/lib/utils";
 import type { NavItem, PriceItem, SiteContent } from "@/types/site-content";
 import {
   AdminImageFieldLabel,
@@ -26,6 +32,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+
+/** Sichtbarkeit der Desktop-Speicher-Meldung vor Beginn des Ausblendens. */
+const DESKTOP_SAVE_FEEDBACK_VISIBLE_MS = 3000;
+/** Dauer des Ausblendens (Opacity). */
+const DESKTOP_SAVE_FEEDBACK_FADE_MS = 520;
 
 const MAX_ITEMS_PER_LIST = 10;
 const LINK_TEXT_FALLBACK = "Linktext";
@@ -916,7 +927,76 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
   const [selectedAktuellFileById, setSelectedAktuellFileById] = useState<Record<string, string>>({});
   const aktuellFileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
+  const [mobileSaveHost, setMobileSaveHost] = useState<HTMLElement | null>(null);
+  const [saveToast, setSaveToast] = useState<{ text: string; isError: boolean } | null>(null);
+  const [desktopSaveFeedbackShow, setDesktopSaveFeedbackShow] = useState(false);
+  const [desktopSaveFeedbackFadeOut, setDesktopSaveFeedbackFadeOut] = useState(false);
+  const desktopSaveFeedbackTimersRef = useRef<{
+    toFade: ReturnType<typeof setTimeout> | null;
+    toUnmount: ReturnType<typeof setTimeout> | null;
+  }>({ toFade: null, toUnmount: null });
+
   const serializedContent = useMemo(() => JSON.stringify(draft), [draft]);
+
+  useEffect(() => {
+    setMobileSaveHost(document.getElementById(ADMIN_MOBILE_SAVE_PORTAL_ID));
+  }, []);
+
+  useEffect(() => {
+    const clearDesktopFeedbackTimers = () => {
+      if (desktopSaveFeedbackTimersRef.current.toFade) {
+        clearTimeout(desktopSaveFeedbackTimersRef.current.toFade);
+        desktopSaveFeedbackTimersRef.current.toFade = null;
+      }
+      if (desktopSaveFeedbackTimersRef.current.toUnmount) {
+        clearTimeout(desktopSaveFeedbackTimersRef.current.toUnmount);
+        desktopSaveFeedbackTimersRef.current.toUnmount = null;
+      }
+    };
+
+    clearDesktopFeedbackTimers();
+
+    if (!saveState.message && !saveState.error) {
+      setDesktopSaveFeedbackShow(false);
+      setDesktopSaveFeedbackFadeOut(false);
+      return;
+    }
+
+    setDesktopSaveFeedbackShow(true);
+    setDesktopSaveFeedbackFadeOut(false);
+
+    desktopSaveFeedbackTimersRef.current.toFade = setTimeout(() => {
+      setDesktopSaveFeedbackFadeOut(true);
+      desktopSaveFeedbackTimersRef.current.toUnmount = setTimeout(() => {
+        setDesktopSaveFeedbackShow(false);
+        setDesktopSaveFeedbackFadeOut(false);
+        desktopSaveFeedbackTimersRef.current.toUnmount = null;
+      }, DESKTOP_SAVE_FEEDBACK_FADE_MS);
+      desktopSaveFeedbackTimersRef.current.toFade = null;
+    }, DESKTOP_SAVE_FEEDBACK_VISIBLE_MS);
+
+    return clearDesktopFeedbackTimers;
+  }, [saveState.message, saveState.error]);
+
+  useEffect(() => {
+    if (saveState.message) {
+      setSaveToast({ text: saveState.message, isError: false });
+      return;
+    }
+    if (saveState.error) {
+      setSaveToast({ text: saveState.error, isError: true });
+    }
+  }, [saveState.message, saveState.error]);
+
+  useEffect(() => {
+    if (!saveToast) {
+      return;
+    }
+    const durationMs = saveToast.isError ? 4000 : 2600;
+    const timer = window.setTimeout(() => setSaveToast(null), durationMs);
+    return () => window.clearTimeout(timer);
+  }, [saveToast]);
+
   useEffect(() => {
     const header = document.querySelector<HTMLElement>("[data-admin-header]");
     if (!header) {
@@ -992,26 +1072,88 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
     }
   };
 
+  const mobileSaveButton =
+    mobileSaveHost &&
+    createPortal(
+      <Button
+        type="submit"
+        form={ADMIN_SITE_CONTENT_FORM_ID}
+        disabled={savePending}
+        className="h-9 w-full text-sm font-medium"
+      >
+        {savePending ? "Speichern..." : "Änderungen speichern"}
+      </Button>,
+      mobileSaveHost,
+    );
+
   return (
     <div className="space-y-6">
+      {mobileSaveButton}
+
+      {saveToast ? (
+        <div
+          className="md:hidden pointer-events-none fixed inset-x-0 bottom-0 z-[60] flex justify-center px-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
+          role="status"
+          aria-live="polite"
+        >
+          <div
+            className={cn(
+              "pointer-events-auto max-w-md rounded-xl border px-4 py-3 text-center text-sm shadow-lg backdrop-blur-md",
+              saveToast.isError
+                ? "border-destructive/40 bg-background/95 text-destructive"
+                : "border-emerald-600/35 bg-background/95 text-emerald-800",
+            )}
+          >
+            {saveToast.text}
+          </div>
+        </div>
+      ) : null}
+
       <div className="sticky z-30" style={{ top: `${sectionTabsTop}px` }}>
         <div className="-mx-4 border-b border-border/80 bg-background/90 px-4 py-2 backdrop-blur sm:-mx-6 sm:px-6">
-          <div
-            className="hide-scrollbar overflow-x-auto overflow-y-hidden overscroll-x-contain overscroll-y-none"
-            style={{ touchAction: "pan-x" }}
-          >
-            <div className="flex w-max min-w-full gap-2">
-              {sections.map((section) => (
-                <Button
-                  key={section.id}
-                  type="button"
-                  variant={activeSection === section.id ? "default" : "outline"}
-                  size="default"
-                  onClick={() => setActiveSection(section.id)}
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between md:gap-3">
+            <div
+              className="hide-scrollbar min-w-0 flex-1 overflow-x-auto overflow-y-hidden overscroll-x-contain overscroll-y-none"
+              style={{ touchAction: "pan-x" }}
+            >
+              <div className="flex w-max min-w-full gap-2">
+                {sections.map((section) => (
+                  <Button
+                    key={section.id}
+                    type="button"
+                    variant={activeSection === section.id ? "default" : "outline"}
+                    size="default"
+                    onClick={() => setActiveSection(section.id)}
+                  >
+                    {section.label}
+                  </Button>
+                ))}
+              </div>
+            </div>
+            <div className="hidden min-w-0 shrink-0 flex-row items-center gap-3 md:flex">
+              {desktopSaveFeedbackShow && (saveState.message || saveState.error) ? (
+                <div
+                  className={cn(
+                    "min-w-0 max-w-[min(20rem,42vw)] space-y-0.5 transition-opacity duration-[520ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
+                    desktopSaveFeedbackFadeOut ? "opacity-0" : "opacity-100",
+                  )}
                 >
-                  {section.label}
-                </Button>
-              ))}
+                  {saveState.message ? (
+                    <p className="text-sm leading-snug text-emerald-700">{saveState.message}</p>
+                  ) : null}
+                  {saveState.error ? (
+                    <p className="text-sm leading-snug text-destructive">{saveState.error}</p>
+                  ) : null}
+                </div>
+              ) : null}
+              <Button
+                type="submit"
+                form={ADMIN_SITE_CONTENT_FORM_ID}
+                disabled={savePending}
+                className="shrink-0"
+              >
+                {savePending ? "Speichern..." : "Änderungen speichern"}
+              </Button>
             </div>
           </div>
         </div>
@@ -1027,7 +1169,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <form action={saveFormAction} className="space-y-5">
+          <form id={ADMIN_SITE_CONTENT_FORM_ID} action={saveFormAction} className="space-y-5">
             <input type="hidden" name="content" value={serializedContent} />
 
             {activeSection === "hero" ? (
@@ -1178,12 +1320,16 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                     <div key={item.id} data-aktuell-card-id={item.id}>
                       <Card size="sm">
                         <CardHeader className="-mx-3 -mt-3 rounded-t-xl border-b border-border/60 bg-gradient-to-b from-muted/75 via-muted/35 to-transparent px-3 pt-3 pb-2">
-                          <CardTitle className="pl-1 text-sm font-bold">Card {index + 1}</CardTitle>
+                          <CardTitle className="pl-2 text-sm font-bold leading-none">
+                            Card {index + 1}
+                          </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-3">
-                          <div className="grid gap-3 md:grid-cols-2">
+                          <div className="grid gap-3 md:grid-cols-2 md:items-start">
                             <div className="space-y-2">
-                              <Label>ID</Label>
+                              <div className="flex min-h-7 items-center">
+                                <Label>ID</Label>
+                              </div>
                               <Input
                                 value={item.id}
                                 onChange={(event) =>
@@ -1242,6 +1388,35 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                               }
                             />
                           </div>
+                          <div className="space-y-2">
+                            <Label htmlFor={`aktuell-badge-${item.id}`}>
+                              Badge auf dem Bild
+                            </Label>
+                            <Input
+                              id={`aktuell-badge-${item.id}`}
+                              placeholder="Leer = automatisch (Aktuell / Workshop)"
+                              value={item.badgeLabel ?? ""}
+                              maxLength={40}
+                              onChange={(event) =>
+                                setDraft((prev) => ({
+                                  ...prev,
+                                  aktuell: {
+                                    ...prev.aktuell,
+                                    items: prev.aktuell.items.map((current) =>
+                                      current.id === item.id
+                                        ? {
+                                            ...current,
+                                            badgeLabel: event.target.value.trim()
+                                              ? event.target.value.trim()
+                                              : undefined,
+                                          }
+                                        : current,
+                                    ),
+                                  },
+                                }))
+                              }
+                            />
+                          </div>
                           <MarkdownEditor
                             label="Text (Markdown)"
                             value={item.text}
@@ -1258,9 +1433,11 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                               }))
                             }
                           />
-                          <div className="grid gap-3 md:grid-cols-2">
+                          <div className="grid gap-3 md:grid-cols-2 md:items-start">
                             <div className="space-y-2">
-                              <Label htmlFor={`aktuell-image-url-${item.id}`}>Bild URL</Label>
+                              <div className="flex min-h-7 items-center">
+                                <Label htmlFor={`aktuell-image-url-${item.id}`}>Bild URL</Label>
+                              </div>
                               <Input
                                 id={`aktuell-image-url-${item.id}`}
                                 value={item.image.url}
@@ -1308,10 +1485,10 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                   disabled={uploadingAktuellById[item.id] ?? false}
                                   onClick={() => aktuellFileInputRefs.current[item.id]?.click()}
                                 >
-                                  Datei auswaehlen
+                                  Datei auswählen
                                 </Button>
                                 <span className="text-xs text-muted-foreground">
-                                  {selectedAktuellFileById[item.id] ?? "Keine Datei ausgewaehlt"}
+                                  {selectedAktuellFileById[item.id] ?? "Keine Datei ausgewählt"}
                                 </span>
                               </div>
                               <p className="text-xs text-muted-foreground">
@@ -1900,12 +2077,25 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
               </div>
             ) : null}
 
-            <div className="flex flex-wrap items-center gap-3 border-t border-border pt-4">
+            <div className="hidden flex-wrap items-center gap-3 border-t border-border pt-4 md:flex">
               <Button type="submit" disabled={savePending}>
                 {savePending ? "Speichern..." : "Änderungen speichern"}
               </Button>
-              {saveState.message ? <p className="text-sm text-emerald-700">{saveState.message}</p> : null}
-              {saveState.error ? <p className="text-sm text-destructive">{saveState.error}</p> : null}
+              {desktopSaveFeedbackShow && (saveState.message || saveState.error) ? (
+                <div
+                  className={cn(
+                    "flex flex-col gap-0.5 transition-opacity duration-[520ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none",
+                    desktopSaveFeedbackFadeOut ? "opacity-0" : "opacity-100",
+                  )}
+                >
+                  {saveState.message ? (
+                    <p className="text-sm text-emerald-700">{saveState.message}</p>
+                  ) : null}
+                  {saveState.error ? (
+                    <p className="text-sm text-destructive">{saveState.error}</p>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
           </form>
         </CardContent>
@@ -1927,7 +2117,9 @@ function Field({
 }) {
   return (
     <div className="space-y-2">
-      <Label>{label}</Label>
+      <div className="flex min-h-7 items-center">
+        <Label>{label}</Label>
+      </div>
       <Input
         value={value}
         disabled={disabled}

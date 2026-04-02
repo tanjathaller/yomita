@@ -166,7 +166,7 @@ export function AdminImageFieldLabel({
   htmlFor?: string;
 }) {
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex min-h-7 items-center gap-1.5">
       <Label htmlFor={htmlFor} className="mb-0 font-bold">
         {children}
       </Label>
@@ -180,7 +180,7 @@ export function AdminImageFieldLabel({
  */
 export function AdminSortOrderLabelRow({ htmlFor }: { htmlFor?: string }) {
   return (
-    <div className="flex items-center gap-1.5">
+    <div className="flex min-h-7 items-center gap-1.5">
       <Label htmlFor={htmlFor} className="mb-0 font-bold">
         Reihenfolge
       </Label>

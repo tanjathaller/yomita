@@ -143,6 +143,7 @@ const aktuellCtaSchema = z
 export const aktuellesItemSchema = z.object({
   id: z.string(),
   title: z.string().optional(),
+  badgeLabel: z.string().max(40).optional(),
   text: z.string(),
   image: z.object({
     url: z.string().min(1),

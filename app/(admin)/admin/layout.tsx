@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ExternalLink, LayoutDashboard } from "lucide-react";
 
+import { ADMIN_MOBILE_SAVE_PORTAL_ID } from "@/lib/admin-dashboard-ui";
+
 import { logoutOwnerAction } from "./actions";
 
 export const metadata: Metadata = {
@@ -37,27 +39,34 @@ export default function AdminLayout({
             </div>
           </div>
 
-          <div className="flex w-full items-center gap-2 sm:w-auto sm:shrink-0">
-            <Link
-              href="/"
-              target="_blank"
-              rel="noopener noreferrer"
-              prefetch={false}
-              aria-label="Öffnet die öffentliche Website in einem neuen Tab"
-              className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg border border-primary/30 bg-primary/[0.04] px-2.5 text-sm font-medium text-primary whitespace-nowrap transition-[color,background-color,border-color] duration-200 ease-out hover:bg-primary/[0.1] hover:text-primary sm:h-8 sm:flex-none"
-            >
-              Website öffnen
-              <ExternalLink className="size-3.5 opacity-80" aria-hidden />
-            </Link>
-
-            <form action={logoutOwnerAction} className="flex-1 sm:flex-none">
-              <button
-                type="submit"
-                className="inline-flex h-9 w-full items-center justify-center rounded-lg border border-border bg-background px-2.5 text-sm font-medium text-foreground whitespace-nowrap transition-[color,background-color,border-color] duration-200 ease-out hover:bg-muted hover:text-foreground sm:h-8 sm:w-auto"
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:shrink-0 sm:flex-row sm:items-center">
+            <div className="flex w-full items-center gap-2 sm:w-auto">
+              <Link
+                href="/"
+                target="_blank"
+                rel="noopener noreferrer"
+                prefetch={false}
+                aria-label="Öffnet die öffentliche Website in einem neuen Tab"
+                className="inline-flex h-9 flex-1 items-center justify-center gap-1.5 rounded-lg border border-primary/30 bg-primary/[0.04] px-2.5 text-sm font-medium text-primary whitespace-nowrap transition-[color,background-color,border-color] duration-200 ease-out hover:bg-primary/[0.1] hover:text-primary sm:h-8 sm:flex-none"
               >
-                Abmelden
-              </button>
-            </form>
+                Website öffnen
+                <ExternalLink className="size-3.5 opacity-80" aria-hidden />
+              </Link>
+
+              <form action={logoutOwnerAction} className="flex-1 sm:flex-none">
+                <button
+                  type="submit"
+                  className="inline-flex h-9 w-full items-center justify-center rounded-lg border border-border bg-background px-2.5 text-sm font-medium text-foreground whitespace-nowrap transition-[color,background-color,border-color] duration-200 ease-out hover:bg-muted hover:text-foreground sm:h-8 sm:w-auto"
+                >
+                  Abmelden
+                </button>
+              </form>
+            </div>
+            <div
+              id={ADMIN_MOBILE_SAVE_PORTAL_ID}
+              className="w-full md:hidden empty:hidden"
+              aria-live="polite"
+            />
           </div>
         </div>
       </header>

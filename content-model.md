@@ -79,6 +79,7 @@ Kurzmeldungen, Saison-Hinweise oder Einzelthemen **oberhalb** der Kursübersicht
 |-------------|---------|--------------|
 | `id`        | string  | stabile ID |
 | `title`     | string? | optional: kurzer Thementitel |
+| `badgeLabel` | string? | optional: Text des kleinen Badges auf dem Kartenbild; wenn leer: automatisch „Workshop“, wenn der Titel „workshop“ enthält (Groß-/Kleinschreibung egal), sonst „Aktuell“ |
 | `text`      | string  | Fließtext (Markdown möglich, je nach Renderer) |
 | `cta`       | object? | optionaler Link-Button pro Card (standardmäßig deaktiviert) |
 | `sortOrder` | number  | Reihenfolge (niedrig = weiter oben) |

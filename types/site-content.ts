@@ -121,6 +121,11 @@ export type AktuellesItem = {
   id: string;
   /** Optional short headline for the topic (e.g. workshop title). */
   title?: string;
+  /**
+   * Text im Bild-Badge (oben links auf der Karte). Wenn leer: automatisch
+   * „Workshop“, wenn der Titel „workshop“ enthält, sonst „Aktuell“.
+   */
+  badgeLabel?: string;
   /** Body copy; Markdown if the section renderer supports it. */
   text: string;
   image: {
