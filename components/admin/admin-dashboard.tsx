@@ -1293,6 +1293,22 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                     }
                   />
                 </div>
+                <div className="space-y-2 md:col-span-2">
+                  <Label htmlFor="hero-image-alt">Hero-Bild Alt-Text</Label>
+                  <Input
+                    id="hero-image-alt"
+                    value={draft.hero.imageAlt}
+                    onChange={(event) =>
+                      setDraft((prev) => ({
+                        ...prev,
+                        hero: { ...prev.hero, imageAlt: event.target.value },
+                      }))
+                    }
+                  />
+                  <p className="text-muted-foreground text-sm">
+                    Kurzbeschreibung des Hero-Fotos für Screenreader und Suchmaschinen (Pflichtfeld).
+                  </p>
+                </div>
                 <div className="space-y-2">
                   <Label>CTA Label</Label>
                   <Input

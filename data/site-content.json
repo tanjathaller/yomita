@@ -2,6 +2,7 @@
   "hero": {
     "title": "Namaste und herzlich willkommen! ",
     "claim": "Ich bin Tanja Thaller, freiberufliche Yogalehrerin im Raum Neuss/Düsseldorf und freue mich sehr, dass Du mich gefunden hast.",
+    "imageAlt": "Portrait – Yogastudio und Achtsamkeit",
     "primaryCtaLabel": "Mehr über mich",
     "primaryCtaUrl": "#ueber-mich"
   },
@@ -131,6 +132,7 @@
   ],
   "about": {
     "title": "Über mich",
+    "eyebrow": "Kurz zu mir",
     "text": "**Yoga ohne Schnickschnack. Dafür mit Verstand.** \n\nYoga begleitet mich schon seit vielen Jahren und war keine Flucht in eine ferne Welt, sondern mein Anker in einer sehr lauten. Heute helfe ich dir, genau diesen Ort in dir selbst wiederzufinden. Körper und Geist in Einklang zu bringen. Keine Erleuchtungsgarantie, dafür aber mit viel Empathie. Vergiss das Bild vom fernen Guru. Ich unterrichte Yoga so wie ich es selbst schätze: Traditionell in der Tiefe, aber bodenständig in der Umsetzung. Ich lege Wert auf eine präzise aber individuelle Ausrichtung. Stets verbunden mit der Atmung und natürlich darf die Entspannung nicht zu kurz kommen. Wir starten beim Körper, um den Geist zur Ruhe zu bringen. Kein Dogma - Yoga muss zu deinem Leben passen, und nicht umgekehrt. Ich erkläre dir gerne, warum wir welche Übung machen.\n\nFühlst du dich in anonymen Studios unwohl? Hast Du körperliche Baustellen oder suchst einen Ort in dem du keine Rolle spielen musst? Dann bist du bei mir genau richtig. Bei mir bist du keine Nummer im System, sondern Teil einer persönlichen Community. Anspruchsvoll, ohne mit Esoterik zu überfordern.\n\nMein Werdegang in Kurzform: Viele Jahre eigene Praxis. Erste Yogaausbildung (200 Std.) im Yogaloft Düsseldorf. Viele absolvierte Workshops und gelesene Bücher. Weitere Ausbildungen im Bereich Yoga Therapie und Yin Yoga. Und ja, es fasziniert mich immer noch und immer wieder auf Neue, die vielen Facetten des Yogas zu entdecken.",
     "image": {
       "url": "/images/tanja-11-mobile.webp",

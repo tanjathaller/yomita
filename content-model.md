@@ -41,6 +41,7 @@ Optional. Wenn leer oder nicht gesetzt, kann die UI Default-Einträge aus der Ta
 |--------------------|--------|--------------|
 | `title`            | string | Hauptüberschrift |
 | `claim`            | string | Unterzeile / Value Proposition |
+| `imageAlt`         | string | Alt-Text für das Hero-Hintergrundbild (A11y, Bildsuche); Fallback in der Validierung, wenn in alten Daten fehlend |
 | `primaryCtaLabel`  | string | Button-Text zum App-Einstieg |
 | `primaryCtaUrl`    | string | Link-Ziel; meist `settings.appUrl`, ggf. mit UTM-Parametern |
 

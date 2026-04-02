@@ -92,9 +92,12 @@ export const legalContentSchema = z.object({
   privacyText: z.string(),
 });
 
+const heroImageAltDefault = "Portrait – Yogastudio und Achtsamkeit";
+
 export const heroSectionSchema = z.object({
   title: z.string(),
   claim: z.string(),
+  imageAlt: z.string().min(1).default(heroImageAltDefault),
   primaryCtaLabel: z.string(),
   primaryCtaUrl: z.string().min(1),
 });

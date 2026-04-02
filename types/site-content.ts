@@ -120,6 +120,8 @@ export type LegalContent = {
 export type HeroSection = {
   title: string;
   claim: string;
+  /** Alt-Text für das Hero-Hintergrundbild (Barrierefreiheit & Bildsuche). */
+  imageAlt: string;
   primaryCtaLabel: string;
   /** Often `settings.appUrl` with optional query params. */
   primaryCtaUrl: string;
