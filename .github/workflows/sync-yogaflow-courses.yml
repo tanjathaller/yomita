@@ -58,15 +58,17 @@ jobs:
           YOGAFLOW_SYNC_PASSWORD: ${{ secrets.YOGAFLOW_SYNC_PASSWORD }}
         run: npm run sync:yogaflow
 
+      # Wichtig: kein `git pull` mit „dirty“ Working Tree (Sync ändert die JSON schon).
+      # Ablauf: erst committen, dann rebase auf origin, dann push.
       - name: Commit wenn geändert
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git pull --rebase origin "${GITHUB_REF_NAME}"
           git add data/yogaflow-courses.json
           if git diff --staged --quiet; then
             echo "Keine Änderung an yogaflow-courses.json"
-          else
-            git commit -m "chore: sync YogaFlow-Kurse"
-            git push
+            exit 0
           fi
+          git commit -m "chore: sync YogaFlow-Kurse"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push origin "${GITHUB_REF_NAME}"
