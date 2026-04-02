@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 
 import type { Course } from "@/types/site-content";
 
@@ -8,7 +8,10 @@ import { CourseRow } from "@/components/domain/course-row";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { cn } from "@/lib/utils";
 
-const INITIAL_VISIBLE = 6;
+/** Entspricht Tailwind `lg` – ab hier zwei Spalten, mehr Kurse sichtbar. */
+const LG_MIN_WIDTH = "(min-width: 1024px)";
+const INITIAL_VISIBLE_MOBILE = 4;
+const INITIAL_VISIBLE_LG = 6;
 
 const courseGridItemClass = cn(
   "flex min-w-0 w-full flex-col",
@@ -29,10 +32,21 @@ export function YogaflowCoursesExpandable({
   courses,
 }: YogaflowCoursesExpandableProps) {
   const [expanded, setExpanded] = useState(false);
+  const [initialVisible, setInitialVisible] = useState(INITIAL_VISIBLE_MOBILE);
+
+  useEffect(() => {
+    const mq = window.matchMedia(LG_MIN_WIDTH);
+    const apply = () =>
+      setInitialVisible(mq.matches ? INITIAL_VISIBLE_LG : INITIAL_VISIBLE_MOBILE);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
   const panelId = useId();
-  const hasMore = courses.length > INITIAL_VISIBLE;
-  const visible = expanded ? courses : courses.slice(0, INITIAL_VISIBLE);
-  const hiddenCount = courses.length - INITIAL_VISIBLE;
+  const hasMore = courses.length > initialVisible;
+  const visible = expanded ? courses : courses.slice(0, initialVisible);
+  const hiddenCount = courses.length - initialVisible;
 
   return (
     <div className="w-full">

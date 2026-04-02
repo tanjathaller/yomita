@@ -1854,8 +1854,9 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                   </div>
                 </div>
                 <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
-                  <strong className="text-foreground">YogaFlow:</strong> bis zu sechs
-                  Termine sichtbar, der Rest unter „Mehr anzeigen“, Daten aus{" "}
+                  <strong className="text-foreground">YogaFlow:</strong> vier Termine auf
+                  Mobil, sechs ab großem Bildschirm sichtbar, der Rest unter „Mehr anzeigen“,
+                  Daten aus{" "}
                   <code className="text-xs">data/yogaflow-courses.json</code> (Action
                   „Sync YogaFlow courses“, mit gesetztem{" "}
                   <code className="text-xs">syncedAt</code>).{" "}

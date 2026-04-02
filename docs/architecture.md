@@ -44,7 +44,7 @@ Empfehlung **Next.js App Router** mit **Route Groups**:
 ## 3. Datenfluss
 
 1. **Single source of truth:** ein persistiertes `SiteContent` in Vercel KV (Key `site:content`), lokal mit Dateifallback (`data/site-content.json`).
-2. **Kursliste (YogaFlow + manuell):** `getSiteContent()` hängt optional `yogaflowCourses` aus `data/yogaflow-courses.json` an (nicht-leeres `syncedAt`); **`courses`** im KV/JSON sind zusätzliche, manuell gepflegte Kurse (ohne App). Öffentliche UI: erste 6 YogaFlow-Termine, Rest per „Mehr anzeigen“; manuelle Kurse eigener Block. Admin lädt `readSiteContent()` (ohne YogaFlow-Merge), damit der Entwurf keine Sync-Daten persistiert. Deaktivieren: `YOGAFLOW_USE_SYNCED_COURSES=false`. Sync: Workflow `sync-yogaflow-courses.yml` + Secrets.
+2. **Kursliste (YogaFlow + manuell):** `getSiteContent()` hängt optional `yogaflowCourses` aus `data/yogaflow-courses.json` an (nicht-leeres `syncedAt`); **`courses`** im KV/JSON sind zusätzliche, manuell gepflegte Kurse (ohne App). Öffentliche UI: erste 4 YogaFlow-Termine mobil, 6 ab `lg`, Rest per „Mehr anzeigen“; manuelle Kurse eigener Block. Admin lädt `readSiteContent()` (ohne YogaFlow-Merge), damit der Entwurf keine Sync-Daten persistiert. Deaktivieren: `YOGAFLOW_USE_SYNCED_COURSES=false`. Sync: Workflow `sync-yogaflow-courses.yml` + Secrets.
 3. **Öffentliche Seiten:** Server Components laden Inhalt serverseitig (`getSiteContent()`), rendern Sektionen; Listen nach `sortOrder` sortieren.
 4. **Caching:** `fetch` mit `revalidate` (ISR) oder On-Demand Revalidation nach Speichern im Admin (Vercel-tauglich).
 5. **Admin:** Formulare pro Bereich; Speichern per **Server Action** (`siteContentSchema`), danach `revalidatePath` für öffentliche Routen.

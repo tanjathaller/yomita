@@ -137,7 +137,7 @@ Kein Feld `externalUrl`.
 
 - **Quelle:** GitHub Action schreibt `data/yogaflow-courses.json` (`syncedAt` + `courses[]`, gleiche `Course`-Struktur wie oben, i. d. R. nur `type: "internal"`).
 - **Merge:** `getSiteContent()` setzt nach KV/Datei optional `yogaflowCourses` aus dieser Datei, wenn `syncedAt` **nicht leer** ist. Das Feld **`courses`** bleibt die **manuell** gepflegten Kurse (nicht in der YogaFlow-App). Abschalten: Env `YOGAFLOW_USE_SYNCED_COURSES=false` oder leeres `syncedAt`.
-- **Darstellung:** Von `yogaflowCourses` werden standardmäßig die **nächsten 6** Termine gezeigt; weitere über „Mehr anzeigen“. Manuelle `courses` erscheinen darunter getrennt (Überschrift optional `settings.coursesManualSectionTitle`, Fallback „Weitere Angebote“), sofern beide Listen Inhalt haben.
+- **Darstellung:** Von `yogaflowCourses` werden standardmäßig die **nächsten 4** Termine auf schmalen Viewports bzw. **6** ab Breakpoint `lg` gezeigt; weitere über „Mehr anzeigen“. Manuelle `courses` erscheinen darunter getrennt (Überschrift optional `settings.coursesManualSectionTitle`, Fallback „Weitere Angebote“), sofern beide Listen Inhalt haben.
 
 ### Externer Kurs (`type: "external"`)
 
