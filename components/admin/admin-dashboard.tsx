@@ -960,6 +960,10 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
   const [uploadErrorAbout, setUploadErrorAbout] = useState("");
   const [selectedAboutFileName, setSelectedAboutFileName] = useState("");
   const aboutImageFileInputRef = useRef<HTMLInputElement | null>(null);
+  const [uploadingOgImage, setUploadingOgImage] = useState(false);
+  const [uploadErrorOg, setUploadErrorOg] = useState("");
+  const [selectedOgFileName, setSelectedOgFileName] = useState("");
+  const ogImageFileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [mobileSaveHost, setMobileSaveHost] = useState<HTMLElement | null>(null);
   const [saveToast, setSaveToast] = useState<{ text: string; isError: boolean } | null>(null);
@@ -1151,6 +1155,45 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
       setUploadErrorAbout(message);
     } finally {
       setUploadingAboutImage(false);
+    }
+  };
+
+  const uploadOgImage = async (file: File) => {
+    setUploadingOgImage(true);
+    setUploadErrorOg("");
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("scope", "og");
+
+    try {
+      const response = await fetch("/api/admin/upload-image", {
+        method: "POST",
+        body: formData,
+      });
+      const raw = await response.text();
+      let data: { error?: string; url?: string } = {};
+      if (raw.trim()) {
+        try {
+          data = JSON.parse(raw) as { error?: string; url?: string };
+        } catch {
+          throw new Error(`Upload-Antwort ungueltig (HTTP ${response.status}).`);
+        }
+      }
+
+      if (!response.ok || !data.url) {
+        throw new Error(data.error ?? "Upload fehlgeschlagen.");
+      }
+
+      setDraft((prev) => ({
+        ...prev,
+        settings: { ...prev.settings, ogImageUrl: data.url! },
+      }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Upload fehlgeschlagen.";
+      setUploadErrorOg(message);
+    } finally {
+      setUploadingOgImage(false);
     }
   };
 
@@ -2136,9 +2179,64 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                   <Field label="Site Title" value={draft.settings.siteTitle ?? ""} onChange={(value) =>
                     setDraft((prev) => ({ ...prev, settings: { ...prev.settings, siteTitle: value || undefined } }))
                   } />
-                  <Field label="OG Image URL" value={draft.settings.ogImageUrl ?? ""} onChange={(value) =>
-                    setDraft((prev) => ({ ...prev, settings: { ...prev.settings, ogImageUrl: value || undefined } }))
-                  } />
+                  <div className="grid gap-3 md:col-span-2 md:grid-cols-2 md:items-start">
+                    <div className="space-y-2">
+                      <AdminImageFieldLabel variant="og" htmlFor="settings-og-image-url">
+                        OG Image URL
+                      </AdminImageFieldLabel>
+                      <Input
+                        id="settings-og-image-url"
+                        value={draft.settings.ogImageUrl ?? ""}
+                        onChange={(event) =>
+                          setDraft((prev) => ({
+                            ...prev,
+                            settings: {
+                              ...prev.settings,
+                              ogImageUrl: event.target.value || undefined,
+                            },
+                          }))
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <AdminImageFieldLabel variant="og">OG-Bild hochladen</AdminImageFieldLabel>
+                      <input
+                        ref={ogImageFileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="sr-only"
+                        disabled={uploadingOgImage}
+                        onChange={async (event) => {
+                          const file = event.target.files?.[0];
+                          if (!file) {
+                            return;
+                          }
+                          setSelectedOgFileName(file.name);
+                          await uploadOgImage(file);
+                          event.target.value = "";
+                        }}
+                      />
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="border-primary/40 bg-primary/5 text-primary transition-transform transition-shadow duration-150 hover:-translate-y-0.5 hover:bg-primary/10 hover:shadow-sm active:translate-y-0"
+                          disabled={uploadingOgImage}
+                          onClick={() => ogImageFileInputRef.current?.click()}
+                        >
+                          Datei auswählen
+                        </Button>
+                        <span className="text-xs text-muted-foreground">
+                          {selectedOgFileName || "Keine Datei ausgewählt"}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">Erlaubt: JPG, PNG, WEBP (max. 5 MB)</p>
+                      {uploadingOgImage ? (
+                        <p className="text-xs text-muted-foreground">Upload laeuft...</p>
+                      ) : null}
+                      {uploadErrorOg ? <p className="text-xs text-destructive">{uploadErrorOg}</p> : null}
+                    </div>
+                  </div>
                   <div className="space-y-2 md:col-span-2">
                     <Label>Meta Description</Label>
                     <Textarea
@@ -2152,78 +2250,6 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                       }
                     />
                   </div>
-                </div>
-                <div className="space-y-3 rounded-lg border border-border p-3">
-                  <p className="text-sm font-medium">Section-Labels (kleine Zeile über Headlines)</p>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <Field
-                      label="Hero Label"
-                      value={draft.settings.sectionEyebrows?.hero ?? ""}
-                      onChange={(value) =>
-                        setDraft((prev) => ({
-                          ...prev,
-                          settings: {
-                            ...prev.settings,
-                            sectionEyebrows: {
-                              ...prev.settings.sectionEyebrows,
-                              hero: value || undefined,
-                            },
-                          },
-                        }))
-                      }
-                    />
-                    <Field
-                      label="Aktuelles Label"
-                      value={draft.settings.sectionEyebrows?.aktuell ?? ""}
-                      onChange={(value) =>
-                        setDraft((prev) => ({
-                          ...prev,
-                          settings: {
-                            ...prev.settings,
-                            sectionEyebrows: {
-                              ...prev.settings.sectionEyebrows,
-                              aktuell: value || undefined,
-                            },
-                          },
-                        }))
-                      }
-                    />
-                    <Field
-                      label="Kurse Label"
-                      value={draft.settings.sectionEyebrows?.courses ?? ""}
-                      onChange={(value) =>
-                        setDraft((prev) => ({
-                          ...prev,
-                          settings: {
-                            ...prev.settings,
-                            sectionEyebrows: {
-                              ...prev.settings.sectionEyebrows,
-                              courses: value || undefined,
-                            },
-                          },
-                        }))
-                      }
-                    />
-                    <Field
-                      label="Preise Label"
-                      value={draft.settings.sectionEyebrows?.prices ?? ""}
-                      onChange={(value) =>
-                        setDraft((prev) => ({
-                          ...prev,
-                          settings: {
-                            ...prev.settings,
-                            sectionEyebrows: {
-                              ...prev.settings.sectionEyebrows,
-                              prices: value || undefined,
-                            },
-                          },
-                        }))
-                      }
-                    />
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Leer lassen = Fallback auf Standardtexte (Hero: Business Name, sonst Journal/Angebot/Teilnahme).
-                  </p>
                 </div>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">

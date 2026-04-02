@@ -16,10 +16,10 @@ export function SiteFooter({ settings }: SiteFooterProps) {
   const navItems = resolveNavigation(settings).filter((item) => item.href !== "/#hero");
 
   return (
-    <footer className="w-full min-w-0 overflow-x-clip bg-[var(--surface-muted-footer)]">
+    <footer className="relative z-10 w-full min-w-0 bg-[var(--surface-muted-footer)]">
       {/* Eine Spalte: Links und Wordmark starten an derselben linken Kante (Y bündig mit Impressum). */}
       <div
-        className="@container w-full min-w-0 pt-14 pb-6 pl-[max(0.25rem,env(safe-area-inset-left,0px))] pr-[max(0.25rem,env(safe-area-inset-right,0px))] lg:pt-16 lg:pb-8"
+        className="@container w-full min-w-0 overflow-x-clip pt-14 pb-6 pl-[max(0.25rem,env(safe-area-inset-left,0px))] pr-[max(0.25rem,env(safe-area-inset-right,0px))] lg:pt-16 lg:pb-8"
       >
         <div className="mx-auto flex w-max max-w-full min-w-0 flex-col items-start lg:w-full lg:max-w-4xl">
           <nav className="flex w-full justify-center pb-6" aria-label="Footer Navigation">
@@ -56,28 +56,34 @@ export function SiteFooter({ settings }: SiteFooterProps) {
               </li>
             </ul>
           </nav>
-          <nav className="flex w-full flex-col items-center pb-8" aria-label="Rechtliches">
+          <nav
+            className="relative z-20 flex w-full flex-col items-center pb-8"
+            aria-label="Rechtliches"
+          >
             <p className="text-muted-foreground mb-2 text-xs font-semibold tracking-[0.12em] uppercase">
               Rechtliches
             </p>
-            <div className="flex flex-wrap justify-center gap-2">
-              <Link
+            <div className="relative z-20 flex flex-wrap justify-center gap-2">
+              {/* Native <a>: zuverlässige Navigation unabhängig vom Client-Router; Styling wie zuvor. */}
+              <a
                 href="/impressum"
                 className="text-foreground/80 hover:text-foreground hover:border-primary/35 hover:bg-card/70 inline-flex rounded-full border border-border/60 bg-card/40 px-3 py-1.5 text-xs font-semibold tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
               >
                 Impressum
-              </Link>
-              <Link
+              </a>
+              <a
                 href="/datenschutz"
                 className="text-foreground/80 hover:text-foreground hover:border-primary/35 hover:bg-card/70 inline-flex rounded-full border border-border/60 bg-card/40 px-3 py-1.5 text-xs font-semibold tracking-wide transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
               >
                 Datenschutz
-              </Link>
+              </a>
             </div>
           </nav>
 
           {/* Mobil: @-Zeile rechts bündig zum Wordmark-Block; Desktop: beides zentriert. */}
-          <div className="mx-auto flex w-max min-w-0 max-w-full flex-col items-stretch lg:w-full lg:max-w-none lg:items-center">
+          {/* pointer-events-none: große Wordmark-Glyphen (clamp bis 18rem, enge Zeilenhöhe) können
+              optisch über die darüberliegenden Rechts-Links ragen und sonst alle Klicks abfangen. */}
+          <div className="pointer-events-none [&_*]:pointer-events-none mx-auto flex w-max min-w-0 max-w-full flex-col items-stretch lg:w-full lg:max-w-none lg:items-center">
             <p
               className="font-heading text-footer-wordmark text-center leading-[0.82] font-black tracking-[0.065em] uppercase select-none"
               style={wordmarkStyle}

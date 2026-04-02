@@ -3,6 +3,7 @@
 import type { ContactSection as ContactModel } from "@/types/site-content";
 import type { MouseEvent } from "react";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 
 import { ContactForm } from "@/components/forms/contact-form";
 import { SectionShell } from "@/components/shared/section-shell";
@@ -85,35 +86,38 @@ export function ContactSection({ contact }: ContactSectionProps) {
           </div>
         </dl>
       </div>
-      {showEmailConfirm ? (
-        <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-[#1F2A22]/45 p-4 backdrop-blur-[1px] lg:items-center lg:p-6"
-          onClick={() => setShowEmailConfirm(false)}
-        >
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="email-confirm-title"
-            className="w-full max-w-sm rounded-2xl border border-primary/25 bg-[var(--surface-muted-band)] p-5 text-foreground shadow-xl"
-            onClick={(event) => event.stopPropagation()}
-          >
-            <h3 id="email-confirm-title" className="text-[#2F3B2A] text-lg font-semibold tracking-tight">
-              Zur E-Mail-App wechseln?
-            </h3>
-            <p className="text-foreground/85 mt-2 text-sm leading-relaxed">
-              Du kannst auch einfach das Kontaktformular auf dieser Seite verwenden.
-            </p>
-            <div className="mt-5 flex justify-end gap-2">
-              <Button size="lg" variant="ghost" onClick={() => setShowEmailConfirm(false)}>
-                Abbrechen
-              </Button>
-              <Button size="lg" onClick={proceedToEmailApp}>
-                Weiter zur E-Mail
-              </Button>
-            </div>
-          </div>
-        </div>
-      ) : null}
+      {showEmailConfirm
+        ? createPortal(
+            <div
+              className="fixed inset-0 z-[100] flex items-end justify-center bg-[#1F2A22]/45 p-4 backdrop-blur-[1px] lg:items-center lg:p-6"
+              onClick={() => setShowEmailConfirm(false)}
+            >
+              <div
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="email-confirm-title"
+                className="w-full max-w-sm rounded-2xl border border-primary/25 bg-[var(--surface-muted-band)] p-5 text-foreground shadow-xl"
+                onClick={(event) => event.stopPropagation()}
+              >
+                <h3 id="email-confirm-title" className="text-[#2F3B2A] text-lg font-semibold tracking-tight">
+                  Zur E-Mail-App wechseln?
+                </h3>
+                <p className="text-foreground/85 mt-2 text-sm leading-relaxed">
+                  Du kannst auch einfach das Kontaktformular auf dieser Seite verwenden.
+                </p>
+                <div className="mt-5 flex justify-end gap-2">
+                  <Button size="lg" variant="ghost" onClick={() => setShowEmailConfirm(false)}>
+                    Abbrechen
+                  </Button>
+                  <Button size="lg" onClick={proceedToEmailApp}>
+                    Weiter zur E-Mail
+                  </Button>
+                </div>
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
     </SectionShell>
   );
 }

@@ -13,7 +13,7 @@ export type AdminHintContent = {
   bullets: string[];
 };
 
-export type AdminImageHintVariant = "aktuell" | "about";
+export type AdminImageHintVariant = "aktuell" | "about" | "og";
 
 const HINT_COPY: Record<
   AdminImageHintVariant,
@@ -41,6 +41,17 @@ const HINT_COPY: Record<
       "Seitenverhaeltnis 4:5, Darstellung mit Zuschnitt – Gesicht und wichtige Details moeglichst zentriert.",
       "Mobil: grosse Flaeche; Desktop: etwa halbe Seitenbreite.",
       "Empfohlen: mindestens 1000×1250 px, besser 1200×1500 px (WebP/JPEG).",
+    ],
+  },
+  og: {
+    title: "Open-Graph-Bild (Link-Vorschau)",
+    paragraphs: [
+      "Wird von vielen Apps und Netzwerken genutzt, wenn jemand einen Link zur Website teilt (z. B. WhatsApp, Facebook).",
+    ],
+    bullets: [
+      "Empfohlen: 1200 × 630 px, Seitenverhältnis ca. 1,91 : 1; Minimum oft 600 × 315 px.",
+      "Format: JPG oder PNG für beste Kompatibilität; WebP ist möglich. Upload maximal 5 MB (JPG, PNG, WEBP).",
+      "Wichtiges Motiv mittig platzieren – Vorschauen schneiden am Rand zu.",
     ],
   },
 };
