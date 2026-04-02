@@ -12,11 +12,15 @@ import {
   useState,
 } from "react";
 import ReactMarkdown from "react-markdown";
-import { AlertCircle, Heading3, Link2, ListOrdered } from "lucide-react";
+import { Heading3, Link2, ListOrdered } from "lucide-react";
 import remarkBreaks from "remark-breaks";
 
 import type { SaveContentActionState } from "@/app/(admin)/admin/actions";
 import type { NavItem, PriceItem, SiteContent } from "@/types/site-content";
+import {
+  AdminImageFieldLabel,
+  AdminSortOrderLabelRow,
+} from "@/components/admin/admin-image-size-hint";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -24,7 +28,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 const MAX_ITEMS_PER_LIST = 10;
-const SORT_ORDER_HELP_TEXT = "Niedrige Zahl = weiter oben auf der öffentlichen Website.";
 const LINK_TEXT_FALLBACK = "Linktext";
 const MARKDOWN_HISTORY_LIMIT = 120;
 const NEW_WINDOW_LINK_TITLE = "new-window";
@@ -85,21 +88,6 @@ function getNextSortOrder(items: Array<{ sortOrder: number }>): number {
 function parseNumber(value: string): number {
   const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : 0;
-}
-
-function SortOrderLabel() {
-  return (
-    <span className="inline-flex items-center gap-1.5">
-      Reihenfolge
-      <span
-        className="inline-flex cursor-help items-center"
-        title={SORT_ORDER_HELP_TEXT}
-        aria-label={SORT_ORDER_HELP_TEXT}
-      >
-        <AlertCircle className="size-3.5 text-muted-foreground" />
-      </span>
-    </span>
-  );
 }
 
 function deriveAltFromFilename(filename: string): string {
@@ -1214,10 +1202,9 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                               />
                             </div>
                             <div className="space-y-2">
-                              <Label>
-                                <SortOrderLabel />
-                              </Label>
+                              <AdminSortOrderLabelRow htmlFor={`aktuell-sort-${item.id}`} />
                               <Input
+                                id={`aktuell-sort-${item.id}`}
                                 type="number"
                                 value={item.sortOrder}
                                 onChange={(event) =>
@@ -1273,8 +1260,9 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                           />
                           <div className="grid gap-3 md:grid-cols-2">
                             <div className="space-y-2">
-                              <Label>Bild URL</Label>
+                              <Label htmlFor={`aktuell-image-url-${item.id}`}>Bild URL</Label>
                               <Input
+                                id={`aktuell-image-url-${item.id}`}
                                 value={item.image.url}
                                 onChange={(event) =>
                                   setDraft((prev) => ({
@@ -1292,7 +1280,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                               />
                             </div>
                             <div className="space-y-2">
-                              <Label>Bild hochladen</Label>
+                              <AdminImageFieldLabel variant="aktuell">Bild hochladen</AdminImageFieldLabel>
                               <input
                                 ref={(element) => {
                                   aktuellFileInputRefs.current[item.id] = element;
@@ -1630,8 +1618,11 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                 />
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label>Bild URL</Label>
+                    <AdminImageFieldLabel variant="about" htmlFor="about-image-url">
+                      Bild URL
+                    </AdminImageFieldLabel>
                     <Input
+                      id="about-image-url"
                       value={draft.about.image.url}
                       onChange={(event) =>
                         setDraft((prev) => ({
@@ -1965,11 +1956,15 @@ function PriceEditor({
       <CardContent className="space-y-3">
         <div className="grid gap-3 md:grid-cols-2">
           <Field label="ID" value={item.id} onChange={(value) => onChange({ ...item, id: value })} />
-          <Field
-            label={<SortOrderLabel />}
-            value={String(item.sortOrder)}
-            onChange={(value) => onChange({ ...item, sortOrder: parseNumber(value) })}
-          />
+          <div className="space-y-2">
+            <AdminSortOrderLabelRow htmlFor={`price-sort-${item.id}`} />
+            <Input
+              id={`price-sort-${item.id}`}
+              type="number"
+              value={String(item.sortOrder)}
+              onChange={(event) => onChange({ ...item, sortOrder: parseNumber(event.target.value) })}
+            />
+          </div>
           <Field label="Titel" value={item.title} onChange={(value) => onChange({ ...item, title: value })} />
           <Field label="Preis" value={item.price} onChange={(value) => onChange({ ...item, price: value })} />
           <Field
