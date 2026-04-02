@@ -137,6 +137,18 @@ function escapeMarkdownLinkText(rawText: string): string {
   return rawText.replaceAll("[", "\\[").replaceAll("]", "\\]");
 }
 
+/** `#kontakt` oder `/#kontakt` (Markdown-Links zur Startseite mit Anker). */
+function anchorPathFromUrl(url: string): string | null {
+  const t = url.trim();
+  if (/^#[a-z0-9-]+$/i.test(t)) {
+    return t;
+  }
+  if (/^\/#[a-z0-9-]+$/i.test(t)) {
+    return t.slice(1);
+  }
+  return null;
+}
+
 function isValidEditorUrl(url: string): boolean {
   if (/^https?:\/\/\S+$/i.test(url)) {
     return true;
@@ -144,7 +156,7 @@ function isValidEditorUrl(url: string): boolean {
   if (/^mailto:\S+@\S+\.\S+$/i.test(url)) {
     return true;
   }
-  if (/^#[a-z0-9-]+$/i.test(url)) {
+  if (anchorPathFromUrl(url)) {
     return true;
   }
   return false;
@@ -159,17 +171,18 @@ function collectMarkdownLinkWarnings(markdown: string): string[] {
       continue;
     }
 
-    if (href.startsWith("#")) {
-      if (!isInternalAnchorHref(href)) {
+    const anchor = anchorPathFromUrl(href);
+    if (anchor) {
+      if (!isInternalAnchorHref(anchor)) {
         warnings.add(
-          `Unbekannter Anker-Link: "${href}". Erlaubt sind: ${Array.from(VALID_INTERNAL_ANCHORS).join(", ")}.`,
+          `Unbekannter Anker-Link: "${href}". Erlaubt sind: ${Array.from(VALID_INTERNAL_ANCHORS).join(", ")} (auch als /#…).`,
         );
       }
       continue;
     }
 
     if (!/^https?:\/\/\S+$/i.test(href) && !/^mailto:\S+@\S+\.\S+$/i.test(href)) {
-      warnings.add(`Ungültige Link-URL: "${href}". Erlaubt: https://, http://, mailto: oder #anker.`);
+      warnings.add(`Ungültige Link-URL: "${href}". Erlaubt: https://, http://, mailto:, #anker oder /#anker.`);
     }
   }
 
@@ -206,11 +219,13 @@ function MarkdownEditor({
   value,
   onChange,
   rows = 5,
+  placeholder,
 }: {
   label: string;
   value: string;
   onChange: (nextValue: string) => void;
   rows?: number;
+  placeholder?: string;
 }) {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const historyPastRef = useRef<string[]>([]);
@@ -437,16 +452,19 @@ function MarkdownEditor({
   const insertCustomLink = useCallback(() => {
     const trimmedUrl = linkUrl.trim();
     if (!isValidEditorUrl(trimmedUrl)) {
-      setLinkInputError("Ungültige URL. Erlaubt: https://, http://, mailto: oder #anker.");
+      setLinkInputError("Ungültige URL. Erlaubt: https://, http://, mailto:, #anker oder /#anker.");
       return;
     }
-    if (trimmedUrl.startsWith("#") && !isInternalAnchorHref(trimmedUrl)) {
-      setLinkInputError(`Unbekannter Anker: ${trimmedUrl}`);
-      return;
-    }
-    if (trimmedUrl.startsWith("#") && linkTarget === "blank") {
-      setLinkInputError("Anker-Links öffnen immer im gleichen Fenster.");
-      return;
+    const anchorForComposer = anchorPathFromUrl(trimmedUrl);
+    if (anchorForComposer) {
+      if (!isInternalAnchorHref(anchorForComposer)) {
+        setLinkInputError(`Unbekannter Anker: ${trimmedUrl}`);
+        return;
+      }
+      if (linkTarget === "blank") {
+        setLinkInputError("Anker-Links öffnen immer im gleichen Fenster.");
+        return;
+      }
     }
 
     const safeText = escapeMarkdownLinkText(linkText.trim() || LINK_TEXT_FALLBACK);
@@ -842,6 +860,7 @@ function MarkdownEditor({
           <Textarea
             ref={textareaRef}
             value={value}
+            placeholder={placeholder}
             onChange={(event) => handleTextareaChange(event.target.value)}
             onKeyDown={handleEditorKeyDown}
             onSelect={syncEditorSelection}
@@ -1649,7 +1668,26 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
             {activeSection === "courses" ? (
               <div className="space-y-3">
                 <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
+                  <div className="space-y-2 md:col-span-2">
+                    <Label>Kurse Label (kleine Zeile über H2)</Label>
+                    <Input
+                      value={draft.settings.sectionEyebrows?.courses ?? ""}
+                      placeholder="Angebot"
+                      onChange={(event) =>
+                        setDraft((prev) => ({
+                          ...prev,
+                          settings: {
+                            ...prev.settings,
+                            sectionEyebrows: {
+                              ...prev.settings.sectionEyebrows,
+                              courses: event.target.value || undefined,
+                            },
+                          },
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2 md:col-span-2">
                     <Label>Kurse-Titel (H2)</Label>
                     <Input
                       value={draft.settings.coursesSectionTitle ?? ""}
@@ -1666,36 +1704,17 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                     />
                   </div>
                   <div className="space-y-2 md:col-span-2">
-                    <Label>Kurse-Untertext (Absatz unter dem Titel)</Label>
-                    <Textarea
-                      rows={4}
+                    <MarkdownEditor
+                      label="Kurse-Untertext (Markdown, Absatz unter dem Titel)"
                       value={draft.settings.coursesSectionIntro ?? ""}
-                      placeholder="Als Bestandskund:in buchst du deine Stunden ganz entspannt über die App ..."
-                      onChange={(event) =>
+                      rows={4}
+                      placeholder='Als Bestandskund:in … über das [Kontaktformular](/#kontakt).'
+                      onChange={(value) =>
                         setDraft((prev) => ({
                           ...prev,
                           settings: {
                             ...prev.settings,
-                            coursesSectionIntro: event.target.value || undefined,
-                          },
-                        }))
-                      }
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Kurse Label (kleine Zeile über H2)</Label>
-                    <Input
-                      value={draft.settings.sectionEyebrows?.courses ?? ""}
-                      placeholder="Angebot"
-                      onChange={(event) =>
-                        setDraft((prev) => ({
-                          ...prev,
-                          settings: {
-                            ...prev.settings,
-                            sectionEyebrows: {
-                              ...prev.settings.sectionEyebrows,
-                              courses: event.target.value || undefined,
-                            },
+                            coursesSectionIntro: value || undefined,
                           },
                         }))
                       }

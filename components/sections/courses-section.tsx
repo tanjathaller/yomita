@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { Course } from "@/types/site-content";
 
 import { CourseRow } from "@/components/domain/course-row";
-import { HashScrollLink } from "@/components/layout/hash-scroll-link";
+import { MarkdownContent } from "@/components/shared/markdown-content";
 import { SectionShell } from "@/components/shared/section-shell";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,7 @@ type CoursesSectionProps = {
   eyebrowLabel?: string;
   /** Optionaler Sektionstitel (Fallback: „Kurse & Termine“). */
   sectionTitle?: string;
-  /** Optionaler Sektionstext (Fallback: Standardtext). */
+  /** Optionaler Sektionstext (Markdown; Fallback: Standardtext inkl. Link zum Kontakt). */
   sectionIntro?: string;
   /** When true, this block sits below „Aktuelles“ in the same muted band (spacing + divider). */
   afterAktuelles?: boolean;
@@ -34,7 +34,9 @@ export function CoursesSection({
 }: CoursesSectionProps) {
   const eyebrow = eyebrowLabel?.trim() || "Angebot";
   const heading = sectionTitle?.trim() || "Kurse & Termine";
-  const intro = sectionIntro?.trim() || "Als Bestandskund:in buchst du deine Stunden ganz entspannt über die App. Wenn du neu bist oder Fragen hast, bin ich gern für dich da - schreib mir einfach über das";
+  const introMarkdown =
+    sectionIntro?.trim() ||
+    "Als Bestandskund:in buchst du deine Stunden ganz entspannt über die App. Wenn du neu bist oder Fragen hast, bin ich gern für dich da - schreib mir einfach über das [Kontaktformular](/#kontakt).";
   return (
     <SectionShell
       id="kurse"
@@ -61,13 +63,13 @@ export function CoursesSection({
         </div>
       </div>
       <div className="mt-4 max-w-2xl pl-4 lg:mt-5 lg:pl-6">
-        <p className="text-muted-foreground max-w-prose text-sm leading-relaxed lg:text-base">
-          {intro}{" "}
-          <HashScrollLink href="/#kontakt" className="text-primary font-medium underline-offset-4 hover:underline">
-            Kontaktformular
-          </HashScrollLink>
-          .
-        </p>
+        <MarkdownContent
+          markdown={introMarkdown}
+          className={cn(
+            "max-w-prose text-muted-foreground [&_p]:text-sm [&_p]:leading-relaxed [&_p]:text-muted-foreground lg:[&_p]:text-base",
+            "[&_a]:text-primary [&_a]:font-medium [&_a]:underline-offset-4 hover:[&_a]:underline",
+          )}
+        />
         <div className="mt-4">
           <Link
             href={appUrl}

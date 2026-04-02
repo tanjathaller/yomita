@@ -92,7 +92,7 @@ export type GeneralSettings = {
   };
   /** Optionaler Titel der Kurse-Sektion (Fallback: „Kurse & Termine“). */
   coursesSectionTitle?: string;
-  /** Optionaler Untertext der Kurse-Sektion (Fallback: bestehender Standardtext). */
+  /** Optionaler Untertext der Kurse-Sektion (Markdown; Fallback: Standardtext inkl. Link zu `#kontakt`). */
   coursesSectionIntro?: string;
   appUrl: string;
   logoUrl?: string;

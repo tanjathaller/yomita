@@ -190,7 +190,7 @@ Kein Feld `externalUrl`.
 | `navWordmark`      | string?  | optional; wenn gesetzt: Wordmark in **Header**, **Mobile-Menü** und **Footer** (z. B. „YOMITA“) |
 | `sectionEyebrows`  | object?  | optionale kleine Labels über Abschnitts-Headlines: `hero`, `aktuell`, `courses`, `prices`; Fallbacks: `businessName` bzw. „Journal“, „Angebot“, „Teilnahme“ |
 | `coursesSectionTitle` | string? | optionaler Titel der Kurse-Sektion; Fallback: „Kurse & Termine“ |
-| `coursesSectionIntro` | string? | optionaler Untertext der Kurse-Sektion vor dem Kontakt-Link; Fallback: bisheriger Standardtext |
+| `coursesSectionIntro` | string? | optionaler Untertext der Kurse-Sektion (**Markdown**); z. B. Link zum Kontakt `[Kontaktformular](/#kontakt)`; Fallback: Standardtext mit diesem Link |
 | `appUrl`           | string   | Hauptlink zur Kursbuchungs-App (Hero-CTA kann davon abweichen, z. B. Tracking) |
 | `logoUrl`          | string?  | optional; Logo-Erstellung ist nicht Projektbestandteil, Upload-URL ist erlaubt |
 | `siteTitle`        | string?  | `<title>` / Branding |
