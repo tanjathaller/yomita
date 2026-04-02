@@ -1,11 +1,10 @@
 /**
- * Liest Kurse + Anmeldungen aus Supabase (YogaFlow) und schreibt `data/yogaflow-courses.json`.
+ * Liest Kurse aus Supabase und schreibt `data/yogaflow-courses.json`.
+ * Restplätze: bevorzugt per Playwright aus der YogaFlow-Web-App (YOGAFLOW_APP_URL),
+ * sonst Fallback über `registrations` (oft unvollständig wegen RLS).
  *
- * Env (CI: GitHub Secrets; lokal: siehe `.env.example`, z. B. `node --env-file=.env.local`):
- * - YOGAFLOW_SUPABASE_URL
- * - YOGAFLOW_SUPABASE_ANON_KEY
- * - YOGAFLOW_SYNC_EMAIL
- * - YOGAFLOW_SYNC_PASSWORD
+ * Env: YOGAFLOW_SUPABASE_URL, YOGAFLOW_SUPABASE_ANON_KEY, YOGAFLOW_SYNC_EMAIL,
+ * YOGAFLOW_SYNC_PASSWORD; optional YOGAFLOW_APP_URL für korrekte Status-Anzeige.
  */
 
 import { writeFile } from "node:fs/promises";
@@ -13,6 +12,8 @@ import path from "node:path";
 
 import { yogaflowCoursesFileSchema } from "../lib/schemas/yogaflow-courses-file";
 import type { InternalCourse } from "../types/site-content";
+
+import { scrapeRemainingSpotsFromYogaflowApp } from "./yogaflow-playwright-status.mts";
 
 type SupabaseCourseRow = {
   id: string;
@@ -205,15 +206,20 @@ function countOccupiedForCourse(
   }).length;
 }
 
-function rowToInternalCourse(
+function remainingFromRegistrations(
   row: SupabaseCourseRow,
   registrations: SupabaseRegistrationRow[],
-  sortOrder: number,
-): InternalCourse {
+): number {
   const occupied = countOccupiedForCourse(registrations, row.id);
   const cap = Math.max(1, row.max_participants);
-  const remaining = Math.max(0, cap - occupied);
+  return Math.max(0, cap - occupied);
+}
 
+function rowToInternalCourse(
+  row: SupabaseCourseRow,
+  sortOrder: number,
+  remainingSpots: number,
+): InternalCourse {
   const scheduleNote =
     row.frequency && row.frequency !== "one_time"
       ? row.frequency
@@ -227,9 +233,9 @@ function rowToInternalCourse(
     day: formatDayDe(row.date),
     time: buildTimeLabel(row.time, row.end_time, row.duration ?? 60),
     location: locationLabel(row.location, row.room),
-    bookingStatus: remaining === 0 ? "full" : "available",
+    bookingStatus: remainingSpots === 0 ? "full" : "available",
     price: formatPriceEur(row.price),
-    remainingSpots: remaining,
+    remainingSpots,
     sortOrder,
     scheduleNote,
     startsOn: row.date,
@@ -256,17 +262,45 @@ async function main() {
     jwt,
   );
 
-  const registrationPath =
-    "/rest/v1/registrations?select=course_id,status,is_waitlist";
-  const registrations = await fetchAllRows<SupabaseRegistrationRow>(
-    baseUrl,
-    registrationPath,
-    anonKey,
-    jwt,
-  );
+  const appUrl = normalizeSecret(process.env.YOGAFLOW_APP_URL ?? "");
+  const remainingById = new Map<string, number>();
+
+  if (appUrl) {
+    console.log(
+      "YOGAFLOW_APP_URL gesetzt – Restplätze per Playwright aus der Web-App lesen …",
+    );
+    const scraped = await scrapeRemainingSpotsFromYogaflowApp({
+      appUrl,
+      email,
+      password,
+      courses: courses.map((row) => ({
+        id: row.id,
+        title: (row.title ?? "").trim() || "Yoga-Kurs",
+        dayDe: formatDayDe(row.date),
+      })),
+    });
+    for (const row of courses) {
+      remainingById.set(row.id, scraped.get(row.id) ?? 99);
+    }
+  } else {
+    console.warn(
+      "YOGAFLOW_APP_URL fehlt – Restplätze nur über registrations (kann durch RLS falsch sein). Bitte App-URL setzen.",
+    );
+    const registrationPath =
+      "/rest/v1/registrations?select=course_id,status,is_waitlist";
+    const registrations = await fetchAllRows<SupabaseRegistrationRow>(
+      baseUrl,
+      registrationPath,
+      anonKey,
+      jwt,
+    );
+    for (const row of courses) {
+      remainingById.set(row.id, remainingFromRegistrations(row, registrations));
+    }
+  }
 
   const mapped: InternalCourse[] = courses.map((row, index) =>
-    rowToInternalCourse(row, registrations, (index + 1) * 10),
+    rowToInternalCourse(row, (index + 1) * 10, remainingById.get(row.id) ?? 99),
   );
 
   const payload = {

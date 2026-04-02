@@ -1,5 +1,6 @@
 # Holt Kurse aus YogaFlow (Supabase) und committet data/yogaflow-courses.json bei Änderung.
-# Secrets: YOGAFLOW_SUPABASE_URL, YOGAFLOW_SUPABASE_ANON_KEY, YOGAFLOW_SYNC_EMAIL, YOGAFLOW_SYNC_PASSWORD
+# Secrets: YOGAFLOW_SUPABASE_URL, YOGAFLOW_SUPABASE_ANON_KEY, YOGAFLOW_SYNC_EMAIL,
+# YOGAFLOW_SYNC_PASSWORD, YOGAFLOW_APP_URL (öffentliche YogaFlow-App, z. B. https://….bolt.host/)
 # Bei Branch-Schutz: Workflow braucht Schreibzugriff (z. B. „Allow GitHub Actions to create and approve pull requests“ oder PAT).
 
 name: Sync YogaFlow courses
@@ -35,20 +36,25 @@ jobs:
           K: ${{ secrets.YOGAFLOW_SUPABASE_ANON_KEY }}
           E: ${{ secrets.YOGAFLOW_SYNC_EMAIL }}
           P: ${{ secrets.YOGAFLOW_SYNC_PASSWORD }}
+          A: ${{ secrets.YOGAFLOW_APP_URL }}
         run: |
           missing=""
           [ -z "$U" ] && missing="${missing} YOGAFLOW_SUPABASE_URL"
           [ -z "$K" ] && missing="${missing} YOGAFLOW_SUPABASE_ANON_KEY"
           [ -z "$E" ] && missing="${missing} YOGAFLOW_SYNC_EMAIL"
           [ -z "$P" ] && missing="${missing} YOGAFLOW_SYNC_PASSWORD"
+          [ -z "$A" ] && missing="${missing} YOGAFLOW_APP_URL"
           if [ -n "$missing" ]; then
             echo "::error::Folgende GitHub Secrets fehlen oder sind leer:$missing"
             echo "Settings → Secrets and variables → Actions → Repository secrets"
             exit 1
           fi
-          echo "Alle vier YOGAFLOW_* Secrets sind gesetzt."
+          echo "Alle YOGAFLOW_* Secrets inkl. App-URL sind gesetzt."
 
       - run: npm ci
+
+      - name: Playwright Chromium (für Status aus der Web-App)
+        run: npx playwright install chromium --with-deps
 
       - name: Pull YogaFlow data
         env:
@@ -56,6 +62,7 @@ jobs:
           YOGAFLOW_SUPABASE_ANON_KEY: ${{ secrets.YOGAFLOW_SUPABASE_ANON_KEY }}
           YOGAFLOW_SYNC_EMAIL: ${{ secrets.YOGAFLOW_SYNC_EMAIL }}
           YOGAFLOW_SYNC_PASSWORD: ${{ secrets.YOGAFLOW_SYNC_PASSWORD }}
+          YOGAFLOW_APP_URL: ${{ secrets.YOGAFLOW_APP_URL }}
         run: npm run sync:yogaflow
 
       # Wichtig: kein `git pull` mit „dirty“ Working Tree (Sync ändert die JSON schon).

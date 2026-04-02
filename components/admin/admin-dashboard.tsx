@@ -1855,11 +1855,11 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                 </div>
                 <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
                   <strong className="text-foreground">YogaFlow:</strong> vier Termine auf
-                  Mobil, sechs ab großem Bildschirm sichtbar, der Rest unter „Mehr anzeigen“,
-                  Daten aus{" "}
-                  <code className="text-xs">data/yogaflow-courses.json</code> (Action
-                  „Sync YogaFlow courses“, mit gesetztem{" "}
-                  <code className="text-xs">syncedAt</code>).{" "}
+                  Mobil, sechs ab großem Bildschirm sichtbar, der Rest unter „Mehr anzeigen“.
+                  Sync-Action: Supabase + Playwright (Restplatz-Texte aus der App); Secret{" "}
+                  <code className="text-xs">YOGAFLOW_APP_URL</code>. Ausgabe:{" "}
+                  <code className="text-xs">data/yogaflow-courses.json</code> mit{" "}
+                  <code className="text-xs">syncedAt</code>.{" "}
                   <strong className="text-foreground">Weitere Kurse</strong> (nicht in der
                   App) liegen im Content-Feld <code className="text-xs">courses</code> in{" "}
                   <code className="text-xs">site-content.json</code> bzw. KV – hier im Admin

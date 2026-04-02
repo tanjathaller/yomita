@@ -135,7 +135,7 @@ Kein Feld `externalUrl`.
 
 ### YogaFlow-Sync (öffentliche Kursliste)
 
-- **Quelle:** GitHub Action schreibt `data/yogaflow-courses.json` (`syncedAt` + `courses[]`, gleiche `Course`-Struktur wie oben, i. d. R. nur `type: "internal"`).
+- **Quelle:** GitHub Action schreibt `data/yogaflow-courses.json` (`syncedAt` + `courses[]`, gleiche `Course`-Struktur wie oben, i. d. R. nur `type: "internal"`). Kursdaten kommen aus **Supabase REST**; **Restplatz-Status** wird per **Playwright** aus der sichtbaren YogaFlow-Web-App gelesen (Secret `YOGAFLOW_APP_URL`), damit keine Leserechte auf alle `registrations` nötig sind. Ohne `YOGAFLOW_APP_URL` nutzt das Skript nur den unvollständigen `registrations`-Fallback.
 - **Merge:** `getSiteContent()` setzt nach KV/Datei optional `yogaflowCourses` aus dieser Datei, wenn `syncedAt` **nicht leer** ist. Das Feld **`courses`** bleibt die **manuell** gepflegten Kurse (nicht in der YogaFlow-App). Abschalten: Env `YOGAFLOW_USE_SYNCED_COURSES=false` oder leeres `syncedAt`.
 - **Darstellung:** Von `yogaflowCourses` werden standardmäßig die **nächsten 4** Termine auf schmalen Viewports bzw. **6** ab Breakpoint `lg` gezeigt; weitere über „Mehr anzeigen“. Manuelle `courses` erscheinen darunter getrennt (Überschrift optional `settings.coursesManualSectionTitle`, Fallback „Weitere Angebote“), sofern beide Listen Inhalt haben.
 
