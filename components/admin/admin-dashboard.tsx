@@ -25,7 +25,6 @@ import { cn } from "@/lib/utils";
 import type { NavItem, PriceItem, SiteContent } from "@/types/site-content";
 import {
   AdminImageFieldLabel,
-  AdminPairedImageFieldLabel,
   AdminSortOrderLabelRow,
 } from "@/components/admin/admin-image-size-hint";
 import { Button } from "@/components/ui/button";
@@ -957,6 +956,10 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
   const [uploadErrorAktuellById, setUploadErrorAktuellById] = useState<Record<string, string>>({});
   const [selectedAktuellFileById, setSelectedAktuellFileById] = useState<Record<string, string>>({});
   const aktuellFileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const [uploadingAboutImage, setUploadingAboutImage] = useState(false);
+  const [uploadErrorAbout, setUploadErrorAbout] = useState("");
+  const [selectedAboutFileName, setSelectedAboutFileName] = useState("");
+  const aboutImageFileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [mobileSaveHost, setMobileSaveHost] = useState<HTMLElement | null>(null);
   const [saveToast, setSaveToast] = useState<{ text: string; isError: boolean } | null>(null);
@@ -1100,6 +1103,54 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
       setUploadErrorAktuellById((prev) => ({ ...prev, [itemId]: message }));
     } finally {
       setUploadingAktuellById((prev) => ({ ...prev, [itemId]: false }));
+    }
+  };
+
+  const uploadAboutImage = async (file: File) => {
+    setUploadingAboutImage(true);
+    setUploadErrorAbout("");
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("scope", "about");
+
+    try {
+      const response = await fetch("/api/admin/upload-image", {
+        method: "POST",
+        body: formData,
+      });
+      const raw = await response.text();
+      let data: { error?: string; url?: string } = {};
+      if (raw.trim()) {
+        try {
+          data = JSON.parse(raw) as { error?: string; url?: string };
+        } catch {
+          throw new Error(`Upload-Antwort ungueltig (HTTP ${response.status}).`);
+        }
+      }
+
+      if (!response.ok || !data.url) {
+        throw new Error(data.error ?? "Upload fehlgeschlagen.");
+      }
+
+      setDraft((prev) => ({
+        ...prev,
+        about: {
+          ...prev.about,
+          image: {
+            ...prev.about.image,
+            url: data.url!,
+            alt: prev.about.image.alt.trim()
+              ? prev.about.image.alt
+              : deriveAltFromFilename(file.name),
+          },
+        },
+      }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Upload fehlgeschlagen.";
+      setUploadErrorAbout(message);
+    } finally {
+      setUploadingAboutImage(false);
     }
   };
 
@@ -1888,7 +1939,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                     }))
                   }
                 />
-                <div className="grid items-start gap-4 md:grid-cols-2">
+                <div className="grid gap-3 md:grid-cols-2 md:items-start">
                   <div className="space-y-2">
                     <AdminImageFieldLabel variant="about" htmlFor="about-image-url">
                       Bild URL
@@ -1905,9 +1956,49 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                     />
                   </div>
                   <div className="space-y-2">
-                    <AdminPairedImageFieldLabel htmlFor="about-image-alt">
+                    <AdminImageFieldLabel variant="about">Bild hochladen</AdminImageFieldLabel>
+                    <input
+                      ref={aboutImageFileInputRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      className="sr-only"
+                      disabled={uploadingAboutImage}
+                      onChange={async (event) => {
+                        const file = event.target.files?.[0];
+                        if (!file) {
+                          return;
+                        }
+                        setSelectedAboutFileName(file.name);
+                        await uploadAboutImage(file);
+                        event.target.value = "";
+                      }}
+                    />
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="border-primary/40 bg-primary/5 text-primary transition-transform transition-shadow duration-150 hover:-translate-y-0.5 hover:bg-primary/10 hover:shadow-sm active:translate-y-0"
+                        disabled={uploadingAboutImage}
+                        onClick={() => aboutImageFileInputRef.current?.click()}
+                      >
+                        Datei auswählen
+                      </Button>
+                      <span className="text-xs text-muted-foreground">
+                        {selectedAboutFileName || "Keine Datei ausgewählt"}
+                      </span>
+                    </div>
+                    <p className="text-xs text-muted-foreground">Erlaubt: JPG, PNG, WEBP (max. 5 MB)</p>
+                    {uploadingAboutImage ? (
+                      <p className="text-xs text-muted-foreground">Upload laeuft...</p>
+                    ) : null}
+                    {uploadErrorAbout ? (
+                      <p className="text-xs text-destructive">{uploadErrorAbout}</p>
+                    ) : null}
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="about-image-alt" className="font-bold">
                       Bild Alt-Text
-                    </AdminPairedImageFieldLabel>
+                    </Label>
                     <Input
                       id="about-image-alt"
                       value={draft.about.image.alt}

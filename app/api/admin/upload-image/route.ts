@@ -50,6 +50,20 @@ export async function POST(request: Request) {
 
     const formData = await request.formData();
     const file = formData.get("file");
+    const scopeRaw = formData.get("scope");
+    const blobPrefix =
+      scopeRaw === "about"
+        ? "about"
+        : scopeRaw === "aktuelles" || scopeRaw === null || scopeRaw === ""
+          ? "aktuelles"
+          : null;
+
+    if (blobPrefix === null) {
+      return NextResponse.json(
+        { error: "Ungueltiger Upload-Bereich (scope). Erlaubt: aktuelles, about." },
+        { status: 400 },
+      );
+    }
 
     if (!(file instanceof File)) {
       return NextResponse.json({ error: "Keine Datei uebergeben." }, { status: 400 });
@@ -62,7 +76,7 @@ export async function POST(request: Request) {
     }
 
     const safeName = sanitizeFilename(file.name || "image.webp");
-    const key = `aktuelles/${new Date().toISOString().slice(0, 10)}/${randomUUID()}-${safeName}`;
+    const key = `${blobPrefix}/${new Date().toISOString().slice(0, 10)}/${randomUUID()}-${safeName}`;
     const uploaded = await uploadImageToBlob(key, file);
     const imageUrl = uploaded.url;
 
