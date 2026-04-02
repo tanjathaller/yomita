@@ -21,11 +21,32 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
           cache: npm
+
+      - name: Prüfe ob Secrets gesetzt sind (ohne Werte anzuzeigen)
+        env:
+          U: ${{ secrets.YOGAFLOW_SUPABASE_URL }}
+          K: ${{ secrets.YOGAFLOW_SUPABASE_ANON_KEY }}
+          E: ${{ secrets.YOGAFLOW_SYNC_EMAIL }}
+          P: ${{ secrets.YOGAFLOW_SYNC_PASSWORD }}
+        run: |
+          missing=""
+          [ -z "$U" ] && missing="${missing} YOGAFLOW_SUPABASE_URL"
+          [ -z "$K" ] && missing="${missing} YOGAFLOW_SUPABASE_ANON_KEY"
+          [ -z "$E" ] && missing="${missing} YOGAFLOW_SYNC_EMAIL"
+          [ -z "$P" ] && missing="${missing} YOGAFLOW_SYNC_PASSWORD"
+          if [ -n "$missing" ]; then
+            echo "::error::Folgende GitHub Secrets fehlen oder sind leer:$missing"
+            echo "Settings → Secrets and variables → Actions → Repository secrets"
+            exit 1
+          fi
+          echo "Alle vier YOGAFLOW_* Secrets sind gesetzt."
 
       - run: npm ci
 

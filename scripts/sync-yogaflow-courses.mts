@@ -36,10 +36,25 @@ type SupabaseRegistrationRow = {
   is_waitlist: boolean | null;
 };
 
+/** Entfernt Anführungszeichen/Newlines (häufig beim Kopieren aus dem Dashboard). */
+function normalizeSecret(raw: string): string {
+  let s = raw.trim();
+  if (
+    (s.startsWith('"') && s.endsWith('"')) ||
+    (s.startsWith("'") && s.endsWith("'"))
+  ) {
+    s = s.slice(1, -1).trim();
+  }
+  return s.replace(/\r?\n/g, "").trim();
+}
+
 function requireEnv(name: string): string {
-  const v = process.env[name]?.trim();
+  const raw = process.env[name];
+  const v = raw === undefined ? "" : normalizeSecret(raw);
   if (!v) {
-    throw new Error(`Fehlende Umgebungsvariable: ${name}`);
+    throw new Error(
+      `Fehlende oder leere Umgebungsvariable: ${name}. In GitHub Actions: Repository Secret gleichen Namens setzen.`,
+    );
   }
   return v;
 }
@@ -124,7 +139,17 @@ async function supabasePasswordGrant(
   );
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(`Supabase Auth fehlgeschlagen (${res.status}): ${text}`);
+    let hint = "";
+    try {
+      const body = JSON.parse(text) as { error_code?: string };
+      if (body.error_code === "invalid_credentials") {
+        hint =
+          "\n\nHinweis: E-Mail oder Passwort falsch – oder der Account existiert nicht in DIESEM Supabase-Projekt (URL + Anon-Key müssen zum gleichen Projekt wie in der YogaFlow-App passen). In GitHub: Secrets YOGAFLOW_SYNC_EMAIL / YOGAFLOW_SYNC_PASSWORD prüfen. Nach Passwort-Änderung das Secret aktualisieren.";
+      }
+    } catch {
+      /* ignore */
+    }
+    throw new Error(`Supabase Auth fehlgeschlagen (${res.status}): ${text}${hint}`);
   }
   const data = (await res.json()) as { access_token?: string };
   if (!data.access_token) {
@@ -260,6 +285,9 @@ async function main() {
 }
 
 main().catch((err) => {
-  console.error(err);
+  console.error(
+    err instanceof Error ? err.message : err,
+    err instanceof Error && err.stack ? `\n${err.stack}` : "",
+  );
   process.exitCode = 1;
 });
