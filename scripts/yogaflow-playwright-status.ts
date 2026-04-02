@@ -96,62 +96,65 @@ export async function scrapeRemainingSpotsFromYogaflowApp(options: {
     await page.evaluate(() => window.scrollTo(0, 0));
     await new Promise((r) => setTimeout(r, 500));
 
+    // Keine verschachtelten `function`-Deklarationen hier: tsx/esbuild injiziert `__name`,
+    // das im Browser-Kontext von `page.evaluate` nicht existiert.
     const pairs = await page.evaluate(
       (expected: { id: string; title: string; dateVariants: string[] }[]) => {
         const statusRe =
           /(noch\s+\d+\s+Restplätze?|noch\s+1\s+Restplatz|Verfügbar|Leider\s+schon\s+ausgebucht)/i;
 
-        function segmentHasAnyDate(seg: string, variants: string[]) {
-          return variants.some((v) => v && seg.includes(v));
-        }
-
-        function extractStatus(seg: string): string {
-          const m = seg.match(statusRe);
-          return m ? (m[1] ?? m[0]).trim() : "";
-        }
-
         const out: { id: string; status: string }[] = [];
         const body = (document.body.innerText || "").replace(/\u00a0/g, " ");
 
-        for (const c of expected) {
+        for (let ci = 0; ci < expected.length; ci++) {
+          const c = expected[ci]!;
           const title = c.title.trim();
-          const variants = c.dateVariants.filter(Boolean);
+          const variants: string[] = [];
+          for (let vi = 0; vi < c.dateVariants.length; vi++) {
+            const v = c.dateVariants[vi];
+            if (v) variants.push(v);
+          }
           let found = "";
 
-          // 1) Titel-Anker: großes Fenster vor/nach Titel (Datum oft oberhalb der Karte)
-          {
-            let pos = 0;
-            while (pos < body.length) {
-              const i = body.indexOf(title, pos);
-              if (i === -1) break;
-              const start = Math.max(0, i - 900);
-              const end = Math.min(body.length, i + 4800);
-              const segment = body.slice(start, end);
-              if (!segmentHasAnyDate(segment, variants)) {
-                pos = i + 1;
-                continue;
+          let pos = 0;
+          while (pos < body.length) {
+            const i = body.indexOf(title, pos);
+            if (i === -1) break;
+            const start = Math.max(0, i - 900);
+            const end = Math.min(body.length, i + 4800);
+            const segment = body.slice(start, end);
+            let hasDate = false;
+            for (let di = 0; di < variants.length; di++) {
+              const dv = variants[di]!;
+              if (segment.includes(dv)) {
+                hasDate = true;
+                break;
               }
-              found = extractStatus(segment);
-              if (found) break;
-              pos = i + 1;
             }
+            if (hasDate) {
+              const m = segment.match(statusRe);
+              found = m ? (m[1] ?? m[0]).trim() : "";
+              if (found) break;
+            }
+            pos = i + 1;
           }
 
-          // 2) Datums-Anker: gleicher Titel + Status in lokalem Fenster
           if (!found) {
-            outer: for (const dv of variants) {
-              let pos = 0;
-              while (pos < body.length) {
-                const j = body.indexOf(dv, pos);
+            outer: for (let dvi = 0; dvi < variants.length; dvi++) {
+              const dv = variants[dvi]!;
+              let dpos = 0;
+              while (dpos < body.length) {
+                const j = body.indexOf(dv, dpos);
                 if (j === -1) break;
-                const start = Math.max(0, j - 1000);
-                const end = Math.min(body.length, j + 2200);
-                const segment = body.slice(start, end);
+                const dstart = Math.max(0, j - 1000);
+                const dend = Math.min(body.length, j + 2200);
+                const segment = body.slice(dstart, dend);
                 if (segment.includes(title)) {
-                  found = extractStatus(segment);
+                  const m = segment.match(statusRe);
+                  found = m ? (m[1] ?? m[0]).trim() : "";
                   if (found) break outer;
                 }
-                pos = j + 1;
+                dpos = j + 1;
               }
             }
           }
