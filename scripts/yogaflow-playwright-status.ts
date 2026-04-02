@@ -9,7 +9,32 @@ export type CourseKeyForScrape = {
   id: string;
   title: string;
   dayDe: string;
+  /** ISO YYYY-MM-DD – für Datumstext-Varianten im UI (z. B. 7.4. vs 07.04.) */
+  startsOn: string;
 };
+
+/** Mögliche Datumsdarstellungen wie in `document.body.innerText`. */
+export function dateLabelVariants(dayDe: string, startsOn: string): string[] {
+  const out = new Set<string>();
+  const d0 = dayDe.trim();
+  if (d0) out.add(d0);
+
+  const m = startsOn.trim().match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!m) return [...out];
+
+  const y = m[1]!;
+  const moNum = Number.parseInt(m[2]!, 10);
+  const dNum = Number.parseInt(m[3]!, 10);
+  const moP = String(moNum).padStart(2, "0");
+  const dP = String(dNum).padStart(2, "0");
+
+  out.add(`${dP}.${moP}.${y}`);
+  out.add(`${dNum}.${moNum}.${y}`);
+  out.add(`${dNum}.${moP}.${y}`);
+  out.add(`${dP}.${moNum}.${y}`);
+  out.add(startsOn.trim());
+  return [...out];
+}
 
 /** UI-Text → freie Plätze (99 = „3+“, Badge zeigt „Verfügbar“). */
 export function parseRemainingFromStatusLabel(label: string): number {
@@ -72,30 +97,63 @@ export async function scrapeRemainingSpotsFromYogaflowApp(options: {
     await new Promise((r) => setTimeout(r, 500));
 
     const pairs = await page.evaluate(
-      (expected: { id: string; title: string; dayDe: string }[]) => {
+      (expected: { id: string; title: string; dateVariants: string[] }[]) => {
         const statusRe =
           /(noch\s+\d+\s+Restplätze?|noch\s+1\s+Restplatz|Verfügbar|Leider\s+schon\s+ausgebucht)/i;
+
+        function segmentHasAnyDate(seg: string, variants: string[]) {
+          return variants.some((v) => v && seg.includes(v));
+        }
+
+        function extractStatus(seg: string): string {
+          const m = seg.match(statusRe);
+          return m ? (m[1] ?? m[0]).trim() : "";
+        }
+
         const out: { id: string; status: string }[] = [];
-        const body = document.body.innerText || "";
+        const body = (document.body.innerText || "").replace(/\u00a0/g, " ");
 
         for (const c of expected) {
           const title = c.title.trim();
-          const dayDe = c.dayDe.trim();
+          const variants = c.dateVariants.filter(Boolean);
           let found = "";
-          let pos = 0;
 
-          while (pos < body.length) {
-            const i = body.indexOf(title, pos);
-            if (i === -1) break;
-            const segment = body.slice(i, i + Math.min(1000, body.length - i));
-            if (!segment.includes(dayDe)) {
+          // 1) Titel-Anker: großes Fenster vor/nach Titel (Datum oft oberhalb der Karte)
+          {
+            let pos = 0;
+            while (pos < body.length) {
+              const i = body.indexOf(title, pos);
+              if (i === -1) break;
+              const start = Math.max(0, i - 900);
+              const end = Math.min(body.length, i + 4800);
+              const segment = body.slice(start, end);
+              if (!segmentHasAnyDate(segment, variants)) {
+                pos = i + 1;
+                continue;
+              }
+              found = extractStatus(segment);
+              if (found) break;
               pos = i + 1;
-              continue;
             }
-            const fromDate = segment.slice(segment.indexOf(dayDe));
-            const m = fromDate.match(statusRe);
-            found = m ? m[1]!.trim() : "";
-            break;
+          }
+
+          // 2) Datums-Anker: gleicher Titel + Status in lokalem Fenster
+          if (!found) {
+            outer: for (const dv of variants) {
+              let pos = 0;
+              while (pos < body.length) {
+                const j = body.indexOf(dv, pos);
+                if (j === -1) break;
+                const start = Math.max(0, j - 1000);
+                const end = Math.min(body.length, j + 2200);
+                const segment = body.slice(start, end);
+                if (segment.includes(title)) {
+                  found = extractStatus(segment);
+                  if (found) break outer;
+                }
+                pos = j + 1;
+              }
+            }
           }
 
           out.push({ id: c.id, status: found });
@@ -106,7 +164,7 @@ export async function scrapeRemainingSpotsFromYogaflowApp(options: {
       options.courses.map((c) => ({
         id: c.id,
         title: c.title,
-        dayDe: c.dayDe,
+        dateVariants: dateLabelVariants(c.dayDe, c.startsOn),
       })),
     );
 

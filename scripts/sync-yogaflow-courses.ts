@@ -279,6 +279,7 @@ async function main() {
         id: row.id,
         title: (row.title ?? "").trim() || "Yoga-Kurs",
         dayDe: formatDayDe(row.date),
+        startsOn: row.date,
       })),
     });
     for (const row of courses) {
