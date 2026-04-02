@@ -9,3 +9,6 @@ export const yogaflowCoursesFileSchema = z.object({
 });
 
 export type ParsedYogaflowCoursesFile = z.infer<typeof yogaflowCoursesFileSchema>;
+
+/** Default-Export für `scripts/sync-yogaflow-courses.mts` (tsx/Node); Named Export bleibt für App-Code. */
+export default yogaflowCoursesFileSchema;
