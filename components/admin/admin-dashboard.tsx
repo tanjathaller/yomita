@@ -122,6 +122,17 @@ function scrollToCard(selector: string): void {
   });
 }
 
+/**
+ * Vor dem Entfernen von Karten/Zeilen mit fokussierten Inputs: WebKit (v. a. iOS) kann sonst
+ * einen weißen Vollbild-Glitch zeigen, bis der Nutzer erneut tippt.
+ */
+function blurActiveElementBeforeDomRemoval(): void {
+  const active = document.activeElement;
+  if (active instanceof HTMLElement) {
+    active.blur();
+  }
+}
+
 function escapeMarkdownLinkText(rawText: string): string {
   return rawText.replaceAll("[", "\\[").replaceAll("]", "\\]");
 }
@@ -1612,15 +1623,16 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                             <Button
                               type="button"
                               variant="outline"
-                              onClick={() =>
+                              onClick={() => {
+                                blurActiveElementBeforeDomRemoval();
                                 setDraft((prev) => ({
                                   ...prev,
                                   aktuell: {
                                     ...prev.aktuell,
                                     items: prev.aktuell.items.filter((current) => current.id !== item.id),
                                   },
-                                }))
-                              }
+                                }));
+                              }}
                             >
                               Entfernen
                             </Button>
@@ -1759,12 +1771,13 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                           ),
                         }))
                       }
-                      onRemove={() =>
+                      onRemove={() => {
+                        blurActiveElementBeforeDomRemoval();
                         setDraft((prev) => ({
                           ...prev,
                           prices: prev.prices.filter((current) => current.id !== price.id),
-                        }))
-                      }
+                        }));
+                      }}
                     />
                   </div>
                 ))}
@@ -2041,15 +2054,16 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                           },
                         }))
                       }
-                      onRemove={() =>
+                      onRemove={() => {
+                        blurActiveElementBeforeDomRemoval();
                         setDraft((prev) => ({
                           ...prev,
                           settings: {
                             ...prev.settings,
                             navigation: navigation.filter((_, currentIndex) => currentIndex !== index),
                           },
-                        }))
-                      }
+                        }));
+                      }}
                     />
                   ))}
                 </div>
