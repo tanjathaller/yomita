@@ -23,6 +23,13 @@ export type BaseCourse = {
   time: string;
   location: string;
   bookingStatus: BookingStatus;
+  /** Anzeige z. B. „12 €“ (optional; YogaFlow-Sync). */
+  price?: string;
+  /**
+   * Freie Plätze aus YogaFlow-Sync. Wenn gesetzt, steuert `CourseStatusBadge` die Texte
+   * (Restplatz / Verfügbar / ausgebucht); sonst Fallback über `bookingStatus`.
+   */
+  remainingSpots?: number;
   /** Lower values appear first in lists. */
   sortOrder: number;
 };
@@ -100,6 +107,8 @@ export type GeneralSettings = {
   coursesSectionTitle?: string;
   /** Optionaler Untertext der Kurse-Sektion (Markdown; Fallback: Standardtext inkl. Link zu `#kontakt`). */
   coursesSectionIntro?: string;
+  /** Überschrift über manuell gepflegten Kursen (nicht aus YogaFlow), nur wenn beide Listen sichtbar sind. */
+  coursesManualSectionTitle?: string;
   /** Optionaler Titel der Preise-Sektion (Fallback: „Preise“). */
   pricesSectionTitle?: string;
   /** Optionaler Untertext der Preise-Sektion (Markdown; Fallback: Hinweis zu Zahlung/Abwicklung). */
@@ -166,7 +175,13 @@ export type AktuellesSection = {
 export type SiteContent = {
   hero: HeroSection;
   aktuell: AktuellesSection;
+  /** Manuell im Content (KV/JSON) gepflegte Kurse – nicht aus der YogaFlow-Sync-Datei. */
   courses: Course[];
+  /**
+   * Nur zur Laufzeit auf der öffentlichen Seite: Kurse aus `data/yogaflow-courses.json`.
+   * Wird nicht mit dem Admin in KV persistiert.
+   */
+  yogaflowCourses?: Course[];
   prices: PriceItem[];
   about: AboutSection;
   contact: ContactSection;

@@ -25,6 +25,9 @@ export function withSortedLists(content: SiteContent): SiteContent {
       items: sortAktuellesItems(content.aktuell.items),
     },
     courses: sortCourses(content.courses),
+    yogaflowCourses: content.yogaflowCourses?.length
+      ? sortCourses(content.yogaflowCourses)
+      : content.yogaflowCourses,
     prices: sortPrices(content.prices),
   };
 }

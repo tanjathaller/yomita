@@ -26,11 +26,13 @@ export default async function HomePage() {
         eyebrowLabel={content.settings.sectionEyebrows?.aktuell}
       />
       <CoursesSection
-        courses={content.courses}
+        yogaflowCourses={content.yogaflowCourses ?? []}
+        manualCourses={content.courses}
         appUrl={content.settings.appUrl}
         eyebrowLabel={content.settings.sectionEyebrows?.courses}
         sectionTitle={content.settings.coursesSectionTitle}
         sectionIntro={content.settings.coursesSectionIntro}
+        manualSectionTitle={content.settings.coursesManualSectionTitle}
         afterAktuelles={hasAktuelles}
         afterAboutTeaser={false}
       />

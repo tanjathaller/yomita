@@ -1831,10 +1831,39 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                       }
                     />
                   </div>
+                  <div className="space-y-2 md:col-span-2">
+                    <Label>Überschrift „weitere“ Kurse (H3)</Label>
+                    <Input
+                      value={draft.settings.coursesManualSectionTitle ?? ""}
+                      placeholder="Weitere Angebote"
+                      onChange={(event) =>
+                        setDraft((prev) => ({
+                          ...prev,
+                          settings: {
+                            ...prev.settings,
+                            coursesManualSectionTitle:
+                              event.target.value || undefined,
+                          },
+                        }))
+                      }
+                    />
+                    <p className="text-muted-foreground text-xs">
+                      Erscheint nur, wenn sowohl YogaFlow-Termine als auch manuelle Kurse
+                      angezeigt werden.
+                    </p>
+                  </div>
                 </div>
                 <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
-                  Die einzelnen Kurs-Cards werden im Admin-Dashboard derzeit nicht angezeigt.
-                  Kursdaten kommen später aus einer externen Quelle.
+                  <strong className="text-foreground">YogaFlow:</strong> bis zu sechs
+                  Termine sichtbar, der Rest unter „Mehr anzeigen“, Daten aus{" "}
+                  <code className="text-xs">data/yogaflow-courses.json</code> (Action
+                  „Sync YogaFlow courses“, mit gesetztem{" "}
+                  <code className="text-xs">syncedAt</code>).{" "}
+                  <strong className="text-foreground">Weitere Kurse</strong> (nicht in der
+                  App) liegen im Content-Feld <code className="text-xs">courses</code> in{" "}
+                  <code className="text-xs">site-content.json</code> bzw. KV – hier im Admin
+                  derzeit ohne Karten-Editor, Anpassung z. B. per JSON-Export/Import oder
+                  direkt in der Datei.
                 </div>
               </div>
             ) : null}

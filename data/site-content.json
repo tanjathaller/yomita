@@ -50,29 +50,6 @@
       "scheduleNote": "wöchentlich"
     },
     {
-      "id": "course-vinyasa-di",
-      "title": "Vinyasa Yoga",
-      "description": "Hier solltest du bereits etwas Yogaerfahrung mitbringen.",
-      "day": "Dienstag",
-      "time": "18:00-19:30 Uhr",
-      "location": "Neuss",
-      "bookingStatus": "available",
-      "sortOrder": 20,
-      "type": "internal"
-    },
-    {
-      "id": "course-yoga-flow-mi",
-      "title": "Yoga Flow",
-      "description": "Für Anfänger und Fortgeschrittene geeignet.",
-      "day": "Mittwoch",
-      "time": "18:00-19:30 Uhr",
-      "location": "Neuss",
-      "bookingStatus": "full",
-      "sortOrder": 30,
-      "type": "internal",
-      "scheduleNote": "Zur Zeit keine Neuaufnahmen."
-    },
-    {
       "id": "course-yin-yang-so",
       "title": "Yin & Yang Yoga",
       "description": "Für Anfänger und Fortgeschrittene geeignet.",
@@ -80,7 +57,7 @@
       "time": "17:00-18:30 Uhr",
       "location": "Yoga Sanskriti in Düsseldorf",
       "bookingStatus": "available",
-      "sortOrder": 40,
+      "sortOrder": 20,
       "type": "internal",
       "scheduleNote": "Anmeldung direkt über www.yogasanskriti.de."
     }

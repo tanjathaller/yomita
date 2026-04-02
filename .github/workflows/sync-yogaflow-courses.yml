@@ -1,0 +1,51 @@
+# Holt Kurse aus YogaFlow (Supabase) und committet data/yogaflow-courses.json bei Änderung.
+# Secrets: YOGAFLOW_SUPABASE_URL, YOGAFLOW_SUPABASE_ANON_KEY, YOGAFLOW_SYNC_EMAIL, YOGAFLOW_SYNC_PASSWORD
+# Bei Branch-Schutz: Workflow braucht Schreibzugriff (z. B. „Allow GitHub Actions to create and approve pull requests“ oder PAT).
+
+name: Sync YogaFlow courses
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: sync-yogaflow-courses
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - run: npm ci
+
+      - name: Pull YogaFlow data
+        env:
+          YOGAFLOW_SUPABASE_URL: ${{ secrets.YOGAFLOW_SUPABASE_URL }}
+          YOGAFLOW_SUPABASE_ANON_KEY: ${{ secrets.YOGAFLOW_SUPABASE_ANON_KEY }}
+          YOGAFLOW_SYNC_EMAIL: ${{ secrets.YOGAFLOW_SYNC_EMAIL }}
+          YOGAFLOW_SYNC_PASSWORD: ${{ secrets.YOGAFLOW_SYNC_PASSWORD }}
+        run: npm run sync:yogaflow
+
+      - name: Commit wenn geändert
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git add data/yogaflow-courses.json
+          if git diff --staged --quiet; then
+            echo "Keine Änderung an yogaflow-courses.json"
+          else
+            git commit -m "chore: sync YogaFlow-Kurse"
+            git push
+          fi

@@ -10,6 +10,8 @@ const baseCourseSchema = z.object({
   time: z.string(),
   location: z.string(),
   bookingStatus: bookingStatusSchema,
+  price: z.string().optional(),
+  remainingSpots: z.number().int().min(0).optional(),
   sortOrder: z.number(),
 });
 
@@ -81,6 +83,7 @@ export const generalSettingsSchema = z.object({
     .optional(),
   coursesSectionTitle: z.string().optional(),
   coursesSectionIntro: z.string().optional(),
+  coursesManualSectionTitle: z.string().optional(),
   pricesSectionTitle: z.string().optional(),
   pricesSectionIntro: z.string().optional(),
   appUrl: z.string().min(1),
@@ -171,7 +174,7 @@ export const aktuellesSectionSchema = z.object({
 export const siteContentSchema = z.object({
   hero: heroSectionSchema,
   aktuell: aktuellesSectionSchema,
-  courses: z.array(courseSchema).max(10),
+  courses: z.array(courseSchema).max(50),
   prices: z.array(priceItemSchema).max(10),
   about: aboutSectionSchema,
   contact: contactSectionSchema,

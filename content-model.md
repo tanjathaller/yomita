@@ -117,6 +117,8 @@ Jeder Eintrag ist entweder **intern** (eigene Kurse / App) oder **extern** (Frem
 | `time`            | string  | z. B. „18:00–19:30“ |
 | `location`        | string  | Ort / Studio |
 | `bookingStatus`   | enum    | `available` \| `full` |
+| `price`           | string? | optional (YogaFlow-Sync), Anzeige z. B. `12,00 €` in der Kurs-Card |
+| `remainingSpots`  | number? | optional, freie Plätze (YogaFlow); steuert Badge-Texte („noch n Restplätze“, „Verfügbar“, „ausgebucht“) |
 | `sortOrder`       | number  | Sortierung im Dashboard (niedrig = weiter oben) |
 
 ### Interner Kurs (`type: "internal"`)
@@ -130,6 +132,12 @@ Zusätzlich optional, für Workshops oder klare Zeiträume:
 | `scheduleNote` | string? | Freitext, z. B. „wöchentlich“, „nur im März“ |
 
 Kein Feld `externalUrl`.
+
+### YogaFlow-Sync (öffentliche Kursliste)
+
+- **Quelle:** GitHub Action schreibt `data/yogaflow-courses.json` (`syncedAt` + `courses[]`, gleiche `Course`-Struktur wie oben, i. d. R. nur `type: "internal"`).
+- **Merge:** `getSiteContent()` setzt nach KV/Datei optional `yogaflowCourses` aus dieser Datei, wenn `syncedAt` **nicht leer** ist. Das Feld **`courses`** bleibt die **manuell** gepflegten Kurse (nicht in der YogaFlow-App). Abschalten: Env `YOGAFLOW_USE_SYNCED_COURSES=false` oder leeres `syncedAt`.
+- **Darstellung:** Von `yogaflowCourses` werden standardmäßig die **nächsten 6** Termine gezeigt; weitere über „Mehr anzeigen“. Manuelle `courses` erscheinen darunter getrennt (Überschrift optional `settings.coursesManualSectionTitle`, Fallback „Weitere Angebote“), sofern beide Listen Inhalt haben.
 
 ### Externer Kurs (`type: "external"`)
 
@@ -193,6 +201,7 @@ Kein Feld `externalUrl`.
 | `sectionEyebrows`  | object?  | optionale kleine Labels über Abschnitts-Headlines: `hero`, `aktuell`, `courses`, `prices`; Fallbacks: `businessName` bzw. „Journal“, „Angebot“, „Teilnahme“ |
 | `coursesSectionTitle` | string? | optionaler Titel der Kurse-Sektion; Fallback: „Kurse & Termine“ |
 | `coursesSectionIntro` | string? | optionaler Untertext der Kurse-Sektion (**Markdown**); z. B. Link zum Kontakt `[Kontaktformular](/#kontakt)`; Fallback: Standardtext mit diesem Link |
+| `coursesManualSectionTitle` | string? | optional: H3 über manuell gepflegten Kursen; nur wenn YogaFlow- und manuelle Liste sichtbar; Fallback: „Weitere Angebote“ |
 | `pricesSectionTitle` | string? | optionaler Titel der Preise-Sektion; Fallback: „Preise“ |
 | `pricesSectionIntro` | string? | optionaler Untertext der Preise-Sektion (**Markdown**); Fallback: Hinweis zu Zahlung/Abwicklung außerhalb der Website |
 | `appUrl`           | string   | Hauptlink zur Kursbuchungs-App (Hero-CTA kann davon abweichen, z. B. Tracking) |
@@ -236,7 +245,7 @@ Ein Dokument (JSON, CMS-Record, eine Zeile), das die gesamte Seite speist:
 ## Hinweise für Admin & Implementierung
 
 - **Sortierung:** `sortOrder` bei Aktuelles-Einträgen, Kursen und Preisen im Dashboard pflegen; öffentliche Liste danach sortieren.  
-- **Listen-Limit:** In `aktuell.items`, `courses` und `prices` sind maximal **10** Cards erlaubt.  
+- **Listen-Limit:** In `aktuell.items` und `prices` maximal **10** Cards; in `courses` maximal **50** (YogaFlow-Sync).  
 - **Validierung:** Bei `type: "internal"` kein `externalUrl`; bei `type: "external"` muss `externalUrl` gesetzt sein.  
 - **Struktur-Schutz:** Sektionen, Reihenfolge und Layout-Templates bleiben fest; im Admin sind nur Inhalte/Felder innerhalb von `SiteContent` editierbar.  
 - **Brief:** Keine Zahlungsabwicklung, kein Buchungssystem auf der Webseite, keine App-Neuregistrierung – das Content-Model spiegelt das wider (App nur per Link, Kontakt per Formular).  

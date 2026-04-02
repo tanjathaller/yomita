@@ -44,11 +44,12 @@ Empfehlung **Next.js App Router** mit **Route Groups**:
 ## 3. Datenfluss
 
 1. **Single source of truth:** ein persistiertes `SiteContent` in Vercel KV (Key `site:content`), lokal mit Dateifallback (`data/site-content.json`).
-2. **Öffentliche Seiten:** Server Components laden Inhalt serverseitig (`getSiteContent()`), rendern Sektionen; Listen nach `sortOrder` sortieren.
-3. **Caching:** `fetch` mit `revalidate` (ISR) oder On-Demand Revalidation nach Speichern im Admin (Vercel-tauglich).
-4. **Admin:** Formulare pro Bereich; Speichern per **Server Action** (`siteContentSchema`), danach `revalidatePath` für öffentliche Routen.
-5. **Kontakt:** POST → API → Versand/Weiterleitung; `contact.formRecipientEmail` optional, sonst Env.
-6. **Medien:** vorerst URLs in Content (`aktuell.items[].image`, `about.image`, `logoUrl`, `ogImageUrl`); Upload-Lösung später ohne Änderung der Sektions-Architektur.
+2. **Kursliste (YogaFlow + manuell):** `getSiteContent()` hängt optional `yogaflowCourses` aus `data/yogaflow-courses.json` an (nicht-leeres `syncedAt`); **`courses`** im KV/JSON sind zusätzliche, manuell gepflegte Kurse (ohne App). Öffentliche UI: erste 6 YogaFlow-Termine, Rest per „Mehr anzeigen“; manuelle Kurse eigener Block. Admin lädt `readSiteContent()` (ohne YogaFlow-Merge), damit der Entwurf keine Sync-Daten persistiert. Deaktivieren: `YOGAFLOW_USE_SYNCED_COURSES=false`. Sync: Workflow `sync-yogaflow-courses.yml` + Secrets.
+3. **Öffentliche Seiten:** Server Components laden Inhalt serverseitig (`getSiteContent()`), rendern Sektionen; Listen nach `sortOrder` sortieren.
+4. **Caching:** `fetch` mit `revalidate` (ISR) oder On-Demand Revalidation nach Speichern im Admin (Vercel-tauglich).
+5. **Admin:** Formulare pro Bereich; Speichern per **Server Action** (`siteContentSchema`), danach `revalidatePath` für öffentliche Routen.
+6. **Kontakt:** POST → API → Versand/Weiterleitung; `contact.formRecipientEmail` optional, sonst Env.
+7. **Medien:** vorerst URLs in Content (`aktuell.items[].image`, `about.image`, `logoUrl`, `ogImageUrl`); Upload-Lösung später ohne Änderung der Sektions-Architektur.
 
 ## 4. Wiederverwendbare Komponenten
 
@@ -65,7 +66,7 @@ Keine Zahlungs- oder Buchungslogik in diesen Komponenten – App-Link und Kontak
 ## 5. Spätere Erweiterbarkeit
 
 - **Auth-Härtung:** bestehendes Owner-Login + Session um Rate-Limit, 2FA oder Audit-Logs erweitern.
-- **Kurs-Sync:** `courses[]` kann später durch Yoga-App-Sync befüllt/überschrieben werden (separater Kanal).
+- **Kurs-Sync:** optional kürzeres Intervall, Webhook nach Buchung oder Edge-Funktion statt Cron.
 - **Draft/Publish:** zweites Dokument oder Versionierung; öffentliche Route liest nur Published.
 - **i18n:** optional `app/[locale]/` und lokalisierte Content-Struktur.
 - **Weitere Marketing-Seiten:** unter `(public)`; Sektionen wiederverwenden.

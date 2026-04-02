@@ -3,13 +3,28 @@ import Link from "next/link";
 import type { Course } from "@/types/site-content";
 
 import { CourseRow } from "@/components/domain/course-row";
+import { YogaflowCoursesExpandable } from "@/components/domain/yogaflow-courses-expandable";
 import { MarkdownContent } from "@/components/shared/markdown-content";
 import { SectionShell } from "@/components/shared/section-shell";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { cn } from "@/lib/utils";
 
+const manualGridClass = cn(
+  "flex flex-col gap-4",
+  "lg:flex-row lg:flex-wrap lg:justify-center lg:gap-6 xl:gap-8",
+);
+
+const manualItemClass = cn(
+  "flex min-w-0 w-full flex-col",
+  "lg:flex-[0_0_calc((100%_-_1.5rem)/2)]",
+  "xl:flex-[0_0_calc((100%_-_2rem)/2)]",
+);
+
 type CoursesSectionProps = {
-  courses: Course[];
+  /** Aus YogaFlow-Sync (`data/yogaflow-courses.json`). */
+  yogaflowCourses: Course[];
+  /** Manuell im Site-Content gepflegt (nicht in der App). */
+  manualCourses: Course[];
   appUrl: string;
   /** Kleines Label über der Headline (z. B. „Angebot“). */
   eyebrowLabel?: string;
@@ -17,6 +32,8 @@ type CoursesSectionProps = {
   sectionTitle?: string;
   /** Optionaler Sektionstext (Markdown; Fallback: Standardtext inkl. Link zum Kontakt). */
   sectionIntro?: string;
+  /** Überschrift über den manuellen Kursen, wenn YogaFlow- und manuelle Liste beide sichtbar. */
+  manualSectionTitle?: string;
   /** When true, this block sits below „Aktuelles“ in the same muted band (spacing + divider). */
   afterAktuelles?: boolean;
   /** Wenn es kein Aktuelles gibt: unter dem Kurz-„Über mich“-Teaser (spacing + divider). */
@@ -24,11 +41,13 @@ type CoursesSectionProps = {
 };
 
 export function CoursesSection({
-  courses,
+  yogaflowCourses,
+  manualCourses,
   appUrl,
   eyebrowLabel,
   sectionTitle,
   sectionIntro,
+  manualSectionTitle,
   afterAktuelles = false,
   afterAboutTeaser = false,
 }: CoursesSectionProps) {
@@ -37,6 +56,12 @@ export function CoursesSection({
   const introMarkdown =
     sectionIntro?.trim() ||
     "Als Bestandskund:in buchst du deine Stunden ganz entspannt über die App. Wenn du neu bist oder Fragen hast, bin ich gern für dich da - schreib mir einfach über das [Kontaktformular](/#kontakt).";
+  const manualHeading =
+    manualSectionTitle?.trim() || "Weitere Angebote";
+  const hasYogaflow = yogaflowCourses.length > 0;
+  const hasManual = manualCourses.length > 0;
+  const showManualSubheading = hasYogaflow && hasManual;
+
   return (
     <SectionShell
       id="kurse"
@@ -84,24 +109,42 @@ export function CoursesSection({
           </Link>
         </div>
       </div>
-      <div
-        className={cn(
-          "mt-8 flex flex-col gap-4",
-          "lg:flex-row lg:flex-wrap lg:justify-center lg:gap-6 xl:gap-8",
-        )}
-      >
-        {courses.map((course) => (
+
+      <div className="mt-8 w-full px-4 lg:px-6">
+        {hasYogaflow ? <YogaflowCoursesExpandable courses={yogaflowCourses} /> : null}
+
+        {showManualSubheading ? (
+          <div className="mt-14 max-w-2xl border-border/60 border-t pt-10 lg:mt-16 lg:pt-12">
+            <h3 className="text-[#2F3B2A] text-2xl font-semibold tracking-tight lg:text-3xl">
+              {manualHeading}
+            </h3>
+            <p className="text-muted-foreground mt-2 max-w-prose text-sm leading-relaxed lg:text-base">
+              Diese Termine sind nicht über die YogaFlow-App gebucht – Infos und
+              Anmeldung siehe jeweils auf der Karte oder über das Kontaktformular.
+            </p>
+          </div>
+        ) : null}
+
+        {hasManual ? (
           <div
-            key={course.id}
             className={cn(
-              "flex min-w-0 w-full flex-col",
-              "lg:flex-[0_0_calc((100%_-_1.5rem)/2)]",
-              "xl:flex-[0_0_calc((100%_-_2rem)/2)]",
+              manualGridClass,
+              showManualSubheading ? "mt-8 lg:mt-10" : "mt-8",
             )}
           >
-            <CourseRow course={course} />
+            {manualCourses.map((course) => (
+              <div key={course.id} className={manualItemClass}>
+                <CourseRow course={course} />
+              </div>
+            ))}
           </div>
-        ))}
+        ) : null}
+
+        {!hasYogaflow && !hasManual ? (
+          <p className="text-muted-foreground text-center text-sm">
+            Aktuell sind keine Kurse hinterlegt.
+          </p>
+        ) : null}
       </div>
     </SectionShell>
   );

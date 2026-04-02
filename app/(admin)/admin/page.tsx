@@ -1,6 +1,7 @@
 import { AdminDashboard } from "@/components/admin/admin-dashboard";
 import { requireAdminAuth } from "@/lib/admin-auth";
-import { getSiteContent } from "@/lib/get-site-content";
+import { readSiteContent } from "@/lib/site-content-store";
+import { withSortedLists } from "@/lib/sort-content";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { saveSiteContentAction } from "./actions";
@@ -8,7 +9,7 @@ import { saveSiteContentAction } from "./actions";
 export default async function AdminHomePage() {
   await requireAdminAuth();
   try {
-    const content = await getSiteContent();
+    const content = withSortedLists(await readSiteContent());
 
     return (
       <AdminDashboard
