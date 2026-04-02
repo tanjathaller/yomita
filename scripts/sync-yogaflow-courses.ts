@@ -4,7 +4,10 @@
  * sonst Fallback über `registrations` (oft unvollständig wegen RLS).
  *
  * Env: YOGAFLOW_SUPABASE_URL, YOGAFLOW_SUPABASE_ANON_KEY, YOGAFLOW_SYNC_EMAIL,
- * YOGAFLOW_SYNC_PASSWORD; optional YOGAFLOW_APP_URL für korrekte Status-Anzeige.
+ * YOGAFLOW_SYNC_PASSWORD; optional YOGAFLOW_APP_URL (Playwright) und
+ * YOGAFLOW_SUPABASE_COURSES_EXTRA_FIELDS (Restplätze direkt aus `courses`, falls Spalten existieren).
+ *
+ * Restplätze primär: Supabase-RPC `get_course_participant_counts` (registered_count + max_participants).
  *
  * Als `.ts` (nicht `.mts`), damit `tsx`/Node benannte Imports aus `./yogaflow-playwright-status` zuverlässig auflösen.
  */
@@ -15,7 +18,10 @@ import path from "node:path";
 import type { InternalCourse } from "../types/site-content";
 
 import yogaflowCoursesFileSchema from "../lib/schemas/yogaflow-courses-file";
-import { scrapeRemainingSpotsFromYogaflowApp } from "./yogaflow-playwright-status";
+import {
+  remainingFromCourseLikeRow,
+  scrapeRemainingSpotsFromYogaflowApp,
+} from "./yogaflow-playwright-status";
 
 type SupabaseCourseRow = {
   id: string;
@@ -196,6 +202,81 @@ async function fetchAllRows<T>(
   return out;
 }
 
+type RpcParticipantCountRow = {
+  course_id: string;
+  registered_count: number;
+  waitlist_count?: number;
+};
+
+/**
+ * Wie in der YogaFlow-Web-App: POST /rest/v1/rpc/get_course_participant_counts →
+ * [{ course_id, registered_count, waitlist_count }, …]
+ */
+async function fetchRegisteredCountsFromRpc(
+  baseUrl: string,
+  anonKey: string,
+  jwt: string,
+): Promise<Map<string, number>> {
+  const url = `${baseUrl.replace(/\/$/, "")}/rest/v1/rpc/get_course_participant_counts`;
+  const customPayload = normalizeSecret(
+    process.env.YOGAFLOW_RPC_PARTICIPANT_COUNTS_PAYLOAD ?? "",
+  );
+
+  const headersJson: Record<string, string> = {
+    apikey: anonKey,
+    Authorization: `Bearer ${jwt}`,
+    Accept: "application/json",
+  };
+
+  let res: Response;
+  if (customPayload !== "") {
+    res = await fetch(url, {
+      method: "POST",
+      headers: { ...headersJson, "Content-Type": "application/json" },
+      body: customPayload,
+    });
+  } else {
+    res = await fetch(url, {
+      method: "POST",
+      headers: { ...headersJson, "Content-Type": "application/json" },
+      body: "{}",
+    });
+    if (res.status === 404) {
+      const errText = await res.text();
+      if (
+        errText.includes("PGRST202") ||
+        errText.includes("Could not find the function")
+      ) {
+        res = await fetch(url, {
+          method: "GET",
+          headers: headersJson,
+        });
+      } else {
+        throw new Error(`404: ${errText}`);
+      }
+    }
+  }
+
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`${res.status}: ${text}`);
+  }
+  const data = (await res.json()) as unknown;
+  const out = new Map<string, number>();
+  if (!Array.isArray(data)) return out;
+  for (const item of data) {
+    if (!item || typeof item !== "object") continue;
+    const row = item as RpcParticipantCountRow;
+    if (typeof row.course_id !== "string") continue;
+    const raw = row.registered_count;
+    const n =
+      typeof raw === "number" ? raw : typeof raw === "string" ? Number(raw) : NaN;
+    if (!Number.isFinite(n)) continue;
+    out.set(row.course_id, Math.max(0, Math.floor(n)));
+  }
+  return out;
+}
+
 function countOccupiedForCourse(
   registrations: SupabaseRegistrationRow[],
   courseId: string,
@@ -253,37 +334,124 @@ async function main() {
   const jwt = await supabasePasswordGrant(baseUrl, anonKey, email, password);
   const today = todayBerlinYmd();
 
-  const coursePath =
-    `/rest/v1/courses?select=id,title,description,date,time,end_time,location,max_participants,price,duration,room,frequency,status` +
-    `&status=eq.active&date=gte.${today}&order=date.asc,time.asc`;
+  const baseSelect =
+    "id,title,description,date,time,end_time,location,max_participants,price,duration,room,frequency,status";
+  const extraFields = normalizeSecret(
+    process.env.YOGAFLOW_SUPABASE_COURSES_EXTRA_FIELDS ?? "",
+  ).replace(/[^a-zA-Z0-9_,]/g, "");
 
-  const courses = await fetchAllRows<SupabaseCourseRow>(
-    baseUrl,
-    coursePath,
-    anonKey,
-    jwt,
-  );
+  let courses: SupabaseCourseRow[];
+
+  if (extraFields) {
+    const pathWithExtra =
+      `/rest/v1/courses?select=${baseSelect},${extraFields}` +
+      `&status=eq.active&date=gte.${today}&order=date.asc,time.asc`;
+    try {
+      courses = await fetchAllRows<SupabaseCourseRow>(
+        baseUrl,
+        pathWithExtra,
+        anonKey,
+        jwt,
+      );
+      console.log(
+        `Supabase: Kurse mit Zusatzfeldern geladen (${extraFields}).`,
+      );
+    } catch {
+      console.warn(
+        `Supabase: Zusatzfelder „${extraFields}“ schlagen fehl – nutze Standard-Select (Spalten in der DB prüfen).`,
+      );
+      const pathBase =
+        `/rest/v1/courses?select=${baseSelect}` +
+        `&status=eq.active&date=gte.${today}&order=date.asc,time.asc`;
+      courses = await fetchAllRows<SupabaseCourseRow>(
+        baseUrl,
+        pathBase,
+        anonKey,
+        jwt,
+      );
+    }
+  } else {
+    const coursePath =
+      `/rest/v1/courses?select=${baseSelect}` +
+      `&status=eq.active&date=gte.${today}&order=date.asc,time.asc`;
+    courses = await fetchAllRows<SupabaseCourseRow>(
+      baseUrl,
+      coursePath,
+      anonKey,
+      jwt,
+    );
+  }
 
   const appUrl = normalizeSecret(process.env.YOGAFLOW_APP_URL ?? "");
   const remainingById = new Map<string, number>();
 
-  if (appUrl) {
-    console.log(
-      "YOGAFLOW_APP_URL gesetzt – Restplätze per Playwright aus der Web-App lesen …",
+  const skipRpc =
+    normalizeSecret(
+      process.env.YOGAFLOW_SKIP_PARTICIPANT_COUNTS_RPC ?? "",
+    ).toLowerCase() === "true" ||
+    normalizeSecret(process.env.YOGAFLOW_SKIP_PARTICIPANT_COUNTS_RPC ?? "") ===
+      "1";
+
+  if (!skipRpc) {
+    try {
+      const registeredByCourse = await fetchRegisteredCountsFromRpc(
+        baseUrl,
+        anonKey,
+        jwt,
+      );
+      let matched = 0;
+      for (const row of courses) {
+        const reg = registeredByCourse.get(row.id);
+        if (reg === undefined) continue;
+        const cap = Math.max(1, row.max_participants);
+        remainingById.set(row.id, Math.max(0, cap - reg));
+        matched += 1;
+      }
+      console.log(
+        `Supabase RPC get_course_participant_counts: ${registeredByCourse.size} Einträge, ${matched} in der aktuellen Kursliste mit Restplätzen.`,
+      );
+    } catch (e) {
+      console.warn(
+        `RPC get_course_participant_counts nicht nutzbar: ${e instanceof Error ? e.message : String(e)}`,
+      );
+    }
+  }
+
+  for (const row of courses) {
+    if (remainingById.has(row.id)) continue;
+    const fromRow = remainingFromCourseLikeRow(
+      row as unknown as Record<string, unknown>,
     );
-    const scraped = await scrapeRemainingSpotsFromYogaflowApp({
-      appUrl,
-      email,
-      password,
-      courses: courses.map((row) => ({
-        id: row.id,
-        title: (row.title ?? "").trim() || "Yoga-Kurs",
-        dayDe: formatDayDe(row.date),
-        startsOn: row.date,
-      })),
-    });
-    for (const row of courses) {
-      remainingById.set(row.id, scraped.get(row.id) ?? 99);
+    if (fromRow !== undefined) {
+      remainingById.set(row.id, fromRow);
+    }
+  }
+
+  if (appUrl) {
+    const needScrape = courses.filter((row) => !remainingById.has(row.id));
+    if (needScrape.length > 0) {
+      console.log(
+        `YOGAFLOW_APP_URL gesetzt – Restplätze per Playwright für ${needScrape.length}/${courses.length} Kurse (ohne DB-Zahl) …`,
+      );
+      const scraped = await scrapeRemainingSpotsFromYogaflowApp({
+        appUrl,
+        email,
+        password,
+        courses: needScrape.map((row) => ({
+          id: row.id,
+          title: (row.title ?? "").trim() || "Yoga-Kurs",
+          dayDe: formatDayDe(row.date),
+          startsOn: row.date,
+          maxParticipants: Math.max(1, row.max_participants),
+        })),
+      });
+      for (const row of needScrape) {
+        remainingById.set(row.id, scraped.get(row.id) ?? 99);
+      }
+    } else {
+      console.log(
+        "Restplätze vollständig aus Supabase-Kurszeilen – Playwright übersprungen.",
+      );
     }
   } else {
     console.warn(
@@ -298,6 +466,7 @@ async function main() {
       jwt,
     );
     for (const row of courses) {
+      if (remainingById.has(row.id)) continue;
       remainingById.set(row.id, remainingFromRegistrations(row, registrations));
     }
   }
