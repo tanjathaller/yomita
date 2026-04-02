@@ -2075,6 +2075,19 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                   />
                 </div>
                 <div className="space-y-2 md:col-span-2">
+                  <Label>Button-Beschriftung (Absenden)</Label>
+                  <Input
+                    value={draft.contact.formSubmitLabel}
+                    onChange={(event) =>
+                      setDraft((prev) => ({
+                        ...prev,
+                        contact: { ...prev.contact, formSubmitLabel: event.target.value },
+                      }))
+                    }
+                    placeholder="Unverbindlich anfragen"
+                  />
+                </div>
+                <div className="space-y-2 md:col-span-2">
                   <Label>Success-Nachricht</Label>
                   <Textarea
                     rows={4}

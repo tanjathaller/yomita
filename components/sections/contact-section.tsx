@@ -48,7 +48,10 @@ export function ContactSection({ contact }: ContactSectionProps) {
           </p>
         </div>
         <div className="lg:sticky lg:top-[calc(var(--site-header-clearance)+1rem)] lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:self-start">
-          <ContactForm successMessage={contact.formSuccessMessage} />
+          <ContactForm
+            successMessage={contact.formSuccessMessage}
+            submitLabel={contact.formSubmitLabel}
+          />
         </div>
         <dl className="grid gap-3 lg:col-start-1 lg:row-start-2 lg:grid-cols-2">
           <div>

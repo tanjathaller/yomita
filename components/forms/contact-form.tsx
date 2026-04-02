@@ -16,9 +16,10 @@ import { Textarea } from "@/components/ui/textarea";
 
 type ContactFormProps = {
   successMessage?: string;
+  submitLabel: string;
 };
 
-export function ContactForm({ successMessage }: ContactFormProps) {
+export function ContactForm({ successMessage, submitLabel }: ContactFormProps) {
   const [submitted, setSubmitted] = useState(false);
 
   const form = useForm<ContactFormValues>({
@@ -117,7 +118,7 @@ export function ContactForm({ successMessage }: ContactFormProps) {
         ) : null}
       </div>
       <Button type="submit" disabled={form.formState.isSubmitting} className="w-full sm:w-auto">
-        Unverbindlich anfragen
+        {submitLabel}
       </Button>
       <p className="text-muted-foreground text-xs">
         Ich melde mich in der Regel innerhalb von 1-2 Werktagen.

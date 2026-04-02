@@ -70,6 +70,8 @@ export type ContactSection = {
   phone: string;
   formHeadline: string;
   formText: string;
+  /** Beschriftung des Absende-Buttons im Kontaktformular. */
+  formSubmitLabel: string;
   formSuccessMessage?: string;
   formRecipientEmail?: string;
 };

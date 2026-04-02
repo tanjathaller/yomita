@@ -2,7 +2,7 @@
   "hero": {
     "title": "Namaste und herzlich willkommen! ",
     "claim": "Ich bin Tanja Thaller, freiberufliche Yogalehrerin im Raum Neuss/Düsseldorf und freue mich sehr, dass Du mich gefunden hast.",
-    "imageAlt": "Portrait – Yogastudio und Achtsamkeit",
+    "imageAlt": "Tanja Thaller macht Yoga",
     "primaryCtaLabel": "Mehr über mich",
     "primaryCtaUrl": "#ueber-mich"
   },
@@ -143,6 +143,7 @@
     "email": "namaste@yomita.de",
     "phone": "0152 09464468",
     "formHeadline": "Kontakt",
+    "formSubmitLabel": "Unverbindlich anfragen",
     "formText": "Schreib uns – wir melden uns schnellstmöglich. (Beispieltext, E-Mail-Adresse später anpassen.)",
     "formSuccessMessage": "Danke! Deine Nachricht ist angekommen. (Demo – Backend folgt.)"
   },

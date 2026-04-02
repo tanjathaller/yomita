@@ -55,6 +55,10 @@ export const contactSectionSchema = z.object({
   phone: z.string(),
   formHeadline: z.string(),
   formText: z.string(),
+  formSubmitLabel: z
+    .string()
+    .optional()
+    .transform((s) => (s?.trim() ? s.trim() : "Unverbindlich anfragen")),
   formSuccessMessage: z.string().optional(),
   formRecipientEmail: z.string().optional(),
 });

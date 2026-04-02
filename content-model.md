@@ -178,6 +178,7 @@ Kein Feld `externalUrl`.
 | `phone`                | string   | Telefon (Anzeige) |
 | `formHeadline`         | string   | Überschrift über dem Formular |
 | `formText`             | string   | Einleitung / Hinweise zum Formular |
+| `formSubmitLabel`      | string   | Text des Absende-Buttons; fehlt in alten Daten: Fallback „Unverbindlich anfragen“ (Validierung) |
 | `formSuccessMessage`   | string?  | Text nach erfolgreichem Absenden |
 | `formRecipientEmail`   | string?  | optional: Ziel-E-Mail für Submissions; wenn leer, Fallback über Server-Config/Env |
 
