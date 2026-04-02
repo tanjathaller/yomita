@@ -144,10 +144,9 @@ Kein Feld `externalUrl`.
 |----------------|----------|--------------|
 | `id`           | string   | stabile ID |
 | `title`        | string   | z. B. „10er-Karte“ |
-| `price`        | string   | Anzeige, z. B. „120 €“ oder „ab 15 € / Stunde“ |
-| `description`  | string   | Erläuterung |
+| `price`        | string   | **Info- / Preislabel** in der Pill unter dem Titel; bei gesetztem `linkUrl` erscheint derselbe Text auf dem Link-Button (leer → „Mehr erfahren“) |
+| `description`  | string   | Erläuterung (**Markdown**) |
 | `linkUrl`      | string?  | optionaler externer Link (z. B. Anbieter-Seite) |
-| `linkLabel`    | string?  | optionales Link-Label; Fallback ist `linkUrl` |
 | `sortOrder`    | number   | Reihenfolge |
 | `highlighted`  | boolean? | optional hervorgehobene Karte in der UI |
 
@@ -191,6 +190,8 @@ Kein Feld `externalUrl`.
 | `sectionEyebrows`  | object?  | optionale kleine Labels über Abschnitts-Headlines: `hero`, `aktuell`, `courses`, `prices`; Fallbacks: `businessName` bzw. „Journal“, „Angebot“, „Teilnahme“ |
 | `coursesSectionTitle` | string? | optionaler Titel der Kurse-Sektion; Fallback: „Kurse & Termine“ |
 | `coursesSectionIntro` | string? | optionaler Untertext der Kurse-Sektion (**Markdown**); z. B. Link zum Kontakt `[Kontaktformular](/#kontakt)`; Fallback: Standardtext mit diesem Link |
+| `pricesSectionTitle` | string? | optionaler Titel der Preise-Sektion; Fallback: „Preise“ |
+| `pricesSectionIntro` | string? | optionaler Untertext der Preise-Sektion (**Markdown**); Fallback: Hinweis zu Zahlung/Abwicklung außerhalb der Website |
 | `appUrl`           | string   | Hauptlink zur Kursbuchungs-App (Hero-CTA kann davon abweichen, z. B. Tracking) |
 | `logoUrl`          | string?  | optional; Logo-Erstellung ist nicht Projektbestandteil, Upload-URL ist erlaubt |
 | `siteTitle`        | string?  | `<title>` / Branding |

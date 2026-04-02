@@ -36,7 +36,6 @@ export const priceItemSchema = z.object({
   price: z.string(),
   description: z.string(),
   linkUrl: z.string().min(1).optional(),
-  linkLabel: z.string().min(1).optional(),
   sortOrder: z.number(),
   highlighted: z.boolean().optional(),
 });
@@ -77,6 +76,8 @@ export const generalSettingsSchema = z.object({
     .optional(),
   coursesSectionTitle: z.string().optional(),
   coursesSectionIntro: z.string().optional(),
+  pricesSectionTitle: z.string().optional(),
+  pricesSectionIntro: z.string().optional(),
   appUrl: z.string().min(1),
   logoUrl: z.string().optional(),
   siteTitle: z.string().optional(),

@@ -44,10 +44,11 @@ export type Course = InternalCourse | ExternalCourse;
 export type PriceItem = {
   id: string;
   title: string;
+  /** Info- / Preislabel: Kurztext in der Pill; bei Link auch Button-Text (leer → „Mehr erfahren“). */
   price: string;
+  /** Fließtext unter dem Kopfbereich (Markdown). */
   description: string;
   linkUrl?: string;
-  linkLabel?: string;
   sortOrder: number;
   highlighted?: boolean;
 };
@@ -94,6 +95,10 @@ export type GeneralSettings = {
   coursesSectionTitle?: string;
   /** Optionaler Untertext der Kurse-Sektion (Markdown; Fallback: Standardtext inkl. Link zu `#kontakt`). */
   coursesSectionIntro?: string;
+  /** Optionaler Titel der Preise-Sektion (Fallback: „Preise“). */
+  pricesSectionTitle?: string;
+  /** Optionaler Untertext der Preise-Sektion (Markdown; Fallback: Hinweis zu Zahlung/Abwicklung). */
+  pricesSectionIntro?: string;
   appUrl: string;
   logoUrl?: string;
   siteTitle?: string;

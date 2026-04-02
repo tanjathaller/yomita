@@ -89,7 +89,7 @@
       "id": "price-neuss-90",
       "title": "Yogastunde · 90 Minuten · Neuss",
       "price": "12 €",
-      "description": "Kleingruppe\noder 5er-Karte für 50 €",
+      "description": "Kleingruppe\noder 5er-Karte für 50 €\n",
       "sortOrder": 10
     },
     {
@@ -103,10 +103,9 @@
     {
       "id": "price-duesseldorf-90",
       "title": "Yoga Sanskriti · 90 Minuten · Düsseldorf",
-      "price": "",
+      "price": "Zum Studio",
       "description": "Kurs im Studio Yoga Sanskriti",
       "linkUrl": "https://www.yogasanskriti.de",
-      "linkLabel": "Zum Studio",
       "sortOrder": 30
     },
     {

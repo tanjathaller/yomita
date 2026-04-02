@@ -34,7 +34,12 @@ export default async function HomePage() {
         afterAktuelles={hasAktuelles}
         afterAboutTeaser={false}
       />
-      <PricesSection prices={content.prices} eyebrowLabel={content.settings.sectionEyebrows?.prices} />
+      <PricesSection
+        prices={content.prices}
+        eyebrowLabel={content.settings.sectionEyebrows?.prices}
+        sectionTitle={content.settings.pricesSectionTitle}
+        sectionIntro={content.settings.pricesSectionIntro}
+      />
       <AboutSection about={content.about} />
       <ContactSection contact={content.contact} />
     </>

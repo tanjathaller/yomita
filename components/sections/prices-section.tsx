@@ -1,16 +1,27 @@
 import type { PriceItem } from "@/types/site-content";
 
 import { PriceCard } from "@/components/domain/price-card";
+import { MarkdownContent } from "@/components/shared/markdown-content";
 import { SectionShell } from "@/components/shared/section-shell";
+import { cn } from "@/lib/utils";
 
 type PricesSectionProps = {
   prices: PriceItem[];
   /** Kleines Label über der Headline (z. B. „Teilnahme“). */
   eyebrowLabel?: string;
+  /** Optionaler Sektionstitel (Fallback: „Preise“). */
+  sectionTitle?: string;
+  /** Optionaler Absatz unter dem Titel (Markdown). */
+  sectionIntro?: string;
 };
 
-export function PricesSection({ prices, eyebrowLabel }: PricesSectionProps) {
+const DEFAULT_PRICES_INTRO_MARKDOWN =
+  "Zahlung und Abwicklung erfolgen außerhalb dieser Website (z. B. vor Ort oder per Rechnung) – hier nur die Übersicht.";
+
+export function PricesSection({ prices, eyebrowLabel, sectionTitle, sectionIntro }: PricesSectionProps) {
   const eyebrow = eyebrowLabel?.trim() || "Teilnahme";
+  const heading = sectionTitle?.trim() || "Preise";
+  const introMarkdown = sectionIntro?.trim() || DEFAULT_PRICES_INTRO_MARKDOWN;
   return (
     <SectionShell
       id="preise"
@@ -22,7 +33,7 @@ export function PricesSection({ prices, eyebrowLabel }: PricesSectionProps) {
             {eyebrow}
           </p>
           <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight lg:text-6xl">
-            Preise
+            {heading}
           </h2>
           <span
             aria-hidden
@@ -30,10 +41,15 @@ export function PricesSection({ prices, eyebrowLabel }: PricesSectionProps) {
           />
         </div>
       </div>
-      <p className="text-muted-foreground mt-4 max-w-2xl text-sm leading-relaxed lg:text-base">
-        Zahlung und Abwicklung erfolgen außerhalb dieser Website (z. B. vor Ort oder per Rechnung)
-        – hier nur die Übersicht.
-      </p>
+      <div className="mt-4 max-w-2xl pl-4 lg:pl-6">
+        <MarkdownContent
+          markdown={introMarkdown}
+          className={cn(
+            "max-w-prose text-muted-foreground [&_p]:text-sm [&_p]:leading-relaxed [&_p]:text-muted-foreground lg:[&_p]:text-base",
+            "[&_a]:text-primary [&_a]:font-medium [&_a]:underline-offset-4 hover:[&_a]:underline",
+          )}
+        />
+      </div>
       <div className="mt-10 grid gap-5 lg:grid-cols-3 lg:gap-6 xl:gap-8">
         {prices.map((p) => (
           <PriceCard key={p.id} item={p} />

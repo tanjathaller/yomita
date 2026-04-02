@@ -1731,10 +1731,11 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
             {activeSection === "prices" ? (
               <div className="space-y-3">
                 <div className="grid gap-4 md:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label>Preise Label (kleine Zeile)</Label>
+                  <div className="space-y-2 md:col-span-2">
+                    <Label>Preise Label (kleine Zeile über H2)</Label>
                     <Input
                       value={draft.settings.sectionEyebrows?.prices ?? ""}
+                      placeholder="Teilnahme"
                       onChange={(event) =>
                         setDraft((prev) => ({
                           ...prev,
@@ -1744,6 +1745,39 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                               ...prev.settings.sectionEyebrows,
                               prices: event.target.value || undefined,
                             },
+                          },
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2 md:col-span-2">
+                    <Label>Preise-Titel (H2)</Label>
+                    <Input
+                      value={draft.settings.pricesSectionTitle ?? ""}
+                      placeholder="Preise"
+                      onChange={(event) =>
+                        setDraft((prev) => ({
+                          ...prev,
+                          settings: {
+                            ...prev.settings,
+                            pricesSectionTitle: event.target.value || undefined,
+                          },
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2 md:col-span-2">
+                    <MarkdownEditor
+                      label="Preise-Untertext (Markdown, Absatz unter dem Titel)"
+                      value={draft.settings.pricesSectionIntro ?? ""}
+                      rows={4}
+                      placeholder="Zahlung und Abwicklung außerhalb dieser Website …"
+                      onChange={(value) =>
+                        setDraft((prev) => ({
+                          ...prev,
+                          settings: {
+                            ...prev.settings,
+                            pricesSectionIntro: value || undefined,
                           },
                         }))
                       }
@@ -1777,29 +1811,31 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                     Preis-Card hinzufügen
                   </Button>
                 </div>
-                {draft.prices.map((price, index) => (
-                  <div key={price.id} data-price-card-id={price.id}>
-                    <PriceEditor
-                      item={price}
-                      index={index}
-                      onChange={(nextPrice) =>
-                        setDraft((prev) => ({
-                          ...prev,
-                          prices: prev.prices.map((current) =>
-                            current.id === price.id ? nextPrice : current,
-                          ),
-                        }))
-                      }
-                      onRemove={() => {
-                        blurActiveElementBeforeDomRemoval();
-                        setDraft((prev) => ({
-                          ...prev,
-                          prices: prev.prices.filter((current) => current.id !== price.id),
-                        }));
-                      }}
-                    />
-                  </div>
-                ))}
+                <div className="grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2">
+                  {draft.prices.map((price, index) => (
+                    <div key={price.id} data-price-card-id={price.id} className="min-w-0">
+                      <PriceEditor
+                        item={price}
+                        index={index}
+                        onChange={(nextPrice) =>
+                          setDraft((prev) => ({
+                            ...prev,
+                            prices: prev.prices.map((current) =>
+                              current.id === price.id ? nextPrice : current,
+                            ),
+                          }))
+                        }
+                        onRemove={() => {
+                          blurActiveElementBeforeDomRemoval();
+                          setDraft((prev) => ({
+                            ...prev,
+                            prices: prev.prices.filter((current) => current.id !== price.id),
+                          }));
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
             ) : null}
 
@@ -2175,8 +2211,8 @@ function PriceEditor({
 }) {
   return (
     <Card size="sm">
-      <CardHeader>
-        <CardTitle className="text-sm">Preis {index + 1}</CardTitle>
+      <CardHeader className="-mx-3 -mt-3 rounded-t-xl border-b border-border/60 bg-gradient-to-b from-muted/75 via-muted/35 to-transparent px-3 pt-3 pb-2">
+        <CardTitle className="pl-2 text-sm font-bold leading-none">Preis {index + 1}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         <div className="grid gap-3 md:grid-cols-2">
@@ -2191,26 +2227,23 @@ function PriceEditor({
             />
           </div>
           <Field label="Titel" value={item.title} onChange={(value) => onChange({ ...item, title: value })} />
-          <Field label="Preis" value={item.price} onChange={(value) => onChange({ ...item, price: value })} />
+          <Field
+            label="Info- / Preislabel"
+            value={item.price}
+            onChange={(value) => onChange({ ...item, price: value })}
+          />
           <Field
             label="Link URL (optional)"
             value={item.linkUrl ?? ""}
             onChange={(value) => onChange({ ...item, linkUrl: value || undefined })}
           />
-          <Field
-            label="Link Label (optional)"
-            value={item.linkLabel ?? ""}
-            onChange={(value) => onChange({ ...item, linkLabel: value || undefined })}
-          />
         </div>
-        <div className="space-y-2">
-          <Label>Beschreibung</Label>
-          <Textarea
-            rows={4}
-            value={item.description}
-            onChange={(event) => onChange({ ...item, description: event.target.value })}
-          />
-        </div>
+        <MarkdownEditor
+          label="Beschreibung (Markdown)"
+          value={item.description}
+          rows={4}
+          onChange={(value) => onChange({ ...item, description: value })}
+        />
         <label className="flex items-center gap-2 text-sm">
           <input
             type="checkbox"
