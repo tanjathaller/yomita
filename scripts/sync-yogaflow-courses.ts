@@ -208,60 +208,21 @@ type RpcParticipantCountRow = {
   waitlist_count?: number;
 };
 
-/**
- * Wie in der YogaFlow-Web-App: POST /rest/v1/rpc/get_course_participant_counts →
- * [{ course_id, registered_count, waitlist_count }, …]
- */
-async function fetchRegisteredCountsFromRpc(
-  baseUrl: string,
-  anonKey: string,
-  jwt: string,
-): Promise<Map<string, number>> {
-  const url = `${baseUrl.replace(/\/$/, "")}/rest/v1/rpc/get_course_participant_counts`;
-  const customPayload = normalizeSecret(
-    process.env.YOGAFLOW_RPC_PARTICIPANT_COUNTS_PAYLOAD ?? "",
-  );
-
-  const headersJson: Record<string, string> = {
-    apikey: anonKey,
-    Authorization: `Bearer ${jwt}`,
-    Accept: "application/json",
-  };
-
-  let res: Response;
-  if (customPayload !== "") {
-    res = await fetch(url, {
-      method: "POST",
-      headers: { ...headersJson, "Content-Type": "application/json" },
-      body: customPayload,
-    });
-  } else {
-    res = await fetch(url, {
-      method: "POST",
-      headers: { ...headersJson, "Content-Type": "application/json" },
-      body: "{}",
-    });
-    if (res.status === 404) {
-      const errText = await res.text();
-      if (
-        errText.includes("PGRST202") ||
-        errText.includes("Could not find the function")
-      ) {
-        res = await fetch(url, {
-          method: "GET",
-          headers: headersJson,
-        });
-      } else {
-        throw new Error(`404: ${errText}`);
-      }
-    }
+/** `sub` aus dem Supabase-User-JWT (für RPCs mit User-/Teacher-Parameter). */
+function decodeJwtSub(jwt: string): string | undefined {
+  const parts = jwt.split(".");
+  if (parts.length < 2) return undefined;
+  try {
+    const payloadB64 = parts[1]!;
+    const json = Buffer.from(payloadB64, "base64url").toString("utf-8");
+    const payload = JSON.parse(json) as { sub?: string };
+    return typeof payload.sub === "string" ? payload.sub : undefined;
+  } catch {
+    return undefined;
   }
+}
 
-  if (!res.ok) {
-    const text = await res.text();
-    throw new Error(`${res.status}: ${text}`);
-  }
-  const data = (await res.json()) as unknown;
+function parseRpcParticipantRows(data: unknown): Map<string, number> {
   const out = new Map<string, number>();
   if (!Array.isArray(data)) return out;
   for (const item of data) {
@@ -275,6 +236,101 @@ async function fetchRegisteredCountsFromRpc(
     out.set(row.course_id, Math.max(0, Math.floor(n)));
   }
   return out;
+}
+
+/**
+ * POST /rest/v1/rpc/get_course_participant_counts →
+ * [{ course_id, registered_count, waitlist_count }, …]
+ *
+ * PostgREST-Hinweis PGRST202: z. B. `get_course_participant_counts(p_course_ids)` –
+ * wir senden die geladenen Kurs-IDs; sonst typische User-Parameter aus dem JWT-`sub`.
+ */
+async function fetchRegisteredCountsFromRpc(
+  baseUrl: string,
+  anonKey: string,
+  jwt: string,
+  courseIds: string[],
+): Promise<Map<string, number>> {
+  const url = `${baseUrl.replace(/\/$/, "")}/rest/v1/rpc/get_course_participant_counts`;
+  const customPayload = normalizeSecret(
+    process.env.YOGAFLOW_RPC_PARTICIPANT_COUNTS_PAYLOAD ?? "",
+  );
+
+  const headersJson: Record<string, string> = {
+    apikey: anonKey,
+    Authorization: `Bearer ${jwt}`,
+    Accept: "application/json",
+  };
+
+  const postJson = (body: string) =>
+    fetch(url, {
+      method: "POST",
+      headers: { ...headersJson, "Content-Type": "application/json" },
+      body,
+    });
+
+  if (customPayload !== "") {
+    const res = await postJson(customPayload);
+    const text = await res.text();
+    if (!res.ok) {
+      throw new Error(`${res.status}: ${text}`);
+    }
+    const data = text ? (JSON.parse(text) as unknown) : null;
+    return parseRpcParticipantRows(data);
+  }
+
+  const sub = decodeJwtSub(jwt);
+  const bodies: string[] = [];
+  if (courseIds.length > 0) {
+    bodies.push(JSON.stringify({ p_course_ids: courseIds }));
+  }
+  bodies.push("{}");
+  if (sub) {
+    const keys = [
+      "user_id",
+      "p_user_id",
+      "teacher_id",
+      "p_teacher_id",
+      "input_user_id",
+    ] as const;
+    for (const k of keys) {
+      bodies.push(JSON.stringify({ [k]: sub }));
+    }
+  }
+
+  let lastError = "";
+  for (const body of bodies) {
+    const res = await postJson(body);
+    const text = await res.text();
+    if (res.ok) {
+      const data = text ? (JSON.parse(text) as unknown) : null;
+      const map = parseRpcParticipantRows(data);
+      const preview = body.length > 100 ? `${body.slice(0, 100)}…` : body;
+      console.log(
+        `Supabase RPC get_course_participant_counts: OK (${map.size} Kurse, Body: ${preview})`,
+      );
+      return map;
+    }
+    lastError = `${res.status}: ${text}`;
+    const retry404Signature =
+      res.status === 404 &&
+      (text.includes("PGRST202") ||
+        text.includes("Could not find the function"));
+    if (!retry404Signature) {
+      throw new Error(lastError);
+    }
+  }
+
+  const resGet = await fetch(url, { method: "GET", headers: headersJson });
+  const textGet = await resGet.text();
+  if (resGet.ok) {
+    const data = textGet ? (JSON.parse(textGet) as unknown) : null;
+    console.log(
+      "Supabase RPC get_course_participant_counts: OK per GET (ohne Body).",
+    );
+    return parseRpcParticipantRows(data);
+  }
+  throw new Error(lastError || `${resGet.status}: ${textGet}`);
 }
 
 function countOccupiedForCourse(
@@ -398,6 +454,7 @@ async function main() {
         baseUrl,
         anonKey,
         jwt,
+        courses.map((c) => c.id),
       );
       let matched = 0;
       for (const row of courses) {
