@@ -1,6 +1,6 @@
 "use client";
 
-import { useSyncExternalStore } from "react";
+import { type ReactNode, useSyncExternalStore } from "react";
 import { Popover } from "@base-ui/react/popover";
 import { Info } from "lucide-react";
 
@@ -160,7 +160,7 @@ export function AdminImageFieldLabel({
   variant,
   htmlFor,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   variant: AdminImageHintVariant;
   /** Optional: z. B. fuer zugehoeriges URL-Input. */
   htmlFor?: string;
@@ -171,6 +171,27 @@ export function AdminImageFieldLabel({
         {children}
       </Label>
       <AdminImageSizeHint variant={variant} />
+    </div>
+  );
+}
+
+/**
+ * Gleiche Zeilenhöhe und Abstände wie {@link AdminImageFieldLabel}, aber ohne Info-Icon
+ * (Platzhalter mit gleicher Breite) – für z. B. Alt-Text neben „Bild URL“.
+ */
+export function AdminPairedImageFieldLabel({
+  children,
+  htmlFor,
+}: {
+  children: ReactNode;
+  htmlFor?: string;
+}) {
+  return (
+    <div className="flex min-h-7 items-center gap-1.5">
+      <Label htmlFor={htmlFor} className="mb-0 font-bold">
+        {children}
+      </Label>
+      <span className="inline-flex size-7 shrink-0" aria-hidden />
     </div>
   );
 }

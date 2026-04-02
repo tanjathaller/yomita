@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 import type { NavItem, PriceItem, SiteContent } from "@/types/site-content";
 import {
   AdminImageFieldLabel,
+  AdminPairedImageFieldLabel,
   AdminSortOrderLabelRow,
 } from "@/components/admin/admin-image-size-hint";
 import { Button } from "@/components/ui/button";
@@ -1887,7 +1888,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                     }))
                   }
                 />
-                <div className="grid gap-4 md:grid-cols-2">
+                <div className="grid items-start gap-4 md:grid-cols-2">
                   <div className="space-y-2">
                     <AdminImageFieldLabel variant="about" htmlFor="about-image-url">
                       Bild URL
@@ -1904,8 +1905,11 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Bild Alt-Text</Label>
+                    <AdminPairedImageFieldLabel htmlFor="about-image-alt">
+                      Bild Alt-Text
+                    </AdminPairedImageFieldLabel>
                     <Input
+                      id="about-image-alt"
                       value={draft.about.image.alt}
                       onChange={(event) =>
                         setDraft((prev) => ({
