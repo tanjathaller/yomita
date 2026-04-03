@@ -11,8 +11,7 @@ function labelForRemaining(remaining: number): string {
   if (remaining <= 0) return "Leider schon ausgebucht";
   if (remaining === 1) return "noch 1 Restplatz";
   if (remaining === 2) return "noch 2 Restplätze";
-  // 99 = Sentinel aus Sync (Playwright „Verfügbar“ oder kein Treffer)
-  if (remaining >= 3 && remaining < 99) return `noch ${remaining} Restplätze`;
+  // Ab 3 Plätze (inkl. 99 = Sentinel aus Sync): einheitlich „Verfügbar“.
   return "Verfügbar";
 }
 

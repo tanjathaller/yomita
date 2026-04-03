@@ -36,7 +36,6 @@ export default async function PublicLayout({
       <SkipToContentLink />
       <SiteHeader
         settings={content.settings}
-        hero={content.hero}
         hasAktuellesItems={content.aktuell.items.length > 0}
       />
       <main

@@ -8,20 +8,20 @@ import { CourseRow } from "@/components/domain/course-row";
 import { buttonVariants } from "@/components/ui/button-variants";
 import { cn } from "@/lib/utils";
 
-/** Entspricht Tailwind `lg` – ab hier zwei Spalten, mehr Kurse sichtbar. */
+/** Entspricht Tailwind `lg` – ab hier drei Spalten, mehr Kurse sichtbar. */
 const LG_MIN_WIDTH = "(min-width: 1024px)";
 const INITIAL_VISIBLE_MOBILE = 4;
 const INITIAL_VISIBLE_LG = 6;
 
 const courseGridItemClass = cn(
-  "flex min-w-0 w-full flex-col",
-  "lg:flex-[0_0_calc((100%_-_1.5rem)/2)]",
-  "xl:flex-[0_0_calc((100%_-_2rem)/2)]",
+  "flex min-w-0 w-full flex-col lg:self-start",
+  "lg:flex-[0_0_calc((100%_-_3rem)/3)]",
+  "xl:flex-[0_0_calc((100%_-_4rem)/3)]",
 );
 
 const courseGridClass = cn(
   "flex flex-col gap-4",
-  "lg:flex-row lg:flex-wrap lg:justify-center lg:gap-6 xl:gap-8",
+  "lg:flex-row lg:flex-wrap lg:items-start lg:justify-center lg:gap-6 xl:gap-8",
 );
 
 type YogaflowCoursesExpandableProps = {

@@ -23,7 +23,9 @@ function MetaRow({
       <dt className="text-muted-foreground text-[0.65rem] font-medium uppercase tracking-wider">
         {label}
       </dt>
-      <dd className="text-[#2F3B2A] mt-0.5 text-sm leading-snug">{children}</dd>
+      <dd className="text-[#2F3B2A] mt-0.5 min-w-0 text-sm leading-snug break-words">
+        {children}
+      </dd>
     </div>
   );
 }
@@ -32,8 +34,8 @@ export function CourseRow({ course }: { course: Course }) {
   const external = isExternalCourse(course);
 
   return (
-    <Card className="h-full w-full min-w-0 border-border/80 shadow-sm lg:min-h-0 lg:justify-center lg:gap-3 lg:py-3">
-      <CardHeader className="!flex !flex-col gap-3 space-y-0 pb-3 lg:gap-4 lg:pb-5 lg:pt-8 lg:pr-6 lg:pl-6">
+    <Card className="w-full min-w-0 gap-2.5 py-3 border-border/80 shadow-sm lg:gap-2.5 lg:py-2.5">
+      <CardHeader className="!flex !flex-col gap-2.5 space-y-0 px-4 pb-2.5 pt-0 lg:gap-3 lg:px-5 lg:pb-4 lg:pt-5">
         <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
           <CardTitle className="text-[#2F3B2A] text-xl leading-snug lg:min-w-0 lg:flex-1 lg:text-[1.35rem]">
             {course.title}
@@ -52,14 +54,14 @@ export function CourseRow({ course }: { course: Course }) {
         </div>
         <dl
           className={cn(
-            "space-y-2.5 border-border/50 border-t pt-3",
-            "lg:grid lg:grid-cols-3 lg:items-center lg:gap-x-8 lg:gap-y-4 lg:space-y-0 lg:border-border/40 lg:border-t lg:pt-5",
+            "grid min-w-0 grid-cols-2 gap-x-3 gap-y-2.5 border-border/50 border-t pt-2.5",
+            "lg:grid-cols-[minmax(0,1fr)_minmax(0,1.28fr)_minmax(0,1fr)] lg:items-start lg:gap-x-2.5 lg:gap-y-0 lg:border-border/40 lg:pt-3.5 xl:gap-x-3.5",
           )}
         >
           {course.price ? (
             <MetaRow
               label="Preis"
-              className="lg:hidden"
+              className="col-span-2 lg:hidden"
             >
               <span className="font-semibold tabular-nums text-base">
                 {course.price}
@@ -67,14 +69,14 @@ export function CourseRow({ course }: { course: Course }) {
             </MetaRow>
           ) : null}
           <MetaRow label="Datum">{course.day}</MetaRow>
-          <MetaRow label="Zeit">
-            <span className="max-w-full lg:whitespace-nowrap">{course.time}</span>
+          <MetaRow label="Zeit">{course.time}</MetaRow>
+          <MetaRow label="Ort" className="col-span-2 lg:col-span-1">
+            {course.location}
           </MetaRow>
-          <MetaRow label="Ort">{course.location}</MetaRow>
         </dl>
       </CardHeader>
-      <CardContent className="space-y-3 border-0 pt-0 lg:px-6 lg:pb-6 lg:pt-3">
-        <div className="rounded-lg border border-[#6F8B63]/20 bg-[#6F8B63]/[0.07] p-4 lg:px-3.5 lg:py-2.5">
+      <CardContent className="space-y-2.5 border-0 px-4 pt-0 pb-0 lg:space-y-2.5 lg:px-5 lg:pb-4 lg:pt-2">
+        <div className="rounded-lg border border-[#6F8B63]/20 bg-[#6F8B63]/[0.07] p-4 lg:px-3 lg:py-2">
           <p className="text-muted-foreground mb-1 text-[0.65rem] font-medium uppercase tracking-wider">
             Kursstil
           </p>
@@ -83,7 +85,9 @@ export function CourseRow({ course }: { course: Course }) {
           </p>
         </div>
         {course.type === "internal" && course.scheduleNote ? (
-          <p className="text-muted-foreground text-xs leading-relaxed">{course.scheduleNote}</p>
+          <p className="text-muted-foreground text-xs leading-relaxed">
+            {course.scheduleNote}
+          </p>
         ) : null}
         <div className="flex flex-wrap gap-2">
           {external ? (

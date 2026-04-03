@@ -92,7 +92,10 @@ export function MobileNav({
         <div className="border-t border-[rgba(72,90,68,0.30)] px-3 py-4 dark:border-[rgba(169,194,158,0.26)] sm:px-4">
           <Link
             href={appCtaUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={() => setOpen(false)}
+            aria-label={`${appCtaLabel} (öffnet in neuem Tab)`}
             className={cn(
               buttonVariants({ variant: "default" }),
               "h-auto min-h-12 w-full px-4 py-3.5 text-center text-base font-semibold tracking-wide shadow-sm sm:min-h-14 sm:text-lg",

@@ -10,6 +10,8 @@ type SectionShellProps = {
   id: string;
   children: React.ReactNode;
   className?: string;
+  /** Zusätzliche Klassen für den inneren Breiten-Container (`mx-auto max-w-*`). */
+  containerClassName?: string;
   /** z. B. abwechselnde Band-Hintergründe */
   variant?: "default" | "muted";
   /** Weicher Wellenübergang zum **nächsten** Abschnitt (Füllfarbe = dessen Hintergrund). */
@@ -22,6 +24,7 @@ export function SectionShell({
   id,
   children,
   className,
+  containerClassName,
   variant = "default",
   waveInto,
   transitionStyle = "wave",
@@ -38,7 +41,12 @@ export function SectionShell({
         className
       )}
     >
-      <div className="relative z-10 mx-auto max-w-6xl px-4 lg:px-8 xl:max-w-7xl">
+      <div
+        className={cn(
+          "relative z-10 mx-auto max-w-6xl px-4 lg:px-8 xl:max-w-7xl",
+          containerClassName,
+        )}
+      >
         {children}
       </div>
       {waveInto ? (

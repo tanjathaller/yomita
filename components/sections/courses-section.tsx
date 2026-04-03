@@ -11,13 +11,13 @@ import { cn } from "@/lib/utils";
 
 const manualGridClass = cn(
   "flex flex-col gap-4",
-  "lg:flex-row lg:flex-wrap lg:justify-center lg:gap-6 xl:gap-8",
+  "lg:flex-row lg:flex-wrap lg:items-start lg:justify-center lg:gap-6 xl:gap-8",
 );
 
 const manualItemClass = cn(
-  "flex min-w-0 w-full flex-col",
-  "lg:flex-[0_0_calc((100%_-_1.5rem)/2)]",
-  "xl:flex-[0_0_calc((100%_-_2rem)/2)]",
+  "flex min-w-0 w-full flex-col lg:self-start",
+  "lg:flex-[0_0_calc((100%_-_3rem)/3)]",
+  "xl:flex-[0_0_calc((100%_-_4rem)/3)]",
 );
 
 type CoursesSectionProps = {
@@ -66,6 +66,7 @@ export function CoursesSection({
     <SectionShell
       id="kurse"
       variant="muted"
+      containerClassName="max-w-7xl lg:max-w-[min(88rem,calc(100vw-2rem))] xl:max-w-[min(96rem,calc(100vw-2.5rem))]"
       className={cn(
         afterAktuelles || afterAboutTeaser
           ? "pt-12 pb-24 lg:pt-16 lg:pb-34"
@@ -110,7 +111,7 @@ export function CoursesSection({
         </div>
       </div>
 
-      <div className="mt-8 w-full px-4 lg:px-6">
+      <div className="mt-8 w-full">
         {hasYogaflow ? (
           <YogaflowCoursesExpandable
             courses={yogaflowCourses}

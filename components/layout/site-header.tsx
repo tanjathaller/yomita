@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import type { GeneralSettings, HeroSection } from "@/types/site-content";
+import type { GeneralSettings } from "@/types/site-content";
 
 import { buttonVariants } from "@/components/ui/button-variants";
 import { HeaderNavLinks } from "@/components/layout/header-nav-links";
@@ -12,14 +12,13 @@ import { cn } from "@/lib/utils";
 
 type SiteHeaderProps = {
   settings: GeneralSettings;
-  hero: HeroSection;
   hasAktuellesItems?: boolean;
 };
 
 const pillShell =
   "pointer-events-auto flex w-full items-center rounded-xl border border-[rgba(68,84,64,0.22)] bg-[rgba(227,236,218,0.9)] px-4 py-2 shadow-[0_6px_24px_rgba(34,44,30,0.11)] backdrop-blur-[2px] dark:border-[rgba(177,199,170,0.2)] dark:bg-[rgba(53,64,50,0.86)] sm:px-5 sm:py-2.5";
 
-export function SiteHeader({ settings, hero, hasAktuellesItems }: SiteHeaderProps) {
+export function SiteHeader({ settings, hasAktuellesItems }: SiteHeaderProps) {
   const navItems = resolveNavigation(
     settings,
     hasAktuellesItems === false ? { hasAktuellesItems: false } : undefined,
@@ -40,8 +39,8 @@ export function SiteHeader({ settings, hero, hasAktuellesItems }: SiteHeaderProp
           <MobileNav
             items={navItems}
             businessName={headerTitle}
-            appCtaLabel={hero.primaryCtaLabel}
-            appCtaUrl={hero.primaryCtaUrl}
+            appCtaLabel="Zur YogaFlow-App"
+            appCtaUrl={settings.appUrl}
             menuButtonVariant="ghost"
             menuButtonClassName="-me-1 rounded-lg text-foreground hover:bg-[rgba(122,149,110,0.17)] dark:hover:bg-[rgba(166,194,152,0.16)]"
           />
@@ -76,13 +75,16 @@ export function SiteHeader({ settings, hero, hasAktuellesItems }: SiteHeaderProp
           </nav>
 
           <Link
-            href={hero.primaryCtaUrl}
+            href={settings.appUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Zur Yoga-Flow App (öffnet in neuem Tab)"
             className={cn(
               buttonVariants({ size: "sm" }),
               "shrink-0 rounded-lg px-4 font-semibold",
             )}
           >
-            {hero.primaryCtaLabel}
+            Zur Yoga-Flow App
           </Link>
         </div>
       </div>
