@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 import type { Course } from "@/types/site-content";
 
@@ -26,13 +26,17 @@ const courseGridClass = cn(
 
 type YogaflowCoursesExpandableProps = {
   courses: Course[];
+  /** Nach „Weniger anzeigen“ sanft zu diesem Anker scrollen (z. B. Sektion `#kurse`). */
+  collapseScrollToId?: string;
 };
 
 export function YogaflowCoursesExpandable({
   courses,
+  collapseScrollToId,
 }: YogaflowCoursesExpandableProps) {
   const [expanded, setExpanded] = useState(false);
   const [initialVisible, setInitialVisible] = useState(INITIAL_VISIBLE_MOBILE);
+  const wasExpandedRef = useRef(false);
 
   useEffect(() => {
     const mq = window.matchMedia(LG_MIN_WIDTH);
@@ -42,6 +46,19 @@ export function YogaflowCoursesExpandable({
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
   }, []);
+
+  useEffect(() => {
+    if (
+      collapseScrollToId &&
+      wasExpandedRef.current &&
+      !expanded
+    ) {
+      document
+        .getElementById(collapseScrollToId)
+        ?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    wasExpandedRef.current = expanded;
+  }, [collapseScrollToId, expanded]);
 
   const panelId = useId();
   const hasMore = courses.length > initialVisible;

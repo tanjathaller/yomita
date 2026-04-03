@@ -111,7 +111,12 @@ export function CoursesSection({
       </div>
 
       <div className="mt-8 w-full px-4 lg:px-6">
-        {hasYogaflow ? <YogaflowCoursesExpandable courses={yogaflowCourses} /> : null}
+        {hasYogaflow ? (
+          <YogaflowCoursesExpandable
+            courses={yogaflowCourses}
+            collapseScrollToId="kurse"
+          />
+        ) : null}
 
         {showManualSubheading ? (
           <div className="mt-14 max-w-2xl border-border/60 border-t pt-10 lg:mt-16 lg:pt-12">
