@@ -88,7 +88,7 @@ export function AboutSection({ about }: AboutSectionProps) {
           className={cn(
             "p-5 lg:w-full lg:max-w-none lg:justify-self-stretch lg:py-6 lg:pl-4 lg:pr-5 xl:pl-5 xl:pr-6",
             /* Desktop: Text wie eine kleine „Karte“, verspielt aber ruhig */
-            "lg:relative lg:overflow-hidden lg:rounded-[1.75rem] lg:border lg:border-[#7A956E]/20 lg:bg-[color-mix(in_oklab,var(--background)_55%,var(--surface-muted-band)_45%)] lg:px-9 lg:py-6 lg:shadow-md lg:shadow-[#2F3B2A]/[0.06] xl:rounded-[2rem] xl:px-10 xl:py-7",
+            "lg:relative lg:overflow-hidden lg:rounded-[1.75rem] lg:border lg:border-[#7A956E]/20 lg:bg-[color-mix(in_oklab,var(--background)_55%,var(--surface-muted-band)_45%)] lg:px-9 lg:py-6 lg:shadow-md lg:shadow-[#2F3B2A]/[0.06] lg:transition-[box-shadow,transform] lg:duration-300 lg:ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:lg:hover:-translate-y-0.5 lg:hover:shadow-lg lg:hover:shadow-[#2F3B2A]/[0.09] motion-reduce:lg:hover:translate-y-0 xl:rounded-[2rem] xl:px-10 xl:py-7",
           )}
         >
           <header className="relative z-[1] hidden lg:mb-5 lg:block">

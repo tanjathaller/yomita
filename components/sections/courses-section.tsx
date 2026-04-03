@@ -11,11 +11,11 @@ import { cn } from "@/lib/utils";
 
 const manualGridClass = cn(
   "flex flex-col gap-4",
-  "lg:flex-row lg:flex-wrap lg:items-start lg:justify-center lg:gap-6 xl:gap-8",
+  "lg:flex-row lg:flex-wrap lg:items-stretch lg:justify-center lg:gap-6 xl:gap-8",
 );
 
 const manualItemClass = cn(
-  "flex min-w-0 w-full flex-col lg:self-start",
+  "flex min-w-0 w-full flex-col lg:h-full",
   "lg:flex-[0_0_calc((100%_-_3rem)/3)]",
   "xl:flex-[0_0_calc((100%_-_4rem)/3)]",
 );
@@ -120,11 +120,17 @@ export function CoursesSection({
         ) : null}
 
         {showManualSubheading ? (
-          <div className="mt-14 max-w-2xl border-border/60 border-t pt-10 lg:mt-16 lg:pt-12">
-            <h3 className="text-[#2F3B2A] text-2xl font-semibold tracking-tight lg:text-3xl">
-              {manualHeading}
-            </h3>
-            <p className="text-muted-foreground mt-2 max-w-prose text-sm leading-relaxed lg:text-base">
+          <div className="mt-14 max-w-2xl border-border/60 border-t pt-10 pl-4 lg:mt-16 lg:pt-12 lg:pl-6">
+            <div className="relative inline-block pr-6 lg:pr-7">
+              <h3 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight lg:text-6xl">
+                {manualHeading}
+              </h3>
+              <span
+                aria-hidden
+                className="mt-2 ml-3 block h-1 w-40 rounded-full bg-[#D8C9AF]"
+              />
+            </div>
+            <p className="text-muted-foreground mt-4 max-w-prose pl-4 text-sm leading-relaxed lg:mt-5 lg:pl-6 lg:text-base">
               Diese Termine sind nicht über die YogaFlow-App gebucht – Infos und
               Anmeldung siehe jeweils auf der Karte oder über das Kontaktformular.
             </p>

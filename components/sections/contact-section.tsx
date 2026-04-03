@@ -61,7 +61,7 @@ export function ContactSection({ contact }: ContactSectionProps) {
               <a
                 href={`mailto:${contact.email}`}
                 onClick={handleEmailClick}
-                className="group block rounded-xl border border-border/70 bg-card/70 p-4 transition-colors hover:border-primary/40 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                className="group block rounded-xl border border-border/70 bg-card/70 p-4 transition-[color,background-color,border-color,box-shadow,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:hover:-translate-y-0.5 hover:border-primary/40 hover:bg-card hover:shadow-md motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
               >
                 <span className="text-foreground text-sm font-medium">E-Mail</span>
                 <span className="text-primary mt-1 block text-sm underline-offset-4 group-hover:underline">
@@ -75,7 +75,7 @@ export function ContactSection({ contact }: ContactSectionProps) {
             <dd>
               <a
                 href={`tel:${contact.phone.replace(/\s/g, "")}`}
-                className="group block rounded-xl border border-border/70 bg-card/70 p-4 transition-colors hover:border-primary/40 hover:bg-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                className="group block rounded-xl border border-border/70 bg-card/70 p-4 transition-[color,background-color,border-color,box-shadow,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:hover:-translate-y-0.5 hover:border-primary/40 hover:bg-card hover:shadow-md motion-reduce:hover:translate-y-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
               >
                 <span className="text-foreground text-sm font-medium">Telefon</span>
                 <span className="text-primary mt-1 block text-sm underline-offset-4 group-hover:underline">

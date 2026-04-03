@@ -33,7 +33,7 @@ export function AboutTeaserSection({
             "border-0",
             /* Langer Fade: Kartenfläche löst sich unten in dasselbe Band wie die Sektion auf */
             "bg-[linear-gradient(180deg,var(--card)_0%,var(--card)_42%,color-mix(in_oklab,var(--card)_82%,var(--surface-muted-band)_18%)_62%,color-mix(in_oklab,var(--card)_28%,var(--surface-muted-band)_72%)_84%,var(--surface-muted-band)_100%)]",
-            "shadow-[0_2px_20px_rgba(0,0,0,0.04)]",
+            "shadow-[0_2px_20px_rgba(0,0,0,0.04)] transition-[box-shadow,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:hover:-translate-y-0.5 hover:shadow-[0_6px_28px_rgba(47,59,42,0.07)] motion-reduce:hover:translate-y-0",
           )}
         >
           {/* Weicher Übergang unten inkl. seitlicher Kanten (unter dem Inhalt, analog Hero) */}

@@ -15,7 +15,7 @@ export function PriceCard({ item }: { item: PriceItem }) {
   return (
     <Card
       className={cn(
-        "h-full w-full min-w-0 border-primary/20 bg-[color-mix(in_oklab,var(--surface-muted-band)_62%,var(--background)_38%)] shadow-sm transition-[box-shadow,border-color] hover:border-primary/30 hover:shadow-md",
+        "h-full w-full min-w-0 border-primary/20 bg-[color-mix(in_oklab,var(--surface-muted-band)_62%,var(--background)_38%)] shadow-sm transition-[box-shadow,border-color,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-primary/30 hover:shadow-md",
         highlighted &&
           "relative border-[#6F8B63]/45 shadow-md shadow-[#2F3B2A]/10 ring-2 ring-[#7A956E]/35 hover:border-[#6F8B63]/55 hover:ring-[#7A956E]/45",
       )}

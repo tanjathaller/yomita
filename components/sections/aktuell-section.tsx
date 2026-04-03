@@ -36,6 +36,7 @@ export function AktuellesSection({
     <SectionShell
       id="aktuelles"
       variant={afterAboutTeaser ? "default" : "muted"}
+      containerClassName="lg:max-w-7xl xl:max-w-[88rem]"
       className={cn(
         afterAboutTeaser
           ? "pt-7 pb-24 lg:pt-10 lg:pb-34 bg-[linear-gradient(to_bottom,var(--surface-muted-band)_0%,color-mix(in_oklab,var(--surface-muted-band)_62%,var(--background)_38%)_14%,var(--background)_30%,var(--background)_72%,color-mix(in_oklab,var(--background)_74%,var(--surface-muted-band)_26%)_86%,color-mix(in_oklab,var(--background)_44%,var(--surface-muted-band)_56%)_95%,var(--surface-muted-band)_100%)]"
@@ -102,16 +103,16 @@ export function AktuellesSection({
                 className={cn(
                   "h-full w-full min-w-0 overflow-hidden rounded-3xl border border-border/70 bg-card shadow-sm",
                   "lg:rounded-2xl",
-                  "transition-shadow duration-200 hover:shadow-md",
+                  "transition-[box-shadow,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:hover:-translate-y-0.5 hover:shadow-md motion-reduce:hover:translate-y-0",
                 )}
               >
-                <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                <div className="relative aspect-[4/3] overflow-hidden bg-muted lg:aspect-auto lg:h-[16.5rem]">
                   <Image
                     src={imageSrc}
                     alt={item.image.alt}
                     fill
                     className="object-cover object-center"
-                    sizes="(min-width: 1280px) 28vw, (min-width: 1024px) 32vw, (min-width: 640px) 90vw, 100vw"
+                    sizes="(min-width: 1280px) 32vw, (min-width: 1024px) 36vw, (min-width: 640px) 90vw, 100vw"
                     priority={index === 0}
                     unoptimized={useUnoptimized}
                   />
@@ -129,19 +130,22 @@ export function AktuellesSection({
                     </span>
                   </div>
                 </div>
-                <div className="relative space-y-4 p-7 before:pointer-events-none before:absolute before:inset-x-0 before:-top-6 before:h-6 before:bg-gradient-to-b before:from-card/0 before:to-card/85 lg:space-y-3 lg:p-8 lg:before:-top-5 lg:before:h-5">
+                <div className="relative space-y-3 p-6 before:pointer-events-none before:absolute before:inset-x-0 before:-top-5 before:h-5 before:bg-gradient-to-b before:from-card/0 before:to-card/85 lg:space-y-2 lg:px-8 lg:pb-6 lg:pt-5 lg:before:-top-4 lg:before:h-4">
                   {item.title?.trim() ? (
                     <h3 className="text-[#2F3B2A] text-3xl font-semibold tracking-tight lg:text-2xl lg:leading-snug xl:text-[1.65rem]">
                       {item.title.trim()}
                     </h3>
                   ) : null}
-                  <div className="text-muted-foreground text-base leading-relaxed lg:text-sm lg:leading-relaxed xl:text-[0.95rem]">
-                    <MarkdownContent markdown={item.text} />
+                  <div className="text-muted-foreground text-base leading-relaxed lg:text-sm lg:leading-snug xl:text-[0.95rem]">
+                    <MarkdownContent
+                      markdown={item.text}
+                      className="max-w-none space-y-2 lg:space-y-1.5 [&_p]:leading-snug lg:[&_p]:leading-snug"
+                    />
                   </div>
                   {shouldRenderCta ? (
                     <Link
                       href={ctaHref!}
-                      className="text-primary inline-flex items-center gap-2 pt-1 text-lg font-medium tracking-tight underline-offset-4 transition-colors hover:underline lg:text-base"
+                      className="text-primary inline-flex items-center gap-2 pt-0.5 text-lg font-medium tracking-tight underline-offset-4 transition-colors hover:underline lg:text-base lg:pt-0"
                       target={isExternalCta ? "_blank" : undefined}
                       rel={isExternalCta ? "noopener noreferrer" : undefined}
                     >

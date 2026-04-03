@@ -54,7 +54,7 @@ export function ContactForm({ successMessage, submitLabel }: ContactFormProps) {
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
-      className="bg-card text-card-foreground space-y-5 rounded-2xl border border-border/80 p-6 shadow-sm sm:p-7"
+      className="bg-card text-card-foreground space-y-5 rounded-2xl border border-border/80 p-6 shadow-sm transition-[box-shadow,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:hover:-translate-y-0.5 hover:shadow-md motion-reduce:hover:translate-y-0 sm:p-7"
       noValidate
     >
       <div className="grid gap-4 sm:grid-cols-2">
