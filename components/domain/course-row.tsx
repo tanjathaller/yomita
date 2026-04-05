@@ -34,7 +34,7 @@ export function CourseRow({ course }: { course: Course }) {
   const external = isExternalCourse(course);
 
   return (
-    <Card className="h-full w-full min-w-0 gap-2.5 py-3 border-border/80 shadow-sm transition-[box-shadow,border-color,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] lg:gap-2.5 lg:py-2.5">
+    <Card className="w-full min-w-0 gap-2.5 py-3 border-border/80 shadow-sm transition-[box-shadow,border-color,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] lg:gap-2.5 lg:py-2.5">
       <CardHeader className="!flex !flex-col gap-2.5 space-y-0 px-4 pb-2.5 pt-0 lg:gap-3 lg:px-5 lg:pb-4 lg:pt-5">
         <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
           <CardTitle className="text-[#2F3B2A] text-xl leading-snug lg:min-w-0 lg:flex-1 lg:text-[1.35rem]">

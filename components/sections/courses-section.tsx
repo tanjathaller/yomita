@@ -11,11 +11,11 @@ import { cn } from "@/lib/utils";
 
 const manualGridClass = cn(
   "flex flex-col gap-4",
-  "lg:flex-row lg:flex-wrap lg:items-stretch lg:justify-center lg:gap-6 xl:gap-8",
+  "lg:flex-row lg:flex-wrap lg:items-center lg:justify-center lg:gap-6 xl:gap-8",
 );
 
 const manualItemClass = cn(
-  "flex min-w-0 w-full flex-col lg:h-full",
+  "flex min-w-0 w-full flex-col",
   "lg:flex-[0_0_calc((100%_-_3rem)/3)]",
   "xl:flex-[0_0_calc((100%_-_4rem)/3)]",
 );
