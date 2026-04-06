@@ -18,7 +18,7 @@ export type BaseCourse = {
   id: string;
   title: string;
   description: string;
-  /** e.g. weekday or a concrete date label */
+  /** Wochentag oder konkretes Datum (Label auf der Karte: „Wochentag“). */
   day: string;
   time: string;
   location: string;
@@ -30,6 +30,11 @@ export type BaseCourse = {
    * (Restplatz / Verfügbar / ausgebucht); sonst Fallback über `bookingStatus`.
    */
   remainingSpots?: number;
+  /**
+   * Optionaler fester Pill-Text statt „Plätze frei“/Sync-Status (z. B. manuelle Kurse
+   * ohne App-Restplätze).
+   */
+  bookingBadgeLabel?: string;
   /** Lower values appear first in lists. */
   sortOrder: number;
 };
@@ -105,7 +110,7 @@ export type YogaflowCourseSeries = {
   displayTitle: string;
   /** Kurzbeschreibung / Kursstil auf der Karte. */
   description: string;
-  /** Anzeige „Datum“-Zeile (z. B. fester Wochentag). */
+  /** Anzeige in der „Wochentag“-Zeile auf der Karte. */
   day: string;
   time: string;
   location: string;

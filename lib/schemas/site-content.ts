@@ -12,6 +12,7 @@ const baseCourseSchema = z.object({
   bookingStatus: bookingStatusSchema,
   price: z.string().optional(),
   remainingSpots: z.number().int().min(0).optional(),
+  bookingBadgeLabel: z.string().min(1).optional(),
   sortOrder: z.number(),
 });
 

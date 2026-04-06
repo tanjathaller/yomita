@@ -2045,7 +2045,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                               />
                             </div>
                             <div className="space-y-2">
-                              <Label>Datum-Zeile (z. B. Wochentag)</Label>
+                              <Label>Wochentag-Zeile (z. B. Dienstag)</Label>
                               <Input
                                 value={series.day}
                                 onChange={(event) => {

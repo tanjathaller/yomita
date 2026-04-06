@@ -113,12 +113,13 @@ Jeder Eintrag ist entweder **intern** (eigene Kurse / App) oder **extern** (Frem
 | `id`              | string  | stabile ID (UUID oder Slug) |
 | `title`           | string  | Kursname |
 | `description`     | string  | Kurzbeschreibung |
-| `day`             | string  | z. B. Wochentag oder „Sa., 15.03.“ |
+| `day`             | string  | z. B. Wochentag oder „Sa., 15.03.“; auf der Karte als **Wochentag** beschriftet |
 | `time`            | string  | z. B. „18:00–19:30“ |
 | `location`        | string  | Ort / Studio |
 | `bookingStatus`   | enum    | `available` \| `full` |
 | `price`           | string? | optional (YogaFlow-Sync), Anzeige z. B. `12,00 €` in der Kurs-Card |
 | `remainingSpots`  | number? | optional, freie Plätze (YogaFlow); steuert Badge-Texte („noch n Restplätze“, „Verfügbar“, „ausgebucht“) |
+| `bookingBadgeLabel` | string? | optional; wenn gesetzt: fester Pill-Text statt Live-Status (z. B. manuelle Kurse) |
 | `sortOrder`       | number  | Sortierung im Dashboard (niedrig = weiter oben) |
 
 ### Interner Kurs (`type: "internal"`)
@@ -221,7 +222,7 @@ Kein Feld `externalUrl`.
 | `matchTitles` | string[] | exakte(r) `title` aus dem YogaFlow-Sync; mindestens ein Eintrag |
 | `displayTitle` | string | öffentlicher Kartentitel |
 | `description` | string | Kursstil-Text auf der Karte |
-| `day` | string | Anzeige in der Datum-Zeile (z. B. fester Wochentag) |
+| `day` | string | Anzeige in der Wochentag-Zeile auf der Karte |
 | `time` | string | typische Uhrzeit auf der Karte |
 | `location` | string | Ort auf der Karte |
 | `price` | string? | optional |

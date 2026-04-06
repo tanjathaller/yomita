@@ -5,6 +5,8 @@ import { cn } from "@/lib/utils";
 type CourseStatusBadgeProps = {
   bookingStatus: BookingStatus;
   remainingSpots?: number;
+  /** Wenn gesetzt: fester Hinweistext statt Live-Status (manuelle Kurse). */
+  staticLabel?: string;
 };
 
 function labelForRemaining(remaining: number): string {
@@ -18,7 +20,21 @@ function labelForRemaining(remaining: number): string {
 export function CourseStatusBadge({
   bookingStatus,
   remainingSpots,
+  staticLabel,
 }: CourseStatusBadgeProps) {
+  if (staticLabel?.trim()) {
+    return (
+      <span
+        className={cn(
+          "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+          "bg-muted/70 text-muted-foreground",
+        )}
+      >
+        {staticLabel.trim()}
+      </span>
+    );
+  }
+
   const hasSpots =
     remainingSpots !== undefined && Number.isFinite(remainingSpots);
 

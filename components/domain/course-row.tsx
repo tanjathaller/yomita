@@ -50,12 +50,15 @@ export function CourseRow({ course }: { course: Course }) {
           <CourseStatusBadge
             bookingStatus={course.bookingStatus}
             remainingSpots={course.remainingSpots}
+            staticLabel={course.bookingBadgeLabel}
           />
         </div>
         <dl
           className={cn(
-            "grid min-w-0 grid-cols-2 gap-x-3 gap-y-2.5 border-border/50 border-t pt-2.5",
-            "lg:grid-cols-[minmax(0,1fr)_minmax(0,1.28fr)_minmax(0,1fr)] lg:items-start lg:gap-x-2.5 lg:gap-y-0 lg:border-border/40 lg:pt-3.5 xl:gap-x-3.5",
+            "grid min-w-0 w-full grid-cols-2 gap-x-3 gap-y-2.5 border-border/50 border-t pt-2.5",
+            "@min-[22rem]/card-header:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] @min-[22rem]/card-header:items-start @min-[22rem]/card-header:gap-x-4 @min-[22rem]/card-header:gap-y-0",
+            "@min-[30rem]/card-header:gap-x-6",
+            "lg:border-border/40 lg:pt-3.5",
           )}
         >
           {course.price ? (
@@ -68,9 +71,12 @@ export function CourseRow({ course }: { course: Course }) {
               </span>
             </MetaRow>
           ) : null}
-          <MetaRow label="Datum">{course.day}</MetaRow>
+          <MetaRow label="Wochentag">{course.day}</MetaRow>
           <MetaRow label="Zeit">{course.time}</MetaRow>
-          <MetaRow label="Ort" className="col-span-2 lg:col-span-1">
+          <MetaRow
+            label="Ort"
+            className="col-span-2 @min-[22rem]/card-header:col-span-1"
+          >
             {course.location}
           </MetaRow>
         </dl>
