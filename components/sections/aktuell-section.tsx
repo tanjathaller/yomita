@@ -95,8 +95,8 @@ export function AktuellesSection({
               key={item.id}
               className={cn(
                 "flex min-w-0 w-full flex-col",
-                "lg:flex-[0_0_calc((100%_-_3rem)/3)]",
-                "xl:flex-[0_0_calc((100%_-_4rem)/3)]",
+                "lg:flex-[0_0_calc((100%_-_1.5rem)/2)]",
+                "xl:flex-[0_0_calc((100%_-_2rem)/2)]",
               )}
             >
               <article
@@ -106,13 +106,13 @@ export function AktuellesSection({
                   "transition-[box-shadow,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:hover:-translate-y-0.5 hover:shadow-md motion-reduce:hover:translate-y-0",
                 )}
               >
-                <div className="relative aspect-[4/3] overflow-hidden bg-muted lg:aspect-auto lg:h-[16.5rem]">
+                <div className="relative aspect-[4/3] overflow-hidden bg-muted lg:aspect-auto lg:h-[19.5rem]">
                   <Image
                     src={imageSrc}
                     alt={item.image.alt}
                     fill
                     className="object-cover object-center"
-                    sizes="(min-width: 1280px) 32vw, (min-width: 1024px) 36vw, (min-width: 640px) 90vw, 100vw"
+                    sizes="(min-width: 1280px) 44vw, (min-width: 1024px) 48vw, (min-width: 640px) 90vw, 100vw"
                     priority={index === 0}
                     unoptimized={useUnoptimized}
                   />
