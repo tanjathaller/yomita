@@ -1,8 +1,10 @@
+import { Fragment } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
 import type { HeroSection as HeroModel } from "@/types/site-content";
 
+import { HeroAsideStrip } from "@/components/sections/hero-aside-strip";
 import { ResponsiveSiteImage } from "@/components/shared/responsive-site-image";
 import { SectionWaveBottom } from "@/components/shared/section-wave";
 import {
@@ -90,24 +92,25 @@ export function HeroSection({
         <div className="absolute -left-[18%] top-[6%] h-[min(28rem,48vh)] w-[min(34rem,48vw)] rounded-full bg-[radial-gradient(circle_at_center,color-mix(in_oklab,var(--primary)_10%,transparent)_0%,transparent_72%)] opacity-75 blur-3xl" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-6xl bg-[var(--surface-muted-band)] px-4 pt-0 pb-0 lg:bg-transparent lg:px-8 lg:pt-2 xl:max-w-7xl xl:px-10 xl:pt-3">
+      <div className="relative z-10 mx-auto max-w-6xl bg-[var(--surface-muted-band)] px-4 pt-0 pb-0 lg:bg-transparent lg:px-8 lg:pt-3 xl:max-w-7xl xl:px-10 xl:pt-4">
         <div
           data-hero-shell
           className={cn(
             "relative w-full overflow-hidden rounded-t-3xl rounded-b-none border-0 bg-[var(--surface-muted-band)] shadow-none outline-none ring-0",
-            "lg:flex lg:items-start lg:justify-start lg:gap-0 lg:overflow-visible lg:rounded-none lg:bg-transparent lg:py-3 xl:py-4",
+            "lg:flex lg:items-start lg:justify-start lg:gap-0 lg:overflow-visible lg:rounded-none lg:bg-transparent lg:py-4 xl:py-5",
           )}
         >
           {/* Text: mobil Overlay; Desktop = Primary-Block inkl. schmalem rechten Steg (gleiche Höhe), Bild direkt anschließend */}
           <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-end lg:pointer-events-auto lg:relative lg:inset-auto lg:z-20 lg:min-w-0 lg:flex-1 lg:justify-start lg:self-start lg:py-0">
             <div
+              data-hero-primary-card
               className={cn(
                 "max-w-2xl space-y-4 p-6",
                 "lg:flex lg:w-full lg:max-w-none lg:items-stretch lg:gap-0 lg:space-y-0 lg:overflow-hidden lg:rounded-l-2xl lg:rounded-r-none lg:bg-primary lg:p-0 lg:shadow-[0_20px_48px_-24px_rgba(25,38,26,0.5)]",
                 "xl:rounded-l-[1.35rem] xl:rounded-r-none",
               )}
             >
-              <div className="space-y-4 lg:flex-1 lg:min-w-0 lg:space-y-4 lg:p-7 lg:pr-6 lg:text-primary-foreground xl:space-y-5 xl:p-8 xl:pr-7">
+              <div className="space-y-4 lg:flex-1 lg:min-w-0 lg:space-y-5 lg:p-8 lg:pr-7 lg:text-primary-foreground xl:space-y-6 xl:p-9 xl:pr-8">
                 {eyebrow ? (
                 <div className="lg:flex lg:items-center lg:gap-3">
                   <HeroEyebrowFlourish className="hidden lg:block" />
@@ -123,16 +126,24 @@ export function HeroSection({
               ) : null}
               <h1
                 className={cn(
-                  "font-heading text-balance text-4xl font-bold leading-[1.08] tracking-tight text-white drop-shadow-[0_2px_28px_rgba(0,0,0,0.45)] lg:text-5xl xl:text-[3.1rem]",
-                  "lg:drop-shadow-none lg:leading-[1.06] lg:tracking-[-0.02em] lg:text-primary-foreground",
+                  "font-heading text-balance text-4xl font-bold leading-[1.08] tracking-tight text-white drop-shadow-[0_2px_28px_rgba(0,0,0,0.45)] lg:text-6xl xl:text-[3.55rem]",
+                  "lg:max-w-[min(100%,17rem)] lg:text-pretty lg:drop-shadow-none lg:leading-[1.08] lg:tracking-[-0.025em] lg:text-primary-foreground",
+                  "xl:max-w-[min(100%,19.5rem)] xl:leading-[1.06]",
                   "lg:[font-family:var(--font-hero-display),ui-serif,Georgia,serif] lg:font-semibold",
                 )}
               >
-                {hero.title}
+                {hero.title.split("\n").map((line, index) => (
+                  <Fragment key={index}>
+                    {index > 0 ? <br /> : null}
+                    <span className="lg:inline-block lg:whitespace-nowrap">
+                      {line}
+                    </span>
+                  </Fragment>
+                ))}
               </h1>
               <p
                 className={cn(
-                  "max-w-xl text-pretty text-lg leading-relaxed text-white/95 drop-shadow-[0_1px_16px_rgba(0,0,0,0.4)] lg:text-[1.05rem] lg:leading-relaxed xl:text-[1.15rem]",
+                  "max-w-xl text-pretty text-lg leading-relaxed text-white/95 drop-shadow-[0_1px_16px_rgba(0,0,0,0.4)] lg:text-[1.125rem] lg:leading-relaxed xl:text-[1.2rem] xl:leading-relaxed",
                   "lg:border-l-2 lg:border-primary-foreground/25 lg:pl-5 lg:text-primary-foreground/88 lg:drop-shadow-none",
                 )}
               >
@@ -143,7 +154,7 @@ export function HeroSection({
                   href={hero.primaryCtaUrl}
                   className={cn(
                     buttonVariants({ variant: "hero", size: "lg" }),
-                    "min-h-11 gap-2 px-5 text-base font-semibold lg:min-h-11 lg:px-6 lg:text-[1rem]",
+                    "min-h-11 gap-2 px-5 text-base font-semibold lg:min-h-12 lg:px-7 lg:text-[1.0625rem]",
                     "lg:rounded-full lg:bg-primary-foreground lg:text-primary lg:shadow-md lg:ring-0 lg:hover:bg-primary-foreground/92 lg:hover:text-primary lg:hover:shadow-lg lg:focus-visible:border-primary-foreground/50 lg:focus-visible:ring-primary-foreground/40 lg:focus-visible:ring-offset-2 lg:focus-visible:ring-offset-primary",
                   )}
                 >
@@ -168,16 +179,16 @@ export function HeroSection({
           <div
             className={cn(
               "relative z-[1] w-full shrink-0 lg:z-30",
-              "lg:-ml-[6rem] lg:-mt-2.5 lg:-mr-2 lg:w-[min(20rem,34vw)] lg:min-w-[17.5rem] lg:max-w-[20rem] lg:flex-none lg:basis-[min(20rem,34vw)]",
-              "xl:-ml-[7rem] xl:-mt-3 xl:-mr-2.5 xl:w-[min(22rem,32vw)] xl:min-w-[19rem] xl:max-w-[22rem] xl:basis-[min(22rem,32vw)]",
+              "lg:-ml-[6rem] lg:-mt-2.5 lg:-mr-2 lg:w-[min(23rem,38vw)] lg:min-w-[19rem] lg:max-w-[23rem] lg:flex-none lg:basis-[min(23rem,38vw)]",
+              "xl:-ml-[7rem] xl:-mt-3 xl:-mr-2.5 xl:w-[min(25rem,36vw)] xl:min-w-[21rem] xl:max-w-[25rem] xl:basis-[min(25rem,36vw)]",
             )}
           >
             <div
               data-hero-media
               className={cn(
                 "relative min-h-[280px] h-[76vh] w-full max-h-[36rem] overflow-hidden rounded-t-3xl rounded-b-none border-0 bg-[var(--surface-muted-band)] ring-0",
-                "lg:my-0 lg:h-[clamp(17.5rem,48vh,26rem)] lg:min-h-[17.5rem] lg:max-h-[26rem] lg:w-full lg:rounded-2xl lg:rounded-bl-none lg:shadow-[0_24px_56px_-28px_rgba(25,38,26,0.38)] lg:ring-2 lg:ring-primary-foreground/20",
-                "xl:h-[clamp(18rem,50vh,28rem)] xl:max-h-[28rem] xl:rounded-[1.35rem] xl:rounded-bl-none",
+                "lg:my-0 lg:h-[clamp(19.5rem,54vh,30rem)] lg:min-h-[19.5rem] lg:max-h-[30rem] lg:w-full lg:rounded-2xl lg:rounded-bl-none lg:shadow-[0_24px_56px_-28px_rgba(25,38,26,0.38)] lg:ring-2 lg:ring-primary-foreground/20",
+                "xl:h-[clamp(21rem,56vh,32rem)] xl:max-h-[32rem] xl:rounded-[1.35rem] xl:rounded-bl-none",
               )}
             >
               <div className="absolute inset-0 overflow-hidden rounded-[inherit]">
@@ -188,7 +199,7 @@ export function HeroSection({
                   imgClassName={cn(
                     "block h-full w-full border-0 object-cover p-0 outline-none ring-0",
                     "max-lg:absolute max-lg:max-h-none max-lg:max-w-none max-lg:-inset-[9.5%] max-lg:h-[119%] max-lg:w-[119%] max-lg:translate-x-[4.5%] max-lg:object-[center_33%]",
-                    "lg:static lg:translate-x-0 lg:object-[center_28%]",
+                    "lg:static lg:translate-x-0 lg:object-[center_16%]",
                   )}
                 />
               </div>
@@ -218,17 +229,9 @@ export function HeroSection({
           {/*
             Eigener Flex-Nachbar rechts vom Bild — nicht Kind der Primary-Karte, sonst verdeckt z-30 das
             gesamte Karten-Substacking inkl. absolutem Schweif.
-            Höhe orientiert an typischer Textkarte (~20–21rem), nicht an Bildhöhe.
+            Höhe = linke Primary-Karte (HeroAsideStrip misst data-hero-primary-card).
           */}
-          <div
-            aria-hidden
-            className={cn(
-              "pointer-events-none relative z-20 hidden shrink-0 lg:block lg:self-start",
-              "lg:w-10 lg:rounded-r-xl lg:rounded-tl-none lg:bg-primary lg:shadow-[0_12px_32px_-20px_rgba(25,38,26,0.28)]",
-              "lg:h-[20.25rem]",
-              "xl:w-12 xl:h-[21rem] xl:rounded-r-[1.1rem]",
-            )}
-          />
+          <HeroAsideStrip />
         </div>
       </div>
       {waveInto ? <SectionWaveBottom from="muted-band" into={waveInto} /> : null}

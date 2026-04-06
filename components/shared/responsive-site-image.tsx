@@ -9,19 +9,42 @@ type ResponsiveSiteImageProps = {
   imgClassName: string;
   pictureClassName?: string;
   priority?: boolean;
+  /**
+   * Wenn true: auf allen Viewports die Mobile-URL; nur wenn diese leer ist → Desktop-URL.
+   * Nützlich für schmale Desktop-Layouts (z. B. eine einzelne Aktuelles-Card).
+   */
+  preferMobileIfSet?: boolean;
 };
 
 /**
- * Lädt nur die passende Quelle (Mobil &lt; lg vs. Desktop ≥ lg) per &lt;picture&gt;.
+ * Lädt die passende Quelle per &lt;picture&gt; (Mobil &lt; lg vs. Desktop ≥ lg),
+ * sofern nicht {@link preferMobileIfSet} gesetzt ist.
  */
 export function ResponsiveSiteImage({
   image,
   imgClassName,
   pictureClassName,
   priority = false,
+  preferMobileIfSet = false,
 }: ResponsiveSiteImageProps) {
   const mobileSrc = resolveImageUrl(image.mobile.url);
   const desktopSrc = resolveImageUrl(image.desktop.url);
+
+  if (preferMobileIfSet) {
+    const mobileUrl = image.mobile.url.trim();
+    const src = mobileUrl ? mobileSrc : desktopSrc;
+    return (
+      <picture className={pictureClassName}>
+        <img
+          src={src}
+          alt={image.alt}
+          className={cn(imgClassName)}
+          decoding={priority ? "sync" : "async"}
+          fetchPriority={priority ? "high" : "auto"}
+        />
+      </picture>
+    );
+  }
 
   return (
     <picture className={pictureClassName}>

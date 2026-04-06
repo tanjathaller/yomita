@@ -30,6 +30,7 @@ export function AktuellesSection({
 
   const heading = title?.trim() || DEFAULT_TITLE;
   const eyebrow = eyebrowLabel?.trim() || "Journal";
+  const isSingleCard = items.length === 1;
 
   return (
     <SectionShell
@@ -92,60 +93,130 @@ export function AktuellesSection({
               key={item.id}
               className={cn(
                 "flex min-w-0 w-full flex-col",
-                "lg:flex-[0_0_calc((100%_-_1.5rem)/2)]",
-                "xl:flex-[0_0_calc((100%_-_2rem)/2)]",
+                isSingleCard
+                  ? "lg:flex-[0_0_min(100%,52rem)] xl:flex-[0_0_min(100%,60rem)] 2xl:flex-[0_0_min(100%,68rem)]"
+                  : [
+                      "lg:flex-[0_0_calc((100%_-_1.5rem)/2)]",
+                      "xl:flex-[0_0_calc((100%_-_2rem)/2)]",
+                    ],
               )}
             >
               <article
                 className={cn(
-                  "h-full w-full min-w-0 overflow-hidden rounded-3xl border border-border/70 bg-card shadow-sm",
+                  "min-w-0 overflow-hidden rounded-3xl border border-border/70 bg-card shadow-sm",
                   "lg:rounded-2xl",
                   "transition-[box-shadow,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:hover:-translate-y-0.5 hover:shadow-md motion-reduce:hover:translate-y-0",
+                  isSingleCard
+                    ? "flex h-full w-full flex-col gap-6 p-5 lg:flex-row lg:items-center lg:gap-8 lg:p-7 xl:p-8"
+                    : "h-full w-full",
                 )}
               >
-                <div className="relative aspect-[4/3] overflow-hidden bg-muted lg:aspect-auto lg:h-[19.5rem]">
+                <div
+                  className={cn(
+                    "relative shrink-0 overflow-hidden bg-muted",
+                    isSingleCard
+                      ? [
+                          "aspect-[4/3] w-full rounded-2xl border border-border/60 shadow-sm",
+                          "lg:aspect-[4/5] lg:w-[min(100%,18.5rem)] xl:w-[min(100%,21rem)]",
+                        ]
+                      : "aspect-[4/3] lg:aspect-auto lg:h-[19.5rem]",
+                  )}
+                >
                   <ResponsiveSiteImage
                     image={item.image}
                     priority={index === 0}
+                    preferMobileIfSet={isSingleCard}
                     imgClassName="absolute inset-0 h-full w-full object-cover object-center"
                   />
-                  <div
-                    aria-hidden
-                    className="absolute inset-x-0 -bottom-px h-14 bg-gradient-to-b from-transparent via-card/30 to-card/85 lg:h-12"
-                  />
-                  <div
-                    aria-hidden
-                    className="absolute inset-x-0 bottom-0 h-1 bg-card"
-                  />
+                  {!isSingleCard ? (
+                    <>
+                      <div
+                        aria-hidden
+                        className="absolute inset-x-0 -bottom-px h-14 bg-gradient-to-b from-transparent via-card/30 to-card/85 lg:h-12"
+                      />
+                      <div
+                        aria-hidden
+                        className="absolute inset-x-0 bottom-0 h-1 bg-card"
+                      />
+                    </>
+                  ) : null}
                   <div className="absolute left-4 top-4 lg:left-3 lg:top-3">
                     <span className="rounded-full bg-background/90 px-3 py-1 text-xs font-semibold tracking-widest text-[#7A956E] uppercase shadow-sm backdrop-blur-sm lg:px-2.5 lg:py-0.5">
                       {badgeLabel}
                     </span>
                   </div>
                 </div>
-                <div className="relative space-y-3 p-6 before:pointer-events-none before:absolute before:inset-x-0 before:-top-5 before:h-5 before:bg-gradient-to-b before:from-card/0 before:to-card/85 lg:space-y-2 lg:px-8 lg:pb-6 lg:pt-5 lg:before:-top-4 lg:before:h-4">
-                  {item.title?.trim() ? (
-                    <h3 className="text-[#2F3B2A] text-3xl font-semibold tracking-tight lg:text-2xl lg:leading-snug xl:text-[1.65rem]">
-                      {item.title.trim()}
-                    </h3>
-                  ) : null}
-                  <div className="text-muted-foreground text-base leading-relaxed lg:text-sm lg:leading-snug xl:text-[0.95rem]">
-                    <MarkdownContent
-                      markdown={item.text}
-                      className="max-w-none space-y-2 lg:space-y-1.5 [&_p]:leading-snug lg:[&_p]:leading-snug"
-                    />
-                  </div>
-                  {shouldRenderCta ? (
-                    <Link
-                      href={ctaHref!}
-                      className="text-primary inline-flex items-center gap-2 pt-0.5 text-lg font-medium tracking-tight underline-offset-4 transition-colors hover:underline lg:text-base lg:pt-0"
-                      target={isExternalCta ? "_blank" : undefined}
-                      rel={isExternalCta ? "noopener noreferrer" : undefined}
+                <div
+                  className={cn(
+                    "relative",
+                    isSingleCard
+                      ? "flex min-w-0 flex-1 flex-col justify-center"
+                      : "space-y-3 p-6 before:pointer-events-none before:absolute before:inset-x-0 before:-top-5 before:h-5 before:bg-gradient-to-b before:from-card/0 before:to-card/85 lg:min-w-0 lg:space-y-2 lg:px-8 lg:pb-6 lg:pt-5 lg:before:-top-4 lg:before:h-4",
+                  )}
+                >
+                  <div
+                    className={cn(
+                      isSingleCard
+                        ? [
+                            "space-y-4 rounded-2xl border border-[#D8C9AF]/35 bg-gradient-to-br from-muted/45 via-card to-[#D8C9AF]/[0.12] p-6 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.45)] lg:space-y-5 lg:p-7 xl:p-8",
+                            "ring-1 ring-inset ring-[#2F3B2A]/[0.04]",
+                          ]
+                        : "contents",
+                    )}
+                  >
+                    {item.title?.trim() ? (
+                      <h3
+                        className={cn(
+                          "text-[#2F3B2A] text-3xl font-semibold tracking-tight",
+                          isSingleCard
+                            ? "text-[1.65rem] leading-snug lg:text-3xl xl:text-[1.85rem] xl:leading-tight"
+                            : "lg:text-2xl lg:leading-snug xl:text-[1.65rem]",
+                        )}
+                      >
+                        {item.title.trim()}
+                      </h3>
+                    ) : null}
+                    {isSingleCard && item.title?.trim() ? (
+                      <span
+                        aria-hidden
+                        className="block h-1 w-16 max-w-[40%] rounded-full bg-[#D8C9AF]"
+                      />
+                    ) : null}
+                    <div
+                      className={cn(
+                        "text-muted-foreground leading-relaxed",
+                        isSingleCard
+                          ? "text-base lg:text-[1.05rem] lg:leading-relaxed xl:max-w-prose"
+                          : "text-base lg:text-sm lg:leading-snug xl:text-[0.95rem]",
+                      )}
                     >
-                      {ctaLabel}
-                      <span aria-hidden>→</span>
-                    </Link>
-                  ) : null}
+                      <MarkdownContent
+                        markdown={item.text}
+                        className={cn(
+                          "max-w-none space-y-2",
+                          isSingleCard
+                            ? "lg:space-y-2.5 [&_p]:leading-relaxed lg:[&_p]:leading-relaxed"
+                            : "lg:space-y-1.5 [&_p]:leading-snug lg:[&_p]:leading-snug",
+                        )}
+                      />
+                    </div>
+                    {shouldRenderCta ? (
+                      <Link
+                        href={ctaHref!}
+                        className={cn(
+                          "text-primary inline-flex items-center gap-2 font-medium tracking-tight underline-offset-4 transition-colors hover:underline",
+                          isSingleCard
+                            ? "pt-1 text-lg lg:text-base"
+                            : "pt-0.5 text-lg lg:pt-0 lg:text-base",
+                        )}
+                        target={isExternalCta ? "_blank" : undefined}
+                        rel={isExternalCta ? "noopener noreferrer" : undefined}
+                      >
+                        {ctaLabel}
+                        <span aria-hidden>→</span>
+                      </Link>
+                    ) : null}
+                  </div>
                 </div>
               </article>
             </div>
