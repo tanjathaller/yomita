@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import type { GeneralSettings } from "@/types/site-content";
@@ -8,6 +7,7 @@ import { HeaderNavLinks } from "@/components/layout/header-nav-links";
 import { HashScrollLink } from "@/components/layout/hash-scroll-link";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { resolveNavigation } from "@/lib/resolve-navigation";
+import { resolveImageUrl } from "@/lib/resolve-image-url";
 import { cn } from "@/lib/utils";
 
 type SiteHeaderProps = {
@@ -52,15 +52,22 @@ export function SiteHeader({ settings, hasAktuellesItems }: SiteHeaderProps) {
             href="/#hero"
             className="flex min-w-0 shrink-0 items-center gap-2.5 text-foreground"
           >
-            {settings.logoUrl ? (
-              <Image
-                src={settings.logoUrl}
-                alt=""
-                width={40}
-                height={40}
-                className="size-9 shrink-0 rounded-md object-cover"
-                unoptimized
-              />
+            {settings.logo ? (
+              <span className="relative size-9 shrink-0 overflow-hidden rounded-md">
+                <picture className="absolute inset-0 block">
+                  <source
+                    media="(min-width: 1024px)"
+                    srcSet={resolveImageUrl(settings.logo.desktop.url)}
+                  />
+                  <img
+                    src={resolveImageUrl(settings.logo.mobile.url)}
+                    alt=""
+                    width={40}
+                    height={40}
+                    className="size-full object-cover"
+                  />
+                </picture>
+              </span>
             ) : null}
             <span className="truncate text-base font-semibold tracking-tight lg:text-lg">
               {headerTitle}

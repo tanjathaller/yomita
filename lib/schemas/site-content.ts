@@ -100,14 +100,50 @@ export const priceItemSchema = z.object({
   highlighted: z.boolean().optional(),
 });
 
+const legacyFlatImageSchema = z.object({
+  url: z.string(),
+  alt: z.string(),
+});
+
+const responsiveImageInputSchema = z.union([
+  z.object({
+    alt: z.string(),
+    mobile: z.object({ url: z.string() }),
+    desktop: z.object({ url: z.string() }),
+  }),
+  legacyFlatImageSchema,
+]);
+
+/** About, Aktuelles: Alt + Mobil-/Desktop-URL; Legacy `{ url, alt }` wird beim Parsen verdoppelt. */
+export const siteResponsiveImageSchema = responsiveImageInputSchema
+  .transform((raw) => {
+    if ("mobile" in raw) {
+      return {
+        alt: raw.alt.trim(),
+        mobile: { url: raw.mobile.url.trim() },
+        desktop: { url: raw.desktop.url.trim() },
+      };
+    }
+    const u = raw.url.trim();
+    return {
+      alt: raw.alt.trim(),
+      mobile: { url: u },
+      desktop: { url: u },
+    };
+  })
+  .pipe(
+    z.object({
+      alt: z.string().min(1),
+      mobile: z.object({ url: z.string().min(1) }),
+      desktop: z.object({ url: z.string().min(1) }),
+    }),
+  );
+
 export const aboutSectionSchema = z.object({
   title: z.string(),
   eyebrow: z.string().optional(),
   text: z.string(),
-  image: z.object({
-    url: z.string().min(1),
-    alt: z.string().min(1),
-  }),
+  image: siteResponsiveImageSchema,
 });
 
 export const contactSectionSchema = z.object({
@@ -143,30 +179,69 @@ export const yogaflowCourseSeriesSchema = z.object({
   bookingBadgeLink: bookingBadgeLinkSchema.optional(),
 });
 
-export const generalSettingsSchema = z.object({
-  businessName: z.string(),
-  navWordmark: z.string().optional(),
-  sectionEyebrows: z
-    .object({
-      hero: z.string().optional(),
-      aktuell: z.string().optional(),
-      courses: z.string().optional(),
-      prices: z.string().optional(),
-    })
-    .optional(),
-  coursesSectionTitle: z.string().optional(),
-  coursesSectionIntro: z.string().optional(),
-  coursesManualSectionTitle: z.string().optional(),
-  yogaflowCourseSeries: z.array(yogaflowCourseSeriesSchema).max(10).optional(),
-  pricesSectionTitle: z.string().optional(),
-  pricesSectionIntro: z.string().optional(),
-  appUrl: z.string().min(1),
-  logoUrl: z.string().optional(),
-  siteTitle: z.string().optional(),
-  metaDescription: z.string().optional(),
-  ogImageUrl: z.string().optional(),
-  navigation: z.array(navItemSchema).optional(),
-});
+const optionalUrlPairSchema = z
+  .object({
+    mobile: z.object({ url: z.string() }),
+    desktop: z.object({ url: z.string() }),
+  })
+  .optional();
+
+function normalizeOptionalUrlPair(
+  pair: { mobile: { url: string }; desktop: { url: string } } | undefined,
+  legacySingle: string | undefined,
+): { mobile: { url: string }; desktop: { url: string } } | undefined {
+  const hasPair =
+    pair &&
+    (pair.mobile.url.trim().length > 0 || pair.desktop.url.trim().length > 0);
+  if (hasPair) {
+    const m = pair.mobile.url.trim() || pair.desktop.url.trim();
+    const d = pair.desktop.url.trim() || pair.mobile.url.trim();
+    return { mobile: { url: m }, desktop: { url: d } };
+  }
+  const legacy = legacySingle?.trim();
+  if (legacy) {
+    return { mobile: { url: legacy }, desktop: { url: legacy } };
+  }
+  return undefined;
+}
+
+export const generalSettingsSchema = z
+  .object({
+    businessName: z.string(),
+    navWordmark: z.string().optional(),
+    sectionEyebrows: z
+      .object({
+        hero: z.string().optional(),
+        aktuell: z.string().optional(),
+        courses: z.string().optional(),
+        prices: z.string().optional(),
+      })
+      .optional(),
+    coursesSectionTitle: z.string().optional(),
+    coursesSectionIntro: z.string().optional(),
+    coursesManualSectionTitle: z.string().optional(),
+    yogaflowCourseSeries: z.array(yogaflowCourseSeriesSchema).max(10).optional(),
+    pricesSectionTitle: z.string().optional(),
+    pricesSectionIntro: z.string().optional(),
+    appUrl: z.string().min(1),
+    /** @deprecated Nur für alte JSON-Daten; wird zu `logo` zusammengeführt. */
+    logoUrl: z.string().optional(),
+    logo: optionalUrlPairSchema,
+    siteTitle: z.string().optional(),
+    metaDescription: z.string().optional(),
+    /** @deprecated Nur für alte JSON-Daten; wird zu `ogImage` zusammengeführt. */
+    ogImageUrl: z.string().optional(),
+    ogImage: optionalUrlPairSchema,
+    navigation: z.array(navItemSchema).optional(),
+  })
+  .transform((s) => {
+    const { logoUrl, ogImageUrl, logo, ogImage, ...rest } = s;
+    return {
+      ...rest,
+      logo: normalizeOptionalUrlPair(logo, logoUrl),
+      ogImage: normalizeOptionalUrlPair(ogImage, ogImageUrl),
+    };
+  });
 
 export const legalContentSchema = z.object({
   imprintText: z.string(),
@@ -174,14 +249,55 @@ export const legalContentSchema = z.object({
 });
 
 const heroImageAltDefault = "Portrait – Yogastudio und Achtsamkeit";
+const DEFAULT_HERO_BACKGROUND = "/images/tanja-10-mobile.webp";
 
-export const heroSectionSchema = z.object({
-  title: z.string(),
-  claim: z.string(),
-  imageAlt: z.string().min(1).default(heroImageAltDefault),
-  primaryCtaLabel: z.string(),
-  primaryCtaUrl: z.string().min(1),
-});
+export const heroSectionSchema = z
+  .object({
+    title: z.string(),
+    claim: z.string(),
+    /** @deprecated Wird zu `backgroundImage.alt` zusammengeführt, wenn kein neues Objekt gesetzt ist. */
+    imageAlt: z.string().optional(),
+    primaryCtaLabel: z.string(),
+    primaryCtaUrl: z.string().min(1),
+    backgroundImage: responsiveImageInputSchema.optional(),
+  })
+  .transform((h) => {
+    const rawBi = h.backgroundImage;
+    const bi = rawBi
+      ? "mobile" in rawBi
+        ? {
+            alt: rawBi.alt.trim(),
+            mobile: { url: rawBi.mobile.url.trim() },
+            desktop: { url: rawBi.desktop.url.trim() },
+          }
+        : {
+            alt: rawBi.alt.trim(),
+            mobile: { url: rawBi.url.trim() },
+            desktop: { url: rawBi.url.trim() },
+          }
+      : undefined;
+
+    const alt =
+      (bi?.alt && bi.alt.length > 0 ? bi.alt : undefined) ??
+      h.imageAlt?.trim() ??
+      heroImageAltDefault;
+    const mobileUrl =
+      bi?.mobile.url && bi.mobile.url.length > 0 ? bi.mobile.url : DEFAULT_HERO_BACKGROUND;
+    const desktopUrl =
+      bi?.desktop.url && bi.desktop.url.length > 0 ? bi.desktop.url : mobileUrl;
+
+    return {
+      title: h.title,
+      claim: h.claim,
+      primaryCtaLabel: h.primaryCtaLabel,
+      primaryCtaUrl: h.primaryCtaUrl,
+      backgroundImage: {
+        alt,
+        mobile: { url: mobileUrl },
+        desktop: { url: desktopUrl },
+      },
+    };
+  });
 
 const aktuellCtaSchema = z
   .object({
@@ -231,10 +347,7 @@ export const aktuellesItemSchema = z.object({
   title: z.string().optional(),
   badgeLabel: z.string().max(40).optional(),
   text: z.string(),
-  image: z.object({
-    url: z.string().min(1),
-    alt: z.string().min(1),
-  }),
+  image: siteResponsiveImageSchema,
   cta: aktuellCtaSchema.optional(),
   sortOrder: z.number(),
 });

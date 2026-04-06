@@ -12,15 +12,16 @@ export async function generateMetadata(): Promise<Metadata> {
   const content = await getSiteContent();
   const name = content.settings.businessName;
   const defaultTitle = content.settings.siteTitle ?? name;
+  const ogUrl =
+    content.settings.ogImage?.desktop.url?.trim() ||
+    content.settings.ogImage?.mobile.url?.trim();
   return {
     title: {
       default: defaultTitle,
       template: `%s | ${name}`,
     },
     description: content.settings.metaDescription ?? undefined,
-    openGraph: content.settings.ogImageUrl
-      ? { images: [{ url: content.settings.ogImageUrl }] }
-      : undefined,
+    openGraph: ogUrl ? { images: [{ url: ogUrl }] } : undefined,
   };
 }
 

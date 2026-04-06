@@ -22,7 +22,7 @@ Empfehlung **Next.js App Router** mit **Route Groups**:
 
 - `/` – One-Pager: nach `#hero` folgt ein **Kurz-„Über mich“-Teaser** (ohne eigene Anker-ID, Link nach `#ueber-mich`); danach Anker wie in `content-model.md`: `#aktuelles` (optional), `#kurse`, `#preise`, `#ueber-mich`, `#kontakt`.
 - `/impressum`, `/datenschutz` – Inhalt aus `legal.imprintText` / `legal.privacyText` (Markdown/HTML je nach Renderer).
-- Metadata aus `settings`: `siteTitle`, `metaDescription`, `ogImageUrl`.
+- Metadata aus `settings`: `siteTitle`, `metaDescription`, `ogImage` (primär `desktop.url` für Open Graph).
 
 ### Admin
 
@@ -49,7 +49,7 @@ Empfehlung **Next.js App Router** mit **Route Groups**:
 4. **Caching:** `fetch` mit `revalidate` (ISR) oder On-Demand Revalidation nach Speichern im Admin (Vercel-tauglich).
 5. **Admin:** Formulare pro Bereich; Speichern per **Server Action** (`siteContentSchema`), danach `revalidatePath` für öffentliche Routen.
 6. **Kontakt:** POST → API → Versand/Weiterleitung; `contact.formRecipientEmail` optional, sonst Env.
-7. **Medien:** vorerst URLs in Content (`aktuell.items[].image`, `about.image`, `logoUrl`, `ogImageUrl`); Upload-Lösung später ohne Änderung der Sektions-Architektur.
+7. **Medien:** URLs in Content je Bild mit Mobil- und Desktop-Variante (`hero.backgroundImage`, `aktuell.items[].image`, `about.image`, `settings.logo`, `settings.ogImage`); Upload über Admin → Vercel Blob (`/api/admin/upload-image`, scopes u. a. `hero`, `logo`, `aktuelles`, `about`, `og`). Breakpoint für die Auswahl entspricht Tailwind `lg` (1024px).
 
 ## 4. Wiederverwendbare Komponenten
 

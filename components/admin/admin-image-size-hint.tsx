@@ -13,45 +13,128 @@ export type AdminHintContent = {
   bullets: string[];
 };
 
-export type AdminImageHintVariant = "aktuell" | "about" | "og";
+/** Pro Bild-Slot (Mobil &lt; lg vs. Desktop ≥ lg) eigene Hinweise inkl. Pixel-Richtwerte. */
+export type AdminImageHintVariant =
+  | "aktuellMobile"
+  | "aktuellDesktop"
+  | "aboutMobile"
+  | "aboutDesktop"
+  | "heroMobile"
+  | "heroDesktop"
+  | "ogMobile"
+  | "ogDesktop"
+  | "logoMobile"
+  | "logoDesktop";
 
-const HINT_COPY: Record<
-  AdminImageHintVariant,
-  AdminHintContent
-> = {
-  aktuell: {
-    title: "Bildgröße: Aktuelles-Karten",
+const HINT_COPY: Record<AdminImageHintVariant, AdminHintContent> = {
+  aktuellMobile: {
+    title: "Aktuelles · Mobil-Bild",
     paragraphs: [
-      "Auf der Website wird dasselbe Bild auf Mobilgeräten und Desktop verwendet; Next.js lädt automatisch passende Auflösungen. Ein zusätzliches Mobilbild ist nicht erforderlich.",
+      "Die Bildfläche ist auf der Website fest **4 : 3** (Breite zu Höhe). Es wird „cover“ verwendet: Nur wenn deine Datei **genau dieses Seitenverhältnis** hat, bleibt das **gesamte Bild sichtbar** und es wird nichts an den Seiten oder oben/unten abgeschnitten.",
     ],
     bullets: [
-      "Seitenverhältnis: 4:3 (Breite : Höhe), Darstellung mit Zuschnitt – das wichtigste Motiv sollte mittig platziert werden.",
-      "Mobil: Karte nahezu in voller Breite (ca. 350–400 px Anzeige).",
-      "Desktop: Zwei Spalten (ca. 550–600 px Breite pro Karte).",
-      "Empfohlene Quelldatei: mindestens 1200 × 900 px; optional bis ca. 1600 × 1200 px für sehr große Monitore.",
+      "**Optimal:** Quelldatei **exakt 4 : 3**, z. B. **1200 × 900 px**, **1600 × 1200 px** oder **800 × 600 px** (alle dasselbe Verhältnis).",
+      "Abweichende Formate (z. B. quadratisch oder Panorama) füllen zwar die Fläche, aber Randbereiche werden beschnitten.",
       "Format: WebP oder JPEG; Upload maximal 5 MB (JPG, PNG, WEBP).",
     ],
   },
-  about: {
-    title: "Bildgroesse: Ueber-mich-Portrait",
+  aktuellDesktop: {
+    title: "Aktuelles · Desktop-Bild",
     paragraphs: [
-      "Portrait im Hochformat; eine Datei reicht fuer Mobil und Desktop.",
+      "Ab Desktop hat der Bildblock eine **feste Höhe** und **variable Breite** (Karte = halbe Zeile). Das sichtbare Verhältnis liegt typischerweise bei etwa **1,9 : 1 bis 2,1 : 1** (deutlich breiter als hoch). Mit „cover“ gibt es **keinen Zuschnitt** nur dann, wenn dein Bild **dieselbe Breite-zu-Höhe-Relation** wie der Rahmen hat.",
     ],
     bullets: [
-      "Seitenverhaeltnis 4:5, Darstellung mit Zuschnitt – Gesicht und wichtige Details moeglichst zentriert.",
-      "Mobil: grosse Flaeche; Desktop: etwa halbe Seitenbreite.",
-      "Empfohlen: mindestens 1000×1250 px, besser 1200×1500 px (WebP/JPEG).",
+      "**Praktisch optimal:** Seitenverhältnis **2 : 1** (Breite ist doppelt so groß wie die Höhe), z. B. **1920 × 960 px**, **1600 × 800 px** oder **1400 × 700 px** – damit liegst du auf den meisten Bildschirmen sehr nah am Rahmen und vermeidest große Schnitte.",
+      "Sehr schmale oder sehr hohe Bilder werden stärker beschnitten.",
+      "Format: WebP oder JPEG; Upload maximal 5 MB (JPG, PNG, WEBP).",
     ],
   },
-  og: {
-    title: "Open-Graph-Bild (Link-Vorschau)",
+  aboutMobile: {
+    title: "Über mich · Mobil-Portrait",
     paragraphs: [
-      "Wird von vielen Apps und Netzwerken genutzt, wenn jemand einen Link zur Website teilt (z. B. WhatsApp, Facebook).",
+      "Der sichtbare Rahmen ist **4 : 5** (Hochformat, Breite : Höhe). Gleiches Seitenverhältnis in der Datei = **kein Zuschnitt** durch „cover“.",
+      "Zusätzlich zoomt die Seite das Bild leicht ein (~4,5 %). Dadurch können **minimale Randbereiche** fehlen – auch bei passendem Format.",
     ],
     bullets: [
-      "Empfohlen: 1200 × 630 px, Seitenverhältnis ca. 1,91 : 1; Minimum oft 600 × 315 px.",
-      "Format: JPG oder PNG für beste Kompatibilität; WebP ist möglich. Upload maximal 5 MB (JPG, PNG, WEBP).",
-      "Wichtiges Motiv mittig platzieren – Vorschauen schneiden am Rand zu.",
+      "**Optimal:** Quelldatei **exakt 4 : 5**, z. B. **1200 × 1500 px**, **1600 × 2000 px** oder **800 × 1000 px**.",
+      "Wichtiges Motiv (z. B. Gesicht) **etwas mit Abstand zur Kante** platzieren wegen des leichten Zooms.",
+      "Format: WebP oder JPEG; Upload maximal 5 MB (JPG, PNG, WEBP).",
+    ],
+  },
+  aboutDesktop: {
+    title: "Über mich · Desktop-Portrait",
+    paragraphs: [
+      "Auch auf Desktop bleibt der Bildrahmen **4 : 5**. **Exakt 4 : 5** in der Datei vermeidet Zuschnitt durch „cover“. Der leichte Zoom (~4,5 %) gilt hier ebenfalls.",
+    ],
+    bullets: [
+      "**Optimal:** **exakt 4 : 5**, z. B. **1600 × 2000 px** oder **1200 × 1500 px** (höhere Auflösung = schärfer auf großen Monitoren).",
+      "Randbereich leicht „luftiger“ halten wegen Zoom.",
+      "Format: WebP oder JPEG; Upload maximal 5 MB (JPG, PNG, WEBP).",
+    ],
+  },
+  heroMobile: {
+    title: "Hero · Mobil-Hintergrund",
+    paragraphs: [
+      "Wichtig: Der Hero **vergrößert** das Bild und nutzt **object-cover** mit Versatz – das Layout ist **nicht** darauf ausgelegt, die komplette Datei randlos wie in einer Galerie zu zeigen. **Vollständig sichtbar ohne jeden Schnitt** ist hier **nicht erreichbar**.",
+      "Du kannst aber **stark vermeiden**, dass wichtige Teile fehlen: eher **breites** Motiv wählen und **Mitte / leicht oberhalb der Mitte** komponieren (Text liegt unten).",
+    ],
+    bullets: [
+      "Annäherung: Quelle **16 : 9** oder etwas breiter, z. B. **1920 × 1080 px** oder **2400 × 1350 px**; auf dem Phone wirkt die Fläche hoch, trotzdem schneidet das Layout eher oben/unten zu.",
+      "Sehr hohe Portrait-Fotos verlieren oft große Streifen links/rechts.",
+      "Format: WebP oder JPEG; Upload maximal 5 MB (JPG, PNG, WEBP).",
+    ],
+  },
+  heroDesktop: {
+    title: "Hero · Desktop-Hintergrund",
+    paragraphs: [
+      "Wie auf Mobil: **Zoom + cover** – **nie** die gesamte Datei pixelgenau sichtbar. Ziel ist, das Motiv **lesbar neben Text/CTA** zu halten.",
+    ],
+    bullets: [
+      "Annäherung: **16 : 9**, z. B. **1920 × 1080 px** oder **2560 × 1440 px**; sehr breites **21 : 9** kann ebenfalls passen, wenn das Wichtige in der Mitte sitzt.",
+      "Kontrast und Ruhe im **unteren linken** Bereich (Text) einplanen.",
+      "Format: WebP oder JPEG; Upload maximal 5 MB (JPG, PNG, WEBP).",
+    ],
+  },
+  ogMobile: {
+    title: "Open Graph · Mobil-Bild",
+    paragraphs: [
+      "Vorschauen in Apps unterscheiden sich. Wenn du **dieselbe Datei** wie für Desktop nutzt (**1200 × 630 px**, festes Verhältnis), passt das Motiv oft **ohne zusätzlichen Zuschnitt** in die übliche OG-Kachel – einzelne Apps können trotzdem anders zuschneiden.",
+    ],
+    bullets: [
+      "**Optimal (einheitlich mit Desktop):** **exakt 1200 × 630 px** (1,91 : 1).",
+      "Wichtiges Motiv **mittig**, nicht am Rand.",
+      "Format: JPG oder PNG; WebP möglich. Max. 5 MB.",
+    ],
+  },
+  ogDesktop: {
+    title: "Open Graph · Desktop-Bild",
+    paragraphs: [
+      "Standard für Link-Vorschauen ist ein festes **rechteckiges** Format. **1200 × 630 px** ist der gängige Maßstab – Bild füllt die Vorschau ohne Verzerren; einzelne Netzwerke können dennoch minimal beschneiden.",
+    ],
+    bullets: [
+      "**Optimal:** **exakt 1200 × 630 px** (Breite × Höhe). Alternativ **2400 × 1260 px** (gleiches Verhältnis, schärfer).",
+      "Motiv mittig, wichtige Inhalte nicht in den äußeren 10 %.",
+      "Format: JPG oder PNG; WebP möglich. Max. 5 MB.",
+    ],
+  },
+  logoMobile: {
+    title: "Logo · Mobil-Datei",
+    paragraphs: [
+      "Die Anzeige ist **quadratisch** (object-cover im Quadrat). **Exakt quadratische** Datei = **kein Zuschnitt** (das ganze Logo bleibt sichtbar). Im aktuellen Header wird das Logo nur am Desktop gezeigt; die Mobil-Datei dient der Vollständigkeit.",
+    ],
+    bullets: [
+      "**Optimal:** **1 : 1**, z. B. **512 × 512 px** oder **384 × 384 px** (für Retina).",
+      "PNG mit Transparenz oder WebP; max. 5 MB.",
+    ],
+  },
+  logoDesktop: {
+    title: "Logo · Desktop-Datei",
+    paragraphs: [
+      "Quadratischer Rahmen (~36 × 36 CSS-Px). **Quadratische** Quelle = **vollständig sichtbar**, ohne dass Ränder abgeschnitten werden.",
+    ],
+    bullets: [
+      "**Optimal:** **1 : 1**, z. B. **512 × 512 px** oder mindestens **256 × 256 px**.",
+      "PNG mit Transparenz oder WebP; max. 5 MB.",
     ],
   },
 };
@@ -151,7 +234,7 @@ type AdminImageSizeHintProps = {
 
 export function AdminImageSizeHint({ variant, className }: AdminImageSizeHintProps) {
   const copy = HINT_COPY[variant];
-  const ariaSummary = `${copy.title}: empfohlene Pixelmaße und Seitenverhältnis`;
+  const ariaSummary = `${copy.title}: empfohlene Pixelmaße und Darstellung`;
 
   return <AdminHintPopover content={copy} ariaSummary={ariaSummary} className={className} />;
 }
@@ -187,8 +270,8 @@ export function AdminImageFieldLabel({
 }
 
 /**
- * Gleiche Zeilenhöhe und Abstände wie {@link AdminImageFieldLabel}, aber ohne Info-Icon
- * (Platzhalter mit gleicher Breite) – für z. B. Alt-Text neben „Bild URL“.
+ * Gleiche Zeilenhöhe wie {@link AdminImageFieldLabel}, aber ohne Info-Icon
+ * (Platzhalter mit gleicher Breite) – z. B. für Felder ohne Bild-Hinweis.
  */
 export function AdminPairedImageFieldLabel({
   children,

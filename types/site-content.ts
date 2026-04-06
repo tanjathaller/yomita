@@ -69,6 +69,21 @@ export type ExternalCourse = BaseCourse & {
 
 export type Course = InternalCourse | ExternalCourse;
 
+/**
+ * Bild mit getrennten URLs für Mobil (&lt; lg) und Desktop (≥ lg); ein gemeinsamer Alt-Text.
+ */
+export type SiteResponsiveImage = {
+  alt: string;
+  mobile: { url: string };
+  desktop: { url: string };
+};
+
+/** Nur URL-Paare (z. B. Logo, OG), ohne Alt-Text. */
+export type SiteResponsiveImageUrls = {
+  mobile: { url: string };
+  desktop: { url: string };
+};
+
 export type PriceItem = {
   id: string;
   title: string;
@@ -87,10 +102,7 @@ export type AboutSection = {
   /** Kleines Label über der Überschrift, nur Desktop („Eyebrow“). */
   eyebrow?: string;
   text: string;
-  image: {
-    url: string;
-    alt: string;
-  };
+  image: SiteResponsiveImage;
 };
 
 export type ContactSection = {
@@ -168,10 +180,12 @@ export type GeneralSettings = {
   /** Optionaler Untertext der Preise-Sektion (Markdown; Fallback: Hinweis zu Zahlung/Abwicklung). */
   pricesSectionIntro?: string;
   appUrl: string;
-  logoUrl?: string;
+  /** Optionales Logo; Mobil- und Desktop-Datei getrennt (z. B. Zuschnitt/Auflösung). */
+  logo?: SiteResponsiveImageUrls;
   siteTitle?: string;
   metaDescription?: string;
-  ogImageUrl?: string;
+  /** Open-Graph-Vorschau; für Metadaten wird primär die Desktop-URL genutzt. */
+  ogImage?: SiteResponsiveImageUrls;
   navigation?: NavItem[];
 };
 
@@ -185,8 +199,8 @@ export type LegalContent = {
 export type HeroSection = {
   title: string;
   claim: string;
-  /** Alt-Text für das Hero-Hintergrundbild (Barrierefreiheit & Bildsuche). */
-  imageAlt: string;
+  /** Hintergrundbild; Mobil und Desktop als separate Dateien. */
+  backgroundImage: SiteResponsiveImage;
   primaryCtaLabel: string;
   /** Often `settings.appUrl` with optional query params. */
   primaryCtaUrl: string;
@@ -203,10 +217,7 @@ export type AktuellesItem = {
   badgeLabel?: string;
   /** Body copy; Markdown if the section renderer supports it. */
   text: string;
-  image: {
-    url: string;
-    alt: string;
-  };
+  image: SiteResponsiveImage;
   /** Optional card CTA button; disabled by default. */
   cta?: {
     enabled?: boolean;

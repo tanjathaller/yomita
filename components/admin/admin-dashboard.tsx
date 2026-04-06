@@ -152,6 +152,10 @@ function deriveAltFromFilename(filename: string): string {
     .trim();
 }
 
+function aktuellImageUploadKey(itemId: string, slot: "mobile" | "desktop") {
+  return `${itemId}__${slot}`;
+}
+
 function scrollToCard(selector: string): void {
   requestAnimationFrame(() => {
     const element = document.querySelector<HTMLElement>(selector);
@@ -1129,18 +1133,34 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
   const [activeSection, setActiveSection] = useState<SectionKey>("hero");
   const [saveState, saveFormAction, savePending] = useActionState(saveAction, {});
   const [sectionTabsTop, setSectionTabsTop] = useState(104);
-  const [uploadingAktuellById, setUploadingAktuellById] = useState<Record<string, boolean>>({});
+  const [uploadingAktuellKey, setUploadingAktuellKey] = useState<Record<string, boolean>>({});
   const [uploadErrorAktuellById, setUploadErrorAktuellById] = useState<Record<string, string>>({});
-  const [selectedAktuellFileById, setSelectedAktuellFileById] = useState<Record<string, string>>({});
+  const [selectedAktuellFileByKey, setSelectedAktuellFileByKey] = useState<Record<string, string>>({});
   const aktuellFileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
-  const [uploadingAboutImage, setUploadingAboutImage] = useState(false);
+  const [uploadingAboutSlot, setUploadingAboutSlot] = useState<"mobile" | "desktop" | null>(null);
   const [uploadErrorAbout, setUploadErrorAbout] = useState("");
-  const [selectedAboutFileName, setSelectedAboutFileName] = useState("");
-  const aboutImageFileInputRef = useRef<HTMLInputElement | null>(null);
-  const [uploadingOgImage, setUploadingOgImage] = useState(false);
+  const [selectedAboutFileNameMobile, setSelectedAboutFileNameMobile] = useState("");
+  const [selectedAboutFileNameDesktop, setSelectedAboutFileNameDesktop] = useState("");
+  const aboutImageMobileFileInputRef = useRef<HTMLInputElement | null>(null);
+  const aboutImageDesktopFileInputRef = useRef<HTMLInputElement | null>(null);
+  const [uploadingHeroSlot, setUploadingHeroSlot] = useState<"mobile" | "desktop" | null>(null);
+  const [uploadErrorHero, setUploadErrorHero] = useState("");
+  const [selectedHeroFileNameMobile, setSelectedHeroFileNameMobile] = useState("");
+  const [selectedHeroFileNameDesktop, setSelectedHeroFileNameDesktop] = useState("");
+  const heroImageMobileFileInputRef = useRef<HTMLInputElement | null>(null);
+  const heroImageDesktopFileInputRef = useRef<HTMLInputElement | null>(null);
+  const [uploadingOgSlot, setUploadingOgSlot] = useState<"mobile" | "desktop" | null>(null);
   const [uploadErrorOg, setUploadErrorOg] = useState("");
-  const [selectedOgFileName, setSelectedOgFileName] = useState("");
-  const ogImageFileInputRef = useRef<HTMLInputElement | null>(null);
+  const [selectedOgFileNameMobile, setSelectedOgFileNameMobile] = useState("");
+  const [selectedOgFileNameDesktop, setSelectedOgFileNameDesktop] = useState("");
+  const ogImageMobileFileInputRef = useRef<HTMLInputElement | null>(null);
+  const ogImageDesktopFileInputRef = useRef<HTMLInputElement | null>(null);
+  const [uploadingLogoSlot, setUploadingLogoSlot] = useState<"mobile" | "desktop" | null>(null);
+  const [uploadErrorLogo, setUploadErrorLogo] = useState("");
+  const [selectedLogoFileNameMobile, setSelectedLogoFileNameMobile] = useState("");
+  const [selectedLogoFileNameDesktop, setSelectedLogoFileNameDesktop] = useState("");
+  const logoImageMobileFileInputRef = useRef<HTMLInputElement | null>(null);
+  const logoImageDesktopFileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [mobileSaveHost, setMobileSaveHost] = useState<HTMLElement | null>(null);
   const [saveToast, setSaveToast] = useState<{ text: string; isError: boolean } | null>(null);
@@ -1235,8 +1255,9 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
 
   const navigation = draft.settings.navigation ?? [];
 
-  const uploadAktuellImage = async (itemId: string, file: File) => {
-    setUploadingAktuellById((prev) => ({ ...prev, [itemId]: true }));
+  const uploadAktuellImage = async (itemId: string, slot: "mobile" | "desktop", file: File) => {
+    const uKey = aktuellImageUploadKey(itemId, slot);
+    setUploadingAktuellKey((prev) => ({ ...prev, [uKey]: true }));
     setUploadErrorAktuellById((prev) => ({ ...prev, [itemId]: "" }));
 
     const formData = new FormData();
@@ -1271,8 +1292,10 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                   ...current,
                   image: {
                     ...current.image,
-                    url: data.url!,
-                    alt: current.image.alt.trim() ? current.image.alt : deriveAltFromFilename(file.name),
+                    [slot]: { url: data.url! },
+                    alt: current.image.alt.trim()
+                      ? current.image.alt
+                      : deriveAltFromFilename(file.name),
                   },
                 }
               : current,
@@ -1283,12 +1306,12 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
       const message = error instanceof Error ? error.message : "Upload fehlgeschlagen.";
       setUploadErrorAktuellById((prev) => ({ ...prev, [itemId]: message }));
     } finally {
-      setUploadingAktuellById((prev) => ({ ...prev, [itemId]: false }));
+      setUploadingAktuellKey((prev) => ({ ...prev, [uKey]: false }));
     }
   };
 
-  const uploadAboutImage = async (file: File) => {
-    setUploadingAboutImage(true);
+  const uploadAboutImage = async (slot: "mobile" | "desktop", file: File) => {
+    setUploadingAboutSlot(slot);
     setUploadErrorAbout("");
 
     const formData = new FormData();
@@ -1320,7 +1343,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
           ...prev.about,
           image: {
             ...prev.about.image,
-            url: data.url!,
+            [slot]: { url: data.url! },
             alt: prev.about.image.alt.trim()
               ? prev.about.image.alt
               : deriveAltFromFilename(file.name),
@@ -1331,12 +1354,60 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
       const message = error instanceof Error ? error.message : "Upload fehlgeschlagen.";
       setUploadErrorAbout(message);
     } finally {
-      setUploadingAboutImage(false);
+      setUploadingAboutSlot(null);
     }
   };
 
-  const uploadOgImage = async (file: File) => {
-    setUploadingOgImage(true);
+  const uploadHeroBackground = async (slot: "mobile" | "desktop", file: File) => {
+    setUploadingHeroSlot(slot);
+    setUploadErrorHero("");
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("scope", "hero");
+
+    try {
+      const response = await fetch("/api/admin/upload-image", {
+        method: "POST",
+        body: formData,
+      });
+      const raw = await response.text();
+      let data: { error?: string; url?: string } = {};
+      if (raw.trim()) {
+        try {
+          data = JSON.parse(raw) as { error?: string; url?: string };
+        } catch {
+          throw new Error(`Upload-Antwort ungueltig (HTTP ${response.status}).`);
+        }
+      }
+
+      if (!response.ok || !data.url) {
+        throw new Error(data.error ?? "Upload fehlgeschlagen.");
+      }
+
+      setDraft((prev) => ({
+        ...prev,
+        hero: {
+          ...prev.hero,
+          backgroundImage: {
+            ...prev.hero.backgroundImage,
+            [slot]: { url: data.url! },
+            alt: prev.hero.backgroundImage.alt.trim()
+              ? prev.hero.backgroundImage.alt
+              : deriveAltFromFilename(file.name),
+          },
+        },
+      }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Upload fehlgeschlagen.";
+      setUploadErrorHero(message);
+    } finally {
+      setUploadingHeroSlot(null);
+    }
+  };
+
+  const uploadOgImage = async (slot: "mobile" | "desktop", file: File) => {
+    setUploadingOgSlot(slot);
     setUploadErrorOg("");
 
     const formData = new FormData();
@@ -1362,15 +1433,72 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
         throw new Error(data.error ?? "Upload fehlgeschlagen.");
       }
 
-      setDraft((prev) => ({
-        ...prev,
-        settings: { ...prev.settings, ogImageUrl: data.url! },
-      }));
+      setDraft((prev) => {
+        const prevOg = prev.settings.ogImage ?? { mobile: { url: "" }, desktop: { url: "" } };
+        return {
+          ...prev,
+          settings: {
+            ...prev.settings,
+            ogImage: {
+              mobile: { url: slot === "mobile" ? data.url! : prevOg.mobile.url },
+              desktop: { url: slot === "desktop" ? data.url! : prevOg.desktop.url },
+            },
+          },
+        };
+      });
     } catch (error) {
       const message = error instanceof Error ? error.message : "Upload fehlgeschlagen.";
       setUploadErrorOg(message);
     } finally {
-      setUploadingOgImage(false);
+      setUploadingOgSlot(null);
+    }
+  };
+
+  const uploadLogoImage = async (slot: "mobile" | "desktop", file: File) => {
+    setUploadingLogoSlot(slot);
+    setUploadErrorLogo("");
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("scope", "logo");
+
+    try {
+      const response = await fetch("/api/admin/upload-image", {
+        method: "POST",
+        body: formData,
+      });
+      const raw = await response.text();
+      let data: { error?: string; url?: string } = {};
+      if (raw.trim()) {
+        try {
+          data = JSON.parse(raw) as { error?: string; url?: string };
+        } catch {
+          throw new Error(`Upload-Antwort ungueltig (HTTP ${response.status}).`);
+        }
+      }
+
+      if (!response.ok || !data.url) {
+        throw new Error(data.error ?? "Upload fehlgeschlagen.");
+      }
+
+      setDraft((prev) => {
+        const prevLogo = prev.settings.logo ?? { mobile: { url: "" }, desktop: { url: "" } };
+        return {
+          ...prev,
+          settings: {
+            ...prev.settings,
+            logo: {
+              mobile: { url: slot === "mobile" ? data.url! : prevLogo.mobile.url },
+              desktop: { url: slot === "desktop" ? data.url! : prevLogo.desktop.url },
+            },
+          },
+        };
+      });
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Upload fehlgeschlagen.";
+      setUploadErrorLogo(message);
+    } finally {
+      setUploadingLogoSlot(null);
     }
   };
 
@@ -1517,11 +1645,14 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                   <Label htmlFor="hero-image-alt">Hero-Bild Alt-Text</Label>
                   <Input
                     id="hero-image-alt"
-                    value={draft.hero.imageAlt}
+                    value={draft.hero.backgroundImage.alt}
                     onChange={(event) =>
                       setDraft((prev) => ({
                         ...prev,
-                        hero: { ...prev.hero, imageAlt: event.target.value },
+                        hero: {
+                          ...prev.hero,
+                          backgroundImage: { ...prev.hero.backgroundImage, alt: event.target.value },
+                        },
                       }))
                     }
                   />
@@ -1529,6 +1660,120 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                     Kurzbeschreibung des Hero-Fotos für Screenreader und Suchmaschinen (Pflichtfeld).
                   </p>
                 </div>
+                <div className="grid gap-4 md:col-span-2 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <AdminImageFieldLabel variant="heroMobile" htmlFor="hero-bg-mobile-url">
+                      Hero Bild-URL (Mobil)
+                    </AdminImageFieldLabel>
+                    <Input
+                      id="hero-bg-mobile-url"
+                      value={draft.hero.backgroundImage.mobile.url}
+                      onChange={(event) =>
+                        setDraft((prev) => ({
+                          ...prev,
+                          hero: {
+                            ...prev.hero,
+                            backgroundImage: {
+                              ...prev.hero.backgroundImage,
+                              mobile: { url: event.target.value },
+                            },
+                          },
+                        }))
+                      }
+                    />
+                    <AdminImageFieldLabel variant="heroMobile">Mobil hochladen</AdminImageFieldLabel>
+                    <input
+                      ref={heroImageMobileFileInputRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      className="sr-only"
+                      disabled={uploadingHeroSlot !== null}
+                      onChange={async (event) => {
+                        const file = event.target.files?.[0];
+                        if (!file) {
+                          return;
+                        }
+                        setSelectedHeroFileNameMobile(file.name);
+                        await uploadHeroBackground("mobile", file);
+                        event.target.value = "";
+                      }}
+                    />
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="border-primary/40 bg-primary/5 text-primary"
+                        disabled={uploadingHeroSlot !== null}
+                        onClick={() => heroImageMobileFileInputRef.current?.click()}
+                      >
+                        Datei auswählen
+                      </Button>
+                      <span className="text-xs text-muted-foreground">
+                        {selectedHeroFileNameMobile || "—"}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <AdminImageFieldLabel variant="heroDesktop" htmlFor="hero-bg-desktop-url">
+                      Hero Bild-URL (Desktop)
+                    </AdminImageFieldLabel>
+                    <Input
+                      id="hero-bg-desktop-url"
+                      value={draft.hero.backgroundImage.desktop.url}
+                      onChange={(event) =>
+                        setDraft((prev) => ({
+                          ...prev,
+                          hero: {
+                            ...prev.hero,
+                            backgroundImage: {
+                              ...prev.hero.backgroundImage,
+                              desktop: { url: event.target.value },
+                            },
+                          },
+                        }))
+                      }
+                    />
+                    <AdminImageFieldLabel variant="heroDesktop">Desktop hochladen</AdminImageFieldLabel>
+                    <input
+                      ref={heroImageDesktopFileInputRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      className="sr-only"
+                      disabled={uploadingHeroSlot !== null}
+                      onChange={async (event) => {
+                        const file = event.target.files?.[0];
+                        if (!file) {
+                          return;
+                        }
+                        setSelectedHeroFileNameDesktop(file.name);
+                        await uploadHeroBackground("desktop", file);
+                        event.target.value = "";
+                      }}
+                    />
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="border-primary/40 bg-primary/5 text-primary"
+                        disabled={uploadingHeroSlot !== null}
+                        onClick={() => heroImageDesktopFileInputRef.current?.click()}
+                      >
+                        Datei auswählen
+                      </Button>
+                      <span className="text-xs text-muted-foreground">
+                        {selectedHeroFileNameDesktop || "—"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                {uploadingHeroSlot ? (
+                  <p className="text-muted-foreground text-xs md:col-span-2">Upload läuft…</p>
+                ) : null}
+                {uploadErrorHero ? (
+                  <p className="text-destructive text-xs md:col-span-2">{uploadErrorHero}</p>
+                ) : null}
                 <div className="space-y-2">
                   <Label>CTA Label</Label>
                   <Input
@@ -1620,7 +1865,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                 id: newItemId,
                                 title: "Neues Thema",
                                 text: "",
-                                image: { url: "", alt: "" },
+                                image: { alt: "", mobile: { url: "" }, desktop: { url: "" } },
                                 cta: { enabled: false },
                                 sortOrder: getNextSortOrder(prev.aktuell.items),
                               },
@@ -1752,13 +1997,16 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                             }
                           />
                           <div className="grid gap-3 md:grid-cols-2 md:items-start">
-                            <div className="space-y-2">
-                              <div className="flex min-h-7 items-center">
-                                <Label htmlFor={`aktuell-image-url-${item.id}`}>Bild URL</Label>
-                              </div>
+                            <div className="space-y-2 md:col-span-2">
+                              <AdminImageFieldLabel
+                                variant="aktuellMobile"
+                                htmlFor={`aktuell-image-mobile-url-${item.id}`}
+                              >
+                                Bild-URL (Mobil)
+                              </AdminImageFieldLabel>
                               <Input
-                                id={`aktuell-image-url-${item.id}`}
-                                value={item.image.url}
+                                id={`aktuell-image-mobile-url-${item.id}`}
+                                value={item.image.mobile.url}
                                 onChange={(event) =>
                                   setDraft((prev) => ({
                                     ...prev,
@@ -1766,7 +2014,44 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                       ...prev.aktuell,
                                       items: prev.aktuell.items.map((current) =>
                                         current.id === item.id
-                                          ? { ...current, image: { ...current.image, url: event.target.value } }
+                                          ? {
+                                              ...current,
+                                              image: {
+                                                ...current.image,
+                                                mobile: { url: event.target.value },
+                                              },
+                                            }
+                                          : current,
+                                      ),
+                                    },
+                                  }))
+                                }
+                              />
+                            </div>
+                            <div className="space-y-2 md:col-span-2">
+                              <AdminImageFieldLabel
+                                variant="aktuellDesktop"
+                                htmlFor={`aktuell-image-desktop-url-${item.id}`}
+                              >
+                                Bild-URL (Desktop)
+                              </AdminImageFieldLabel>
+                              <Input
+                                id={`aktuell-image-desktop-url-${item.id}`}
+                                value={item.image.desktop.url}
+                                onChange={(event) =>
+                                  setDraft((prev) => ({
+                                    ...prev,
+                                    aktuell: {
+                                      ...prev.aktuell,
+                                      items: prev.aktuell.items.map((current) =>
+                                        current.id === item.id
+                                          ? {
+                                              ...current,
+                                              image: {
+                                                ...current.image,
+                                                desktop: { url: event.target.value },
+                                              },
+                                            }
                                           : current,
                                       ),
                                     },
@@ -1775,23 +2060,26 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                               />
                             </div>
                             <div className="space-y-2">
-                              <AdminImageFieldLabel variant="aktuell">Bild hochladen</AdminImageFieldLabel>
+                              <AdminImageFieldLabel variant="aktuellMobile">Mobil hochladen</AdminImageFieldLabel>
                               <input
                                 ref={(element) => {
-                                  aktuellFileInputRefs.current[item.id] = element;
+                                  aktuellFileInputRefs.current[aktuellImageUploadKey(item.id, "mobile")] = element;
                                 }}
                                 type="file"
                                 accept="image/jpeg,image/png,image/webp"
                                 className="sr-only"
-                                disabled={uploadingAktuellById[item.id] ?? false}
+                                disabled={uploadingAktuellKey[aktuellImageUploadKey(item.id, "mobile")] ?? false}
                                 onChange={async (event) => {
                                   const file = event.target.files?.[0];
                                   if (!file) {
                                     return;
                                   }
 
-                                  setSelectedAktuellFileById((prev) => ({ ...prev, [item.id]: file.name }));
-                                  await uploadAktuellImage(item.id, file);
+                                  setSelectedAktuellFileByKey((prev) => ({
+                                    ...prev,
+                                    [aktuellImageUploadKey(item.id, "mobile")]: file.name,
+                                  }));
+                                  await uploadAktuellImage(item.id, "mobile", file);
                                   event.target.value = "";
                                 }}
                               />
@@ -1800,26 +2088,75 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                   type="button"
                                   variant="outline"
                                   className="border-primary/40 bg-primary/5 text-primary transition-transform transition-shadow duration-150 hover:-translate-y-0.5 hover:bg-primary/10 hover:shadow-sm active:translate-y-0"
-                                  disabled={uploadingAktuellById[item.id] ?? false}
-                                  onClick={() => aktuellFileInputRefs.current[item.id]?.click()}
+                                  disabled={uploadingAktuellKey[aktuellImageUploadKey(item.id, "mobile")] ?? false}
+                                  onClick={() =>
+                                    aktuellFileInputRefs.current[aktuellImageUploadKey(item.id, "mobile")]?.click()
+                                  }
                                 >
                                   Datei auswählen
                                 </Button>
                                 <span className="text-xs text-muted-foreground">
-                                  {selectedAktuellFileById[item.id] ?? "Keine Datei ausgewählt"}
+                                  {selectedAktuellFileByKey[aktuellImageUploadKey(item.id, "mobile")] ??
+                                    "Keine Datei"}
                                 </span>
                               </div>
-                              <p className="text-xs text-muted-foreground">
-                                Erlaubt: JPG, PNG, WEBP (max. 5 MB)
-                              </p>
-                              {uploadingAktuellById[item.id] ? (
-                                <p className="text-xs text-muted-foreground">Upload laeuft...</p>
+                            </div>
+                            <div className="space-y-2">
+                              <AdminImageFieldLabel variant="aktuellDesktop">Desktop hochladen</AdminImageFieldLabel>
+                              <input
+                                ref={(element) => {
+                                  aktuellFileInputRefs.current[aktuellImageUploadKey(item.id, "desktop")] =
+                                    element;
+                                }}
+                                type="file"
+                                accept="image/jpeg,image/png,image/webp"
+                                className="sr-only"
+                                disabled={uploadingAktuellKey[aktuellImageUploadKey(item.id, "desktop")] ?? false}
+                                onChange={async (event) => {
+                                  const file = event.target.files?.[0];
+                                  if (!file) {
+                                    return;
+                                  }
+
+                                  setSelectedAktuellFileByKey((prev) => ({
+                                    ...prev,
+                                    [aktuellImageUploadKey(item.id, "desktop")]: file.name,
+                                  }));
+                                  await uploadAktuellImage(item.id, "desktop", file);
+                                  event.target.value = "";
+                                }}
+                              />
+                              <div className="flex flex-wrap items-center gap-2">
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  className="border-primary/40 bg-primary/5 text-primary transition-transform transition-shadow duration-150 hover:-translate-y-0.5 hover:bg-primary/10 hover:shadow-sm active:translate-y-0"
+                                  disabled={
+                                    uploadingAktuellKey[aktuellImageUploadKey(item.id, "desktop")] ?? false
+                                  }
+                                  onClick={() =>
+                                    aktuellFileInputRefs.current[aktuellImageUploadKey(item.id, "desktop")]?.click()
+                                  }
+                                >
+                                  Datei auswählen
+                                </Button>
+                                <span className="text-xs text-muted-foreground">
+                                  {selectedAktuellFileByKey[aktuellImageUploadKey(item.id, "desktop")] ??
+                                    "Keine Datei"}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="space-y-2 md:col-span-2">
+                              <p className="text-xs text-muted-foreground">Erlaubt: JPG, PNG, WEBP (max. 5 MB)</p>
+                              {uploadingAktuellKey[aktuellImageUploadKey(item.id, "mobile")] ||
+                              uploadingAktuellKey[aktuellImageUploadKey(item.id, "desktop")] ? (
+                                <p className="text-xs text-muted-foreground">Upload läuft…</p>
                               ) : null}
                               {uploadErrorAktuellById[item.id] ? (
                                 <p className="text-xs text-destructive">{uploadErrorAktuellById[item.id]}</p>
                               ) : null}
                             </div>
-                            <div className="space-y-2">
+                            <div className="space-y-2 md:col-span-2">
                               <Label>Bild Alt-Text</Label>
                               <Input
                                 value={item.image.alt}
@@ -2828,36 +3165,57 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                   }
                 />
                 <div className="grid gap-3 md:grid-cols-2 md:items-start">
-                  <div className="space-y-2">
-                    <AdminImageFieldLabel variant="about" htmlFor="about-image-url">
-                      Bild URL
+                  <div className="space-y-2 md:col-span-2">
+                    <AdminImageFieldLabel variant="aboutMobile" htmlFor="about-image-mobile-url">
+                      Bild-URL (Mobil)
                     </AdminImageFieldLabel>
                     <Input
-                      id="about-image-url"
-                      value={draft.about.image.url}
+                      id="about-image-mobile-url"
+                      value={draft.about.image.mobile.url}
                       onChange={(event) =>
                         setDraft((prev) => ({
                           ...prev,
-                          about: { ...prev.about, image: { ...prev.about.image, url: event.target.value } },
+                          about: {
+                            ...prev.about,
+                            image: { ...prev.about.image, mobile: { url: event.target.value } },
+                          },
+                        }))
+                      }
+                    />
+                  </div>
+                  <div className="space-y-2 md:col-span-2">
+                    <AdminImageFieldLabel variant="aboutDesktop" htmlFor="about-image-desktop-url">
+                      Bild-URL (Desktop)
+                    </AdminImageFieldLabel>
+                    <Input
+                      id="about-image-desktop-url"
+                      value={draft.about.image.desktop.url}
+                      onChange={(event) =>
+                        setDraft((prev) => ({
+                          ...prev,
+                          about: {
+                            ...prev.about,
+                            image: { ...prev.about.image, desktop: { url: event.target.value } },
+                          },
                         }))
                       }
                     />
                   </div>
                   <div className="space-y-2">
-                    <AdminImageFieldLabel variant="about">Bild hochladen</AdminImageFieldLabel>
+                    <AdminImageFieldLabel variant="aboutMobile">Mobil hochladen</AdminImageFieldLabel>
                     <input
-                      ref={aboutImageFileInputRef}
+                      ref={aboutImageMobileFileInputRef}
                       type="file"
                       accept="image/jpeg,image/png,image/webp"
                       className="sr-only"
-                      disabled={uploadingAboutImage}
+                      disabled={uploadingAboutSlot !== null}
                       onChange={async (event) => {
                         const file = event.target.files?.[0];
                         if (!file) {
                           return;
                         }
-                        setSelectedAboutFileName(file.name);
-                        await uploadAboutImage(file);
+                        setSelectedAboutFileNameMobile(file.name);
+                        await uploadAboutImage("mobile", file);
                         event.target.value = "";
                       }}
                     />
@@ -2866,24 +3224,59 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                         type="button"
                         variant="outline"
                         className="border-primary/40 bg-primary/5 text-primary transition-transform transition-shadow duration-150 hover:-translate-y-0.5 hover:bg-primary/10 hover:shadow-sm active:translate-y-0"
-                        disabled={uploadingAboutImage}
-                        onClick={() => aboutImageFileInputRef.current?.click()}
+                        disabled={uploadingAboutSlot !== null}
+                        onClick={() => aboutImageMobileFileInputRef.current?.click()}
                       >
                         Datei auswählen
                       </Button>
                       <span className="text-xs text-muted-foreground">
-                        {selectedAboutFileName || "Keine Datei ausgewählt"}
+                        {selectedAboutFileNameMobile || "Keine Datei"}
                       </span>
                     </div>
+                  </div>
+                  <div className="space-y-2">
+                    <AdminImageFieldLabel variant="aboutDesktop">Desktop hochladen</AdminImageFieldLabel>
+                    <input
+                      ref={aboutImageDesktopFileInputRef}
+                      type="file"
+                      accept="image/jpeg,image/png,image/webp"
+                      className="sr-only"
+                      disabled={uploadingAboutSlot !== null}
+                      onChange={async (event) => {
+                        const file = event.target.files?.[0];
+                        if (!file) {
+                          return;
+                        }
+                        setSelectedAboutFileNameDesktop(file.name);
+                        await uploadAboutImage("desktop", file);
+                        event.target.value = "";
+                      }}
+                    />
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="border-primary/40 bg-primary/5 text-primary transition-transform transition-shadow duration-150 hover:-translate-y-0.5 hover:bg-primary/10 hover:shadow-sm active:translate-y-0"
+                        disabled={uploadingAboutSlot !== null}
+                        onClick={() => aboutImageDesktopFileInputRef.current?.click()}
+                      >
+                        Datei auswählen
+                      </Button>
+                      <span className="text-xs text-muted-foreground">
+                        {selectedAboutFileNameDesktop || "Keine Datei"}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="space-y-2 md:col-span-2">
                     <p className="text-xs text-muted-foreground">Erlaubt: JPG, PNG, WEBP (max. 5 MB)</p>
-                    {uploadingAboutImage ? (
-                      <p className="text-xs text-muted-foreground">Upload laeuft...</p>
+                    {uploadingAboutSlot ? (
+                      <p className="text-xs text-muted-foreground">Upload läuft…</p>
                     ) : null}
                     {uploadErrorAbout ? (
                       <p className="text-xs text-destructive">{uploadErrorAbout}</p>
                     ) : null}
                   </div>
-                  <div className="space-y-2">
+                  <div className="space-y-2 md:col-span-2">
                     <Label htmlFor="about-image-alt" className="font-bold">
                       Bild Alt-Text
                     </Label>
@@ -3002,46 +3395,73 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                   <Field label="App URL" value={draft.settings.appUrl} onChange={(value) =>
                     setDraft((prev) => ({ ...prev, settings: { ...prev.settings, appUrl: value } }))
                   } />
-                  <Field label="Logo URL" value={draft.settings.logoUrl ?? ""} onChange={(value) =>
-                    setDraft((prev) => ({ ...prev, settings: { ...prev.settings, logoUrl: value || undefined } }))
-                  } />
                   <Field label="Site Title" value={draft.settings.siteTitle ?? ""} onChange={(value) =>
                     setDraft((prev) => ({ ...prev, settings: { ...prev.settings, siteTitle: value || undefined } }))
                   } />
                   <div className="grid gap-3 md:col-span-2 md:grid-cols-2 md:items-start">
-                    <div className="space-y-2">
-                      <AdminImageFieldLabel variant="og" htmlFor="settings-og-image-url">
-                        OG Image URL
+                    <div className="space-y-2 md:col-span-2">
+                      <AdminImageFieldLabel variant="logoMobile" htmlFor="settings-logo-mobile-url">
+                        Logo-URL (Mobil)
                       </AdminImageFieldLabel>
                       <Input
-                        id="settings-og-image-url"
-                        value={draft.settings.ogImageUrl ?? ""}
+                        id="settings-logo-mobile-url"
+                        value={draft.settings.logo?.mobile.url ?? ""}
                         onChange={(event) =>
-                          setDraft((prev) => ({
-                            ...prev,
-                            settings: {
-                              ...prev.settings,
-                              ogImageUrl: event.target.value || undefined,
-                            },
-                          }))
+                          setDraft((prev) => {
+                            const prevLogo = prev.settings.logo ?? {
+                              mobile: { url: "" },
+                              desktop: { url: "" },
+                            };
+                            return {
+                              ...prev,
+                              settings: {
+                                ...prev.settings,
+                                logo: { ...prevLogo, mobile: { url: event.target.value } },
+                              },
+                            };
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <AdminImageFieldLabel variant="logoDesktop" htmlFor="settings-logo-desktop-url">
+                        Logo-URL (Desktop)
+                      </AdminImageFieldLabel>
+                      <Input
+                        id="settings-logo-desktop-url"
+                        value={draft.settings.logo?.desktop.url ?? ""}
+                        onChange={(event) =>
+                          setDraft((prev) => {
+                            const prevLogo = prev.settings.logo ?? {
+                              mobile: { url: "" },
+                              desktop: { url: "" },
+                            };
+                            return {
+                              ...prev,
+                              settings: {
+                                ...prev.settings,
+                                logo: { ...prevLogo, desktop: { url: event.target.value } },
+                              },
+                            };
+                          })
                         }
                       />
                     </div>
                     <div className="space-y-2">
-                      <AdminImageFieldLabel variant="og">OG-Bild hochladen</AdminImageFieldLabel>
+                      <AdminImageFieldLabel variant="logoMobile">Logo Mobil hochladen</AdminImageFieldLabel>
                       <input
-                        ref={ogImageFileInputRef}
+                        ref={logoImageMobileFileInputRef}
                         type="file"
                         accept="image/jpeg,image/png,image/webp"
                         className="sr-only"
-                        disabled={uploadingOgImage}
+                        disabled={uploadingLogoSlot !== null}
                         onChange={async (event) => {
                           const file = event.target.files?.[0];
                           if (!file) {
                             return;
                           }
-                          setSelectedOgFileName(file.name);
-                          await uploadOgImage(file);
+                          setSelectedLogoFileNameMobile(file.name);
+                          await uploadLogoImage("mobile", file);
                           event.target.value = "";
                         }}
                       />
@@ -3049,19 +3469,185 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                         <Button
                           type="button"
                           variant="outline"
-                          className="border-primary/40 bg-primary/5 text-primary transition-transform transition-shadow duration-150 hover:-translate-y-0.5 hover:bg-primary/10 hover:shadow-sm active:translate-y-0"
-                          disabled={uploadingOgImage}
-                          onClick={() => ogImageFileInputRef.current?.click()}
+                          size="sm"
+                          className="border-primary/40 bg-primary/5 text-primary"
+                          disabled={uploadingLogoSlot !== null}
+                          onClick={() => logoImageMobileFileInputRef.current?.click()}
                         >
-                          Datei auswählen
+                          Datei (Mobil)
                         </Button>
                         <span className="text-xs text-muted-foreground">
-                          {selectedOgFileName || "Keine Datei ausgewählt"}
+                          {selectedLogoFileNameMobile || "—"}
                         </span>
                       </div>
-                      <p className="text-xs text-muted-foreground">Erlaubt: JPG, PNG, WEBP (max. 5 MB)</p>
-                      {uploadingOgImage ? (
-                        <p className="text-xs text-muted-foreground">Upload laeuft...</p>
+                    </div>
+                    <div className="space-y-2">
+                      <AdminImageFieldLabel variant="logoDesktop">Logo Desktop hochladen</AdminImageFieldLabel>
+                      <input
+                        ref={logoImageDesktopFileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="sr-only"
+                        disabled={uploadingLogoSlot !== null}
+                        onChange={async (event) => {
+                          const file = event.target.files?.[0];
+                          if (!file) {
+                            return;
+                          }
+                          setSelectedLogoFileNameDesktop(file.name);
+                          await uploadLogoImage("desktop", file);
+                          event.target.value = "";
+                        }}
+                      />
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="border-primary/40 bg-primary/5 text-primary"
+                          disabled={uploadingLogoSlot !== null}
+                          onClick={() => logoImageDesktopFileInputRef.current?.click()}
+                        >
+                          Datei (Desktop)
+                        </Button>
+                        <span className="text-xs text-muted-foreground">
+                          {selectedLogoFileNameDesktop || "—"}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <p className="text-xs text-muted-foreground">Logo: JPG, PNG, WEBP (max. 5 MB)</p>
+                      {uploadingLogoSlot ? (
+                        <p className="text-xs text-muted-foreground">Upload läuft…</p>
+                      ) : null}
+                      {uploadErrorLogo ? (
+                        <p className="text-xs text-destructive">{uploadErrorLogo}</p>
+                      ) : null}
+                    </div>
+                  </div>
+                  <div className="grid gap-3 md:col-span-2 md:grid-cols-2 md:items-start">
+                    <div className="space-y-2 md:col-span-2">
+                      <AdminImageFieldLabel variant="ogMobile" htmlFor="settings-og-mobile-url">
+                        OG-Bild-URL (Mobil)
+                      </AdminImageFieldLabel>
+                      <Input
+                        id="settings-og-mobile-url"
+                        value={draft.settings.ogImage?.mobile.url ?? ""}
+                        onChange={(event) =>
+                          setDraft((prev) => {
+                            const prevOg = prev.settings.ogImage ?? {
+                              mobile: { url: "" },
+                              desktop: { url: "" },
+                            };
+                            return {
+                              ...prev,
+                              settings: {
+                                ...prev.settings,
+                                ogImage: { ...prevOg, mobile: { url: event.target.value } },
+                              },
+                            };
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <AdminImageFieldLabel variant="ogDesktop" htmlFor="settings-og-desktop-url">
+                        OG-Bild-URL (Desktop)
+                      </AdminImageFieldLabel>
+                      <Input
+                        id="settings-og-desktop-url"
+                        value={draft.settings.ogImage?.desktop.url ?? ""}
+                        onChange={(event) =>
+                          setDraft((prev) => {
+                            const prevOg = prev.settings.ogImage ?? {
+                              mobile: { url: "" },
+                              desktop: { url: "" },
+                            };
+                            return {
+                              ...prev,
+                              settings: {
+                                ...prev.settings,
+                                ogImage: { ...prevOg, desktop: { url: event.target.value } },
+                              },
+                            };
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <AdminImageFieldLabel variant="ogMobile">OG Mobil hochladen</AdminImageFieldLabel>
+                      <input
+                        ref={ogImageMobileFileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="sr-only"
+                        disabled={uploadingOgSlot !== null}
+                        onChange={async (event) => {
+                          const file = event.target.files?.[0];
+                          if (!file) {
+                            return;
+                          }
+                          setSelectedOgFileNameMobile(file.name);
+                          await uploadOgImage("mobile", file);
+                          event.target.value = "";
+                        }}
+                      />
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="border-primary/40 bg-primary/5 text-primary"
+                          disabled={uploadingOgSlot !== null}
+                          onClick={() => ogImageMobileFileInputRef.current?.click()}
+                        >
+                          Datei (Mobil)
+                        </Button>
+                        <span className="text-xs text-muted-foreground">
+                          {selectedOgFileNameMobile || "—"}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <AdminImageFieldLabel variant="ogDesktop">OG Desktop hochladen</AdminImageFieldLabel>
+                      <input
+                        ref={ogImageDesktopFileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="sr-only"
+                        disabled={uploadingOgSlot !== null}
+                        onChange={async (event) => {
+                          const file = event.target.files?.[0];
+                          if (!file) {
+                            return;
+                          }
+                          setSelectedOgFileNameDesktop(file.name);
+                          await uploadOgImage("desktop", file);
+                          event.target.value = "";
+                        }}
+                      />
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="border-primary/40 bg-primary/5 text-primary"
+                          disabled={uploadingOgSlot !== null}
+                          onClick={() => ogImageDesktopFileInputRef.current?.click()}
+                        >
+                          Datei (Desktop)
+                        </Button>
+                        <span className="text-xs text-muted-foreground">
+                          {selectedOgFileNameDesktop || "—"}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <p className="text-xs text-muted-foreground">
+                        OG: JPG, PNG, WEBP (max. 5 MB). Link-Vorschau nutzt primär die Desktop-URL.
+                      </p>
+                      {uploadingOgSlot ? (
+                        <p className="text-xs text-muted-foreground">Upload läuft…</p>
                       ) : null}
                       {uploadErrorOg ? <p className="text-xs text-destructive">{uploadErrorOg}</p> : null}
                     </div>

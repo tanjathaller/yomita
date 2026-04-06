@@ -1,11 +1,10 @@
-import Image from "next/image";
 import Link from "next/link";
 
 import type { AktuellesSection as AktuellesModel } from "@/types/site-content";
 
 import { MarkdownContent } from "@/components/shared/markdown-content";
+import { ResponsiveSiteImage } from "@/components/shared/responsive-site-image";
 import { SectionShell } from "@/components/shared/section-shell";
-import { isBlobProxyUrl, resolveImageUrl } from "@/lib/resolve-image-url";
 import { cn } from "@/lib/utils";
 
 type AktuellesSectionProps = {
@@ -82,8 +81,6 @@ export function AktuellesSection({
               ? "Workshop"
               : DEFAULT_BADGE_LABEL;
 
-          const imageSrc = resolveImageUrl(item.image.url);
-          const useUnoptimized = process.env.NODE_ENV === "development" || isBlobProxyUrl(imageSrc);
           const ctaEnabled = item.cta?.enabled ?? false;
           const ctaLabel = item.cta?.label?.trim();
           const ctaHref = item.cta?.href?.trim();
@@ -107,14 +104,10 @@ export function AktuellesSection({
                 )}
               >
                 <div className="relative aspect-[4/3] overflow-hidden bg-muted lg:aspect-auto lg:h-[19.5rem]">
-                  <Image
-                    src={imageSrc}
-                    alt={item.image.alt}
-                    fill
-                    className="object-cover object-center"
-                    sizes="(min-width: 1280px) 44vw, (min-width: 1024px) 48vw, (min-width: 640px) 90vw, 100vw"
+                  <ResponsiveSiteImage
+                    image={item.image}
                     priority={index === 0}
-                    unoptimized={useUnoptimized}
+                    imgClassName="absolute inset-0 h-full w-full object-cover object-center"
                   />
                   <div
                     aria-hidden

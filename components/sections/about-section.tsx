@@ -1,10 +1,8 @@
-import Image from "next/image";
-
 import type { AboutSection as AboutModel } from "@/types/site-content";
 
 import { MarkdownContent } from "@/components/shared/markdown-content";
+import { ResponsiveSiteImage } from "@/components/shared/responsive-site-image";
 import { SectionShell } from "@/components/shared/section-shell";
-import { isBlobProxyUrl, resolveImageUrl } from "@/lib/resolve-image-url";
 import { cn } from "@/lib/utils";
 
 const ABOUT_EYEBROW_FALLBACK = "Kurz zu mir";
@@ -33,8 +31,6 @@ type AboutSectionProps = {
 };
 
 export function AboutSection({ about }: AboutSectionProps) {
-  const imageSrc = resolveImageUrl(about.image.url);
-  const useUnoptimized = process.env.NODE_ENV === "development" || isBlobProxyUrl(imageSrc);
   const eyebrow = about.eyebrow?.trim() || ABOUT_EYEBROW_FALLBACK;
   const displayTitle = about.title.trim() || ABOUT_TITLE_FALLBACK;
   const mobileTitle = getMobileOverlayTitleLines(about.title);
@@ -54,14 +50,9 @@ export function AboutSection({ about }: AboutSectionProps) {
           />
           <div className="relative aspect-[4/5] max-h-[26rem] rounded-t-3xl rounded-b-none bg-[var(--surface-muted-band)] outline-none ring-0 lg:max-h-[35rem] lg:-rotate-1 lg:rounded-3xl lg:rounded-br-[2.25rem] lg:shadow-xl lg:shadow-[#2F3B2A]/12 lg:ring-2 lg:ring-[#D8C9AF]/45 xl:max-h-[38rem] xl:ring-[#D8C9AF]/55">
             <div className="absolute inset-[3px] isolate overflow-hidden rounded-t-[calc(1.5rem-3px)] rounded-b-none will-change-transform lg:rounded-[calc(1.5rem-3px)] lg:rounded-br-[2rem]">
-              <Image
-                src={imageSrc}
-                alt={about.image.alt}
-                fill
-                className="object-cover object-center [transform:translateZ(0)_scale(1.045)]"
-                sizes="(min-width: 1280px) 44vw, (min-width: 1024px) 42vw, 100vw"
-                priority={false}
-                unoptimized={useUnoptimized}
+              <ResponsiveSiteImage
+                image={about.image}
+                imgClassName="absolute inset-0 h-full w-full object-cover object-center [transform:translateZ(0)_scale(1.045)]"
               />
               <div
                 aria-hidden

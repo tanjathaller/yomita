@@ -41,7 +41,7 @@ Optional. Wenn leer oder nicht gesetzt, kann die UI Default-Einträge aus der Ta
 |--------------------|--------|--------------|
 | `title`            | string | Hauptüberschrift |
 | `claim`            | string | Unterzeile / Value Proposition |
-| `imageAlt`         | string | Alt-Text für das Hero-Hintergrundbild (A11y, Bildsuche); Fallback in der Validierung, wenn in alten Daten fehlend |
+| `backgroundImage`  | object | Hintergrundbild: `alt`, `mobile.url`, `desktop.url` (Wechsel ab Viewport `lg`). In alten Daten: `imageAlt` + fehlendes Objekt → Parser setzt Standard-Hintergrund und übernimmt `imageAlt` als `alt`. |
 | `primaryCtaLabel`  | string | Button-Text zum App-Einstieg |
 | `primaryCtaUrl`    | string | Link-Ziel; meist `settings.appUrl`, ggf. mit UTM-Parametern |
 
@@ -95,10 +95,12 @@ Kurzmeldungen, Saison-Hinweise oder Einzelthemen **oberhalb** der Kursübersicht
 
 ### Bild (`items[].image`)
 
-| Feld  | Typ    | Beschreibung |
-|-------|--------|--------------|
-| `url` | string | Bild-URL (Upload/CDN) |
-| `alt` | string | Pflicht für Barrierefreiheit |
+| Feld     | Typ    | Beschreibung |
+|----------|--------|--------------|
+| `alt`    | string | Pflicht für Barrierefreiheit |
+| `mobile.url`  | string | Bild-URL für Ansichten unter `lg` |
+| `desktop.url` | string | Bild-URL ab `lg` |
+| *(Legacy)* `url` | string | Wird beim Parsen auf Mobil und Desktop kopiert |
 
 ---
 
@@ -173,10 +175,12 @@ Kein Feld `externalUrl`.
 
 ### Bild (`about.image`)
 
-| Feld  | Typ    | Beschreibung |
-|-------|--------|--------------|
-| `url` | string | Bild-URL (Upload/CDN) |
-| `alt` | string | Pflicht für Barrierefreiheit |
+| Feld     | Typ    | Beschreibung |
+|----------|--------|--------------|
+| `alt`    | string | Pflicht für Barrierefreiheit |
+| `mobile.url`  | string | Portrait Mobil (`< lg`) |
+| `desktop.url` | string | Portrait Desktop (`≥ lg`) |
+| *(Legacy)* `url` | string | Wird beim Parsen auf beide URLs kopiert |
 
 ---
 
@@ -208,10 +212,10 @@ Kein Feld `externalUrl`.
 | `pricesSectionTitle` | string? | optionaler Titel der Preise-Sektion; Fallback: „Preise“ |
 | `pricesSectionIntro` | string? | optionaler Untertext der Preise-Sektion (**Markdown**); Fallback: Hinweis zu Zahlung/Abwicklung außerhalb der Website |
 | `appUrl`           | string   | Hauptlink zur Kursbuchungs-App (Hero-CTA kann davon abweichen, z. B. Tracking) |
-| `logoUrl`          | string?  | optional; Logo-Erstellung ist nicht Projektbestandteil, Upload-URL ist erlaubt |
+| `logo`             | object?  | optional; `mobile.url` und `desktop.url` (Header-Logo). Legacy: `logoUrl` wird beim Parsen auf beide URLs kopiert |
 | `siteTitle`        | string?  | `<title>` / Branding |
 | `metaDescription`  | string?  | Meta-Description SEO |
-| `ogImageUrl`       | string?  | Open-Graph-Vorschaubild |
+| `ogImage`          | object?  | optional; `mobile.url` und `desktop.url` für Link-Vorschauen; in Metadaten wird primär die Desktop-URL genutzt. Legacy: `ogImageUrl` → beide URLs |
 | `navigation`       | siehe oben | optionale Nav-Einträge |
 
 ### `settings.yogaflowCourseSeries[]` (Eintrag)

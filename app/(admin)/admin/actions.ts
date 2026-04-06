@@ -96,9 +96,12 @@ export async function saveSiteContentAction(
   if (!parsedContent.success) {
     const firstIssue = parsedContent.error.issues[0];
     const issuePath = firstIssue?.path.join(".") ?? "unknown";
-    if (issuePath.includes("aktuell.items") && issuePath.endsWith("image.url")) {
+    if (
+      issuePath.includes("aktuell.items") &&
+      (issuePath.endsWith("image.mobile.url") || issuePath.endsWith("image.desktop.url"))
+    ) {
       return {
-        error: "Bitte zuerst ein Bild auswählen, bevor du speicherst.",
+        error: "Bitte für jede Aktuelles-Karte Mobil- und Desktop-Bild-URL setzen (oder hochladen), bevor du speicherst.",
       };
     }
     if (issuePath.includes("image.alt")) {

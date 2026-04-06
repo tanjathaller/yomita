@@ -22,39 +22,42 @@ export function SiteFooter({ settings }: SiteFooterProps) {
         className="@container w-full min-w-0 overflow-x-clip pt-14 pb-6 pl-[max(0.25rem,env(safe-area-inset-left,0px))] pr-[max(0.25rem,env(safe-area-inset-right,0px))] lg:pt-16 lg:pb-8"
       >
         <div className="mx-auto flex w-max max-w-full min-w-0 flex-col items-start lg:w-full lg:max-w-4xl">
-          <nav className="flex w-full justify-center pb-6" aria-label="Footer Navigation">
-            <ul className="grid w-full max-w-[24rem] grid-cols-2 gap-3 lg:flex lg:max-w-none lg:flex-wrap lg:justify-center lg:gap-4">
+          <nav
+            className="flex w-full flex-col items-center gap-3 pb-6 lg:gap-4"
+            aria-label="Footer Navigation"
+          >
+            <ul className="mx-auto grid w-full max-w-[24rem] grid-cols-2 gap-3 lg:flex lg:max-w-none lg:flex-nowrap lg:justify-center lg:gap-4">
               {navItems.map((item, index) => {
                 const isLastOddItem = navItems.length % 2 === 1 && index === navItems.length - 1;
                 return (
-                <li
-                  key={item.href}
-                  className={cn(
-                    isLastOddItem
-                      ? "col-span-2 flex justify-center lg:basis-full lg:justify-center"
-                      : "w-full lg:w-auto",
-                  )}
-                >
-                  <Link
-                    href={item.href}
-                    className="text-foreground/85 hover:text-foreground hover:border-primary/35 hover:bg-card/75 inline-flex w-full justify-center rounded-full border border-border/70 bg-card/55 px-4 py-2.5 text-base font-semibold tracking-wide uppercase transition-colors lg:w-auto"
+                  <li
+                    key={item.href}
+                    className={cn(
+                      isLastOddItem
+                        ? "col-span-2 flex justify-center lg:col-span-1 lg:inline-flex"
+                        : "w-full lg:w-auto",
+                    )}
                   >
-                    {item.label}
-                  </Link>
-                </li>
-              );
+                    <Link
+                      href={item.href}
+                      className="text-foreground/85 hover:text-foreground hover:border-primary/35 hover:bg-card/75 inline-flex w-full justify-center rounded-full border border-border/70 bg-card/55 px-4 py-2.5 text-base font-semibold tracking-wide uppercase transition-colors lg:w-auto"
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                );
               })}
-              <li className="col-span-2 w-full lg:col-span-1 lg:w-auto">
-                <Link
-                  href={settings.appUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-primary text-primary-foreground hover:bg-primary/85 inline-flex w-full justify-center rounded-full px-4 py-2.5 text-base font-semibold tracking-wide uppercase transition-colors lg:w-auto"
-                >
-                  Zur App
-                </Link>
-              </li>
             </ul>
+            <div className="mx-auto flex w-full max-w-[24rem] justify-center lg:max-w-none">
+              <Link
+                href={settings.appUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-primary text-primary-foreground hover:bg-primary/85 inline-flex w-full justify-center rounded-full px-4 py-2.5 text-base font-semibold tracking-wide uppercase transition-colors lg:w-auto lg:min-w-[12.5rem] lg:px-8"
+              >
+                Zur App
+              </Link>
+            </div>
           </nav>
           <nav
             className="relative z-20 flex w-full flex-col items-center pb-8"

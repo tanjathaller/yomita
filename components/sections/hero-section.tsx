@@ -3,6 +3,7 @@ import { ArrowRight } from "lucide-react";
 
 import type { HeroSection as HeroModel } from "@/types/site-content";
 
+import { ResponsiveSiteImage } from "@/components/shared/responsive-site-image";
 import { SectionWaveBottom } from "@/components/shared/section-wave";
 import {
   buttonTrailingArrowClassName,
@@ -44,20 +45,11 @@ export function HeroSection({
             data-hero-media
             className="relative min-h-[280px] h-[76vh] w-full max-h-[36rem] overflow-hidden rounded-t-3xl rounded-b-none border-0 bg-[var(--surface-muted-band)] ring-0 lg:h-[min(52vh,38rem)] lg:max-h-[40rem] xl:h-[min(56vh,42rem)] xl:max-h-[42rem]"
           >
-            <picture>
-              <source
-                media="(min-width: 585px)"
-                srcSet="/images/tanja-10-mobile.webp"
-                type="image/webp"
-              />
-              <img
-                src="/images/tanja-10-mobile.webp"
-                alt={hero.imageAlt}
-                className="absolute -inset-[9.5%] block h-[119%] w-[119%] max-h-none max-w-none translate-x-[4.5%] border-0 object-cover object-[center_33%] p-0 outline-none ring-0 lg:-inset-[6.5%] lg:h-[113%] lg:w-[113%] lg:translate-x-[3.5%]"
-                decoding="async"
-                fetchPriority="high"
-              />
-            </picture>
+            <ResponsiveSiteImage
+              image={hero.backgroundImage}
+              priority
+              imgClassName="absolute -inset-[9.5%] block h-[119%] w-[119%] max-h-none max-w-none translate-x-[4.5%] border-0 object-cover object-[center_33%] p-0 outline-none ring-0 lg:-inset-[6.5%] lg:h-[113%] lg:w-[113%] lg:translate-x-[3.5%]"
+            />
             <div
               className="absolute inset-0 border-0 bg-[rgba(40,54,38,0.24)] ring-0"
               aria-hidden
