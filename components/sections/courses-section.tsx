@@ -12,11 +12,11 @@ import { cn } from "@/lib/utils";
 
 const courseGridClass = cn(
   "flex flex-col gap-4",
-  "lg:flex-row lg:flex-wrap lg:items-start lg:justify-center lg:gap-6 xl:gap-8",
+  "lg:flex-row lg:flex-wrap lg:items-center lg:justify-center lg:gap-6 xl:gap-8",
 );
 
 const courseGridItemClass = cn(
-  "flex min-w-0 w-full flex-col lg:self-start",
+  "flex min-w-0 w-full flex-col",
   "lg:flex-[0_0_calc((100%_-_1.5rem)/2)]",
   "xl:flex-[0_0_calc((100%_-_2rem)/2)]",
 );

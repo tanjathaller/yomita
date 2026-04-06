@@ -11,6 +11,56 @@ import {
 } from "@/components/ui/button-variants";
 import { cn } from "@/lib/utils";
 
+/** Kleine organische Linie neben der Hero-Eyebrow (nur Desktop, auf dunklem Kartenfeld). */
+function HeroEyebrowFlourish({ className }: { className?: string }) {
+  return (
+    <svg
+      className={cn("h-2.5 w-[3.25rem] shrink-0 text-primary-foreground/45", className)}
+      viewBox="0 0 52 10"
+      fill="none"
+      aria-hidden
+    >
+      <path
+        d="M1 5.5c6.5-2.8 13.2 2.4 20 1.2 6.5-1.1 12.8-3.8 19.5-2.6 3.8.7 7.5 2.4 11.5 2.8"
+        stroke="currentColor"
+        strokeWidth="1.15"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+/** Helle Wellenlinien über dem unteren Bildbereich (nur Desktop). */
+function HeroPhotoWaves({ className }: { className?: string }) {
+  return (
+    <svg
+      className={cn(
+        "pointer-events-none absolute inset-x-0 bottom-[8%] z-[4] h-[32%] min-h-[4.5rem] text-primary-foreground/95",
+        className,
+      )}
+      viewBox="0 0 400 120"
+      fill="none"
+      preserveAspectRatio="xMidYMax meet"
+      aria-hidden
+    >
+      <path
+        d="M-20 88 C 60 72 100 104 180 90 C 260 76 300 98 420 82"
+        stroke="currentColor"
+        strokeWidth="2.25"
+        strokeLinecap="round"
+        opacity={0.92}
+      />
+      <path
+        d="M-10 102 C 70 118 130 78 210 96 C 290 114 340 84 430 100"
+        stroke="currentColor"
+        strokeWidth="1.65"
+        strokeLinecap="round"
+        opacity={0.72}
+      />
+    </svg>
+  );
+}
+
 type HeroSectionProps = {
   hero: HeroModel;
   /** Erscheint als dezente Zeile über der Headline (z. B. Marken- oder Studioname). */
@@ -31,57 +81,61 @@ export function HeroSection({
   return (
     <section
       id="hero"
-      className="relative scroll-mt-[calc(var(--site-header-clearance-mobile)+0.5rem)] bg-[var(--surface-muted-band)] pb-16 lg:scroll-mt-[calc(var(--site-header-clearance)+0.5rem)] lg:pb-[5rem] xl:pb-24"
+      className="relative scroll-mt-[calc(var(--site-header-clearance-mobile)+0.5rem)] bg-[var(--surface-muted-band)] pb-16 lg:scroll-mt-[calc(var(--site-header-clearance)+0.5rem)] lg:pb-12 xl:pb-14"
     >
-      <div className="relative z-10 mx-auto max-w-6xl bg-[var(--surface-muted-band)] px-4 pt-0 pb-0 lg:px-8 lg:pt-4 xl:max-w-7xl xl:px-10 xl:pt-6">
+      <div
+        className="pointer-events-none absolute inset-0 z-0 hidden overflow-hidden lg:block"
+        aria-hidden
+      >
+        <div className="absolute -left-[18%] top-[6%] h-[min(28rem,48vh)] w-[min(34rem,48vw)] rounded-full bg-[radial-gradient(circle_at_center,color-mix(in_oklab,var(--primary)_10%,transparent)_0%,transparent_72%)] opacity-75 blur-3xl" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-6xl bg-[var(--surface-muted-band)] px-4 pt-0 pb-0 lg:bg-transparent lg:px-8 lg:pt-2 xl:max-w-7xl xl:px-10 xl:pt-3">
         <div
           data-hero-shell
           className={cn(
             "relative w-full overflow-hidden rounded-t-3xl rounded-b-none border-0 bg-[var(--surface-muted-band)] shadow-none outline-none ring-0",
+            "lg:flex lg:items-start lg:justify-start lg:gap-0 lg:overflow-visible lg:rounded-none lg:bg-transparent lg:py-3 xl:py-4",
           )}
         >
-          {/* Explizite Höhen (ohne min() mit Komma in Tailwind-Arbitrary) — sonst kann die Box 0px hoch werden */}
-          <div
-            data-hero-media
-            className="relative min-h-[280px] h-[76vh] w-full max-h-[36rem] overflow-hidden rounded-t-3xl rounded-b-none border-0 bg-[var(--surface-muted-band)] ring-0 lg:h-[min(52vh,38rem)] lg:max-h-[40rem] xl:h-[min(56vh,42rem)] xl:max-h-[42rem]"
-          >
-            <ResponsiveSiteImage
-              image={hero.backgroundImage}
-              priority
-              imgClassName="absolute -inset-[9.5%] block h-[119%] w-[119%] max-h-none max-w-none translate-x-[4.5%] border-0 object-cover object-[center_33%] p-0 outline-none ring-0 lg:-inset-[6.5%] lg:h-[113%] lg:w-[113%] lg:translate-x-[3.5%]"
-            />
+          {/* Text: mobil Overlay; Desktop = Primary-Block inkl. schmalem rechten Steg (gleiche Höhe), Bild direkt anschließend */}
+          <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-end lg:pointer-events-auto lg:relative lg:inset-auto lg:z-20 lg:min-w-0 lg:flex-1 lg:justify-start lg:self-start lg:py-0">
             <div
-              className="absolute inset-0 border-0 bg-[rgba(40,54,38,0.24)] ring-0"
-              aria-hidden
-            />
-            <div
-              className="absolute inset-0 border-0 bg-gradient-to-t from-[rgba(34,48,34,0.38)] via-[rgba(44,60,43,0.2)] to-[rgba(58,76,56,0.07)] ring-0"
-              aria-hidden
-            />
-            <div
-              className="pointer-events-none absolute inset-x-0 -bottom-[2px] z-[6] h-52 border-0 ring-0 lg:h-72"
-              style={{
-                background:
-                  "linear-gradient(to top, var(--surface-muted-band) 0%, color-mix(in oklab, var(--surface-muted-band) 90%, transparent) 34%, color-mix(in oklab, var(--surface-muted-band) 52%, transparent) 64%, transparent 100%)",
-                maskImage: "linear-gradient(to top, black 0%, black 88%, transparent 100%)",
-                WebkitMaskImage:
-                  "linear-gradient(to top, black 0%, black 88%, transparent 100%)",
-              }}
-              aria-hidden
-            />
-          </div>
-
-          <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-end">
-            <div className="pointer-events-auto max-w-2xl space-y-4 p-6 lg:space-y-5 lg:p-10 xl:max-w-3xl xl:space-y-6">
-              {eyebrow ? (
-                <p className="font-heading text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-white/75 drop-shadow-[0_1px_12px_rgba(0,0,0,0.45)] lg:text-xs">
-                  {eyebrow}
-                </p>
+              className={cn(
+                "max-w-2xl space-y-4 p-6",
+                "lg:flex lg:w-full lg:max-w-none lg:items-stretch lg:gap-0 lg:space-y-0 lg:overflow-hidden lg:rounded-l-2xl lg:rounded-r-none lg:bg-primary lg:p-0 lg:shadow-[0_20px_48px_-24px_rgba(25,38,26,0.5)]",
+                "xl:rounded-l-[1.35rem] xl:rounded-r-none",
+              )}
+            >
+              <div className="space-y-4 lg:flex-1 lg:min-w-0 lg:space-y-4 lg:p-7 lg:pr-6 lg:text-primary-foreground xl:space-y-5 xl:p-8 xl:pr-7">
+                {eyebrow ? (
+                <div className="lg:flex lg:items-center lg:gap-3">
+                  <HeroEyebrowFlourish className="hidden lg:block" />
+                  <p
+                    className={cn(
+                      "font-heading text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-white/75 drop-shadow-[0_1px_12px_rgba(0,0,0,0.45)] lg:text-xs",
+                      "lg:text-primary-foreground/70 lg:drop-shadow-none",
+                    )}
+                  >
+                    {eyebrow}
+                  </p>
+                </div>
               ) : null}
-              <h1 className="font-heading text-balance text-4xl font-bold leading-[1.08] tracking-tight text-white drop-shadow-[0_2px_28px_rgba(0,0,0,0.45)] lg:text-6xl xl:text-[3.5rem] xl:leading-[1.06]">
+              <h1
+                className={cn(
+                  "font-heading text-balance text-4xl font-bold leading-[1.08] tracking-tight text-white drop-shadow-[0_2px_28px_rgba(0,0,0,0.45)] lg:text-5xl xl:text-[3.1rem]",
+                  "lg:drop-shadow-none lg:leading-[1.06] lg:tracking-[-0.02em] lg:text-primary-foreground",
+                  "lg:[font-family:var(--font-hero-display),ui-serif,Georgia,serif] lg:font-semibold",
+                )}
+              >
                 {hero.title}
               </h1>
-              <p className="max-w-xl text-pretty text-lg leading-relaxed text-white/95 drop-shadow-[0_1px_16px_rgba(0,0,0,0.4)] lg:text-xl lg:leading-relaxed xl:max-w-2xl xl:text-[1.35rem] xl:leading-relaxed">
+              <p
+                className={cn(
+                  "max-w-xl text-pretty text-lg leading-relaxed text-white/95 drop-shadow-[0_1px_16px_rgba(0,0,0,0.4)] lg:text-[1.05rem] lg:leading-relaxed xl:text-[1.15rem]",
+                  "lg:border-l-2 lg:border-primary-foreground/25 lg:pl-5 lg:text-primary-foreground/88 lg:drop-shadow-none",
+                )}
+              >
                 {hero.claim}
               </p>
               <div className="flex flex-wrap items-center gap-3 pt-1">
@@ -89,7 +143,8 @@ export function HeroSection({
                   href={hero.primaryCtaUrl}
                   className={cn(
                     buttonVariants({ variant: "hero", size: "lg" }),
-                    "min-h-11 gap-2 px-5 text-base font-semibold lg:min-h-12 lg:px-6 lg:text-[1.05rem]",
+                    "min-h-11 gap-2 px-5 text-base font-semibold lg:min-h-11 lg:px-6 lg:text-[1rem]",
+                    "lg:rounded-full lg:bg-primary-foreground lg:text-primary lg:shadow-md lg:ring-0 lg:hover:bg-primary-foreground/92 lg:hover:text-primary lg:hover:shadow-lg lg:focus-visible:border-primary-foreground/50 lg:focus-visible:ring-primary-foreground/40 lg:focus-visible:ring-offset-2 lg:focus-visible:ring-offset-primary",
                   )}
                 >
                   {hero.primaryCtaLabel}
@@ -99,8 +154,81 @@ export function HeroSection({
                   />
                 </Link>
               </div>
+              </div>
+              {/* Rechter Steg: dieselbe Primary-Fläche wie die Karte (items-stretch) */}
+              <div aria-hidden className="hidden w-3 shrink-0 lg:block xl:w-3.5" />
             </div>
           </div>
+
+          {/*
+            Wichtig: feste Breite (flex-none + basis), sonst kollabiert die Spalte bei absolute img/picture auf 0px
+            → nur noch das grüne Panel sichtbar.
+            Nur Desktop: etwas weiter nach links über den Primary-Bereich (-ml); Mobil unverändert.
+          */}
+          <div
+            className={cn(
+              "relative z-[1] w-full shrink-0 lg:z-30",
+              "lg:-ml-[6rem] lg:-mt-2.5 lg:-mr-2 lg:w-[min(20rem,34vw)] lg:min-w-[17.5rem] lg:max-w-[20rem] lg:flex-none lg:basis-[min(20rem,34vw)]",
+              "xl:-ml-[7rem] xl:-mt-3 xl:-mr-2.5 xl:w-[min(22rem,32vw)] xl:min-w-[19rem] xl:max-w-[22rem] xl:basis-[min(22rem,32vw)]",
+            )}
+          >
+            <div
+              data-hero-media
+              className={cn(
+                "relative min-h-[280px] h-[76vh] w-full max-h-[36rem] overflow-hidden rounded-t-3xl rounded-b-none border-0 bg-[var(--surface-muted-band)] ring-0",
+                "lg:my-0 lg:h-[clamp(17.5rem,48vh,26rem)] lg:min-h-[17.5rem] lg:max-h-[26rem] lg:w-full lg:rounded-2xl lg:rounded-bl-none lg:shadow-[0_24px_56px_-28px_rgba(25,38,26,0.38)] lg:ring-2 lg:ring-primary-foreground/20",
+                "xl:h-[clamp(18rem,50vh,28rem)] xl:max-h-[28rem] xl:rounded-[1.35rem] xl:rounded-bl-none",
+              )}
+            >
+              <div className="absolute inset-0 overflow-hidden rounded-[inherit]">
+                <ResponsiveSiteImage
+                  image={hero.backgroundImage}
+                  priority
+                  pictureClassName="absolute inset-0 block h-full w-full"
+                  imgClassName={cn(
+                    "block h-full w-full border-0 object-cover p-0 outline-none ring-0",
+                    "max-lg:absolute max-lg:max-h-none max-lg:max-w-none max-lg:-inset-[9.5%] max-lg:h-[119%] max-lg:w-[119%] max-lg:translate-x-[4.5%] max-lg:object-[center_33%]",
+                    "lg:static lg:translate-x-0 lg:object-[center_28%]",
+                  )}
+                />
+              </div>
+              <HeroPhotoWaves className="hidden lg:block" />
+              <div
+                className="absolute inset-0 border-0 bg-[rgba(40,54,38,0.24)] ring-0 lg:hidden"
+                aria-hidden
+              />
+              <div
+                className="absolute inset-0 border-0 bg-gradient-to-t from-[rgba(34,48,34,0.38)] via-[rgba(44,60,43,0.2)] to-[rgba(58,76,56,0.07)] ring-0 lg:hidden"
+                aria-hidden
+              />
+              <div
+                className="pointer-events-none absolute inset-x-0 -bottom-[2px] z-[6] h-52 border-0 ring-0 md:h-64 lg:h-56 xl:h-64"
+                style={{
+                  background:
+                    "linear-gradient(to top, var(--surface-muted-band) 0%, color-mix(in oklab, var(--surface-muted-band) 90%, transparent) 34%, color-mix(in oklab, var(--surface-muted-band) 52%, transparent) 64%, transparent 100%)",
+                  maskImage: "linear-gradient(to top, black 0%, black 88%, transparent 100%)",
+                  WebkitMaskImage:
+                    "linear-gradient(to top, black 0%, black 88%, transparent 100%)",
+                }}
+                aria-hidden
+              />
+            </div>
+          </div>
+
+          {/*
+            Eigener Flex-Nachbar rechts vom Bild — nicht Kind der Primary-Karte, sonst verdeckt z-30 das
+            gesamte Karten-Substacking inkl. absolutem Schweif.
+            Höhe orientiert an typischer Textkarte (~20–21rem), nicht an Bildhöhe.
+          */}
+          <div
+            aria-hidden
+            className={cn(
+              "pointer-events-none relative z-20 hidden shrink-0 lg:block lg:self-start",
+              "lg:w-10 lg:rounded-r-xl lg:rounded-tl-none lg:bg-primary lg:shadow-[0_12px_32px_-20px_rgba(25,38,26,0.28)]",
+              "lg:h-[20.25rem]",
+              "xl:w-12 xl:h-[21rem] xl:rounded-r-[1.1rem]",
+            )}
+          />
         </div>
       </div>
       {waveInto ? <SectionWaveBottom from="muted-band" into={waveInto} /> : null}
