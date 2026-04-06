@@ -1,5 +1,5 @@
 {
-  "syncedAt": "2026-04-05T12:57:04.618Z",
+  "syncedAt": "2026-04-06T07:43:08.631Z",
   "courses": [
     {
       "id": "b5ed1825-ce20-4303-9d22-1e9e833bc43d",
@@ -154,6 +154,20 @@
       "remainingSpots": 1,
       "sortOrder": 110,
       "startsOn": "2026-05-13"
+    },
+    {
+      "id": "51f56177-d67c-4b49-9154-009bcef0e046",
+      "type": "internal",
+      "title": "Yoga am Dienstag",
+      "description": "Vinyasa für Fortgeschrittene",
+      "day": "26.05.2026",
+      "time": "18:00–19:30 (90 Min.)",
+      "location": "Gagelweg",
+      "bookingStatus": "available",
+      "price": "12,00 €",
+      "remainingSpots": 8,
+      "sortOrder": 120,
+      "startsOn": "2026-05-26"
     }
   ]
 }
