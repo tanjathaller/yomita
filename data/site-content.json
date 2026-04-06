@@ -70,8 +70,7 @@
         "anchor": "kontakt"
       },
       "sortOrder": 10,
-      "type": "internal",
-      "scheduleNote": "wöchentlich"
+      "type": "internal"
     },
     {
       "id": "course-yin-yang-so",
@@ -82,9 +81,15 @@
       "location": "Yoga Sanskriti in Düsseldorf",
       "bookingStatus": "available",
       "bookingBadgeLabel": "Anmeldung über Yoga Sanskriti",
+      "bookingBadgeLink": {
+        "enabled": true,
+        "kind": "url",
+        "url": "https://yogasanskriti.de/"
+      },
       "sortOrder": 20,
-      "type": "internal",
-      "scheduleNote": "Anmeldung direkt über www.yogasanskriti.de."
+      "type": "external",
+      "externalUrl": "https://yogasanskriti.de/",
+      "externalLinkLabel": "Zur Website von Yoga Sanskriti"
     }
   ],
   "prices": [

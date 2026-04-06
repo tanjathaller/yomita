@@ -65,6 +65,11 @@ export type InternalCourse = BaseCourse & {
 export type ExternalCourse = BaseCourse & {
   type: "external";
   externalUrl: string;
+  /**
+   * Text des Link-Buttons unter der Kursbeschreibung.
+   * Leer oder fehlend → öffentliche Seite zeigt „Zur Anbieter-Seite“.
+   */
+  externalLinkLabel?: string;
 };
 
 export type Course = InternalCourse | ExternalCourse;

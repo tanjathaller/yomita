@@ -83,6 +83,7 @@ const internalCourseSchema = baseCourseSchema.extend({
 const externalCourseSchema = baseCourseSchema.extend({
   type: z.literal("external"),
   externalUrl: z.string().min(1),
+  externalLinkLabel: z.string().min(1).optional(),
 });
 
 export const courseSchema = z.discriminatedUnion("type", [

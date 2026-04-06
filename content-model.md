@@ -145,9 +145,10 @@ Kein Feld `externalUrl`.
 
 ### Externer Kurs (`type: "external"`)
 
-| Feld           | Typ    | Beschreibung |
-|----------------|--------|--------------|
-| `externalUrl`  | string | Pflicht; Link zur Anbieter-Seite o. Ä. |
+| Feld                 | Typ     | Beschreibung |
+|----------------------|---------|--------------|
+| `externalUrl`        | string  | Pflicht; Link zur Anbieter-Seite o. Ä. |
+| `externalLinkLabel`  | string? | optional; Text des Buttons unter der Karte (leer → „Zur Anbieter-Seite“) |
 
 ---
 

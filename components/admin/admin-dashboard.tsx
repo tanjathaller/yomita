@@ -2816,6 +2816,9 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                                 externalUrl: isExternalCourse(cur)
                                                   ? cur.externalUrl
                                                   : "https://",
+                                                externalLinkLabel: isExternalCourse(cur)
+                                                  ? cur.externalLinkLabel
+                                                  : undefined,
                                               };
                                         return replaceCourseInDraft(prev, courseId, next);
                                       });
@@ -2825,6 +2828,59 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                     <option value="external">Extern mit URL</option>
                                   </select>
                                 </div>
+                                {external ? (
+                                  <div className="space-y-2">
+                                    <div className="grid gap-3 sm:grid-cols-2 sm:items-start">
+                                      <div className="space-y-2">
+                                        <Label htmlFor={`course-external-label-${courseId}`}>
+                                          Button-Text (Link)
+                                        </Label>
+                                        <Input
+                                          id={`course-external-label-${courseId}`}
+                                          value={course.externalLinkLabel ?? ""}
+                                          placeholder="Zur Anbieter-Seite"
+                                          onChange={(event) => {
+                                            const v = event.target.value;
+                                            setDraft((prev) => {
+                                              const cur = prev.courses.find((c) => c.id === courseId)!;
+                                              if (!isExternalCourse(cur)) return prev;
+                                              return replaceCourseInDraft(prev, courseId, {
+                                                ...cur,
+                                                externalLinkLabel:
+                                                  v.trim() === "" ? undefined : v,
+                                              });
+                                            });
+                                          }}
+                                        />
+                                      </div>
+                                      <div className="space-y-2">
+                                        <Label htmlFor={`course-url-${courseId}`}>URL</Label>
+                                        <Input
+                                          id={`course-url-${courseId}`}
+                                          type="url"
+                                          inputMode="url"
+                                          autoComplete="url"
+                                          value={course.externalUrl}
+                                          placeholder="https://…"
+                                          onChange={(event) => {
+                                            const v = event.target.value;
+                                            setDraft((prev) => {
+                                              const cur = prev.courses.find((c) => c.id === courseId)!;
+                                              if (!isExternalCourse(cur)) return prev;
+                                              return replaceCourseInDraft(prev, courseId, {
+                                                ...cur,
+                                                externalUrl: v,
+                                              });
+                                            });
+                                          }}
+                                        />
+                                      </div>
+                                    </div>
+                                    <p className="text-muted-foreground text-xs">
+                                      Button-Text: leer lassen = auf der Website „Zur Anbieter-Seite“.
+                                    </p>
+                                  </div>
+                                ) : null}
                                 <div className="space-y-2">
                                   <Label htmlFor={`course-title-${courseId}`}>Titel</Label>
                                   <Input
@@ -2983,28 +3039,6 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                       });
                                     }}
                                   />
-                                ) : null}
-                                {external ? (
-                                  <div className="space-y-2">
-                                    <Label htmlFor={`course-url-${courseId}`}>
-                                      Anbieter-URL (extern)
-                                    </Label>
-                                    <Input
-                                      id={`course-url-${courseId}`}
-                                      value={course.externalUrl}
-                                      onChange={(event) => {
-                                        const v = event.target.value;
-                                        setDraft((prev) => {
-                                          const cur = prev.courses.find((c) => c.id === courseId)!;
-                                          if (!isExternalCourse(cur)) return prev;
-                                          return replaceCourseInDraft(prev, courseId, {
-                                            ...cur,
-                                            externalUrl: v,
-                                          });
-                                        });
-                                      }}
-                                    />
-                                  </div>
                                 ) : null}
                               </CardContent>
                               <CardFooter className="flex justify-end border-border/70 bg-muted/35 px-4 py-3">

@@ -108,9 +108,14 @@ export function CourseRow({ course }: { course: Course }) {
               href={course.externalUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+              className={cn(
+                buttonVariants({ variant: "outline", size: "sm" }),
+                "border-[#6F8B63]/40 bg-background text-[#2F3B2A] transition-colors hover:border-[#6F8B63] hover:bg-[#7A956E] hover:text-white",
+              )}
             >
-              Zur Anbieter-Seite
+              {course.externalLinkLabel?.trim()
+                ? course.externalLinkLabel.trim()
+                : "Zur Anbieter-Seite"}
             </Link>
           ) : null}
         </div>
