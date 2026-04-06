@@ -18,11 +18,16 @@ function MetaRow({
   className?: string;
 }) {
   return (
-    <div className={cn("min-w-0", className)}>
+    <div
+      className={cn(
+        "min-w-0 max-lg:flex max-lg:min-h-0 max-lg:flex-col max-lg:gap-0.5",
+        className,
+      )}
+    >
       <dt className="text-muted-foreground text-[0.65rem] font-medium uppercase tracking-wider">
         {label}
       </dt>
-      <dd className="text-[#2F3B2A] mt-0.5 min-w-0 text-sm leading-snug break-words">
+      <dd className="text-[#2F3B2A] mt-0.5 min-w-0 text-sm leading-snug break-words max-lg:mt-0 max-lg:text-[0.9375rem] max-lg:leading-relaxed">
         {children}
       </dd>
     </div>
@@ -72,24 +77,43 @@ export function YogaflowSeriesCourseCard({
         </div>
         <dl
           className={cn(
-            "grid min-w-0 w-full grid-cols-2 gap-x-3 gap-y-2.5 border-border/50 border-t pt-2.5",
-            "@min-[22rem]/card-header:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] @min-[22rem]/card-header:items-start @min-[22rem]/card-header:gap-x-4 @min-[22rem]/card-header:gap-y-0",
-            "@min-[30rem]/card-header:gap-x-6",
+            "grid min-w-0 w-full border-border/50 border-t pt-2.5",
+            // Mobil & schmale Viewports: eine Spalte, gleichmäßiger Rhythmus (kein Zwei-Spalten-Zickzack)
+            "grid-cols-1 gap-y-3.5",
+            // Desktop (lg+): bisheriges Raster inkl. Container-Queries unverändert
+            "lg:grid-cols-2 lg:gap-x-3 lg:gap-y-2.5",
+            "lg:@min-[22rem]/card-header:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(0,1fr)] lg:@min-[22rem]/card-header:items-start lg:@min-[22rem]/card-header:gap-x-4 lg:@min-[22rem]/card-header:gap-y-0",
+            "lg:@min-[30rem]/card-header:gap-x-6",
             "lg:border-border/40 lg:pt-3.5",
           )}
         >
           {series.price ? (
-            <MetaRow label="Preis" className="col-span-2 lg:hidden">
+            <MetaRow label="Preis" className="lg:col-span-2 lg:hidden">
               <span className="font-semibold tabular-nums text-base">
                 {series.price}
               </span>
             </MetaRow>
           ) : null}
-          <MetaRow label="Wochentag">{series.day}</MetaRow>
-          <MetaRow label="Zeit">{series.time}</MetaRow>
+          <div
+            className={cn(
+              "min-w-0 max-lg:col-span-full",
+              // Mobil: Wochentag + Zeit nebeneinander, sobald die Kartenbreite es zulässt
+              "max-lg:grid max-lg:grid-cols-1 max-lg:items-start max-lg:gap-x-4 max-lg:gap-y-2.5",
+              "max-lg:@min-[18rem]/card-header:grid-cols-2 max-lg:@min-[18rem]/card-header:gap-y-0",
+              // Desktop: Kinder direkt im <dl>-Raster wie zuvor
+              "lg:contents",
+            )}
+          >
+            <MetaRow label="Wochentag" className="min-w-0">
+              {series.day}
+            </MetaRow>
+            <MetaRow label="Zeit" className="min-w-0">
+              {series.time}
+            </MetaRow>
+          </div>
           <MetaRow
             label="Ort"
-            className="col-span-2 @min-[22rem]/card-header:col-span-1"
+            className="lg:col-span-2 lg:@min-[22rem]/card-header:col-span-1"
           >
             {series.location}
           </MetaRow>
