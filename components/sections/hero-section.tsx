@@ -187,8 +187,8 @@ export function HeroSection({
               data-hero-media
               className={cn(
                 "relative min-h-[280px] h-[76vh] w-full max-h-[36rem] overflow-hidden rounded-t-3xl rounded-b-none border-0 bg-[var(--surface-muted-band)] ring-0",
-                "lg:my-0 lg:h-[clamp(19.5rem,54vh,30rem)] lg:min-h-[19.5rem] lg:max-h-[30rem] lg:w-full lg:rounded-2xl lg:rounded-bl-none lg:shadow-[0_24px_56px_-28px_rgba(25,38,26,0.38)] lg:ring-2 lg:ring-primary-foreground/20",
-                "xl:h-[clamp(21rem,56vh,32rem)] xl:max-h-[32rem] xl:rounded-[1.35rem] xl:rounded-bl-none",
+                "lg:my-0 lg:h-[clamp(19.5rem,54vh,30rem)] lg:min-h-[19.5rem] lg:max-h-[30rem] lg:w-full lg:rounded-2xl lg:rounded-bl-none lg:shadow-xl lg:shadow-[#2F3B2A]/12 lg:ring-2 lg:ring-[#D8C9AF]/45",
+                "xl:h-[clamp(21rem,56vh,32rem)] xl:max-h-[32rem] xl:rounded-[1.35rem] xl:rounded-bl-none xl:ring-[#D8C9AF]/55",
               )}
             >
               <div className="absolute inset-0 overflow-hidden rounded-[inherit]">
@@ -203,6 +203,18 @@ export function HeroSection({
                   )}
                 />
               </div>
+              {/*
+                Nur Desktop: dezenter Rahmen wie mobil im Über-mich-Bild — Border oben/seitlich, per Mask nach unten ausgeblendet.
+              */}
+              <div
+                aria-hidden
+                className={cn(
+                  "pointer-events-none absolute inset-x-0 top-0 z-[3] hidden h-[62%] border-2 border-b-0 border-[#2F3B2A]",
+                  "[mask-image:linear-gradient(to_bottom,black_0%,black_35%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_35%,transparent_100%)]",
+                  "rounded-t-2xl rounded-br-2xl rounded-bl-none lg:block",
+                  "xl:rounded-t-[1.35rem] xl:rounded-br-[1.35rem]",
+                )}
+              />
               <HeroPhotoWaves className="hidden lg:block" />
               <div
                 className="absolute inset-0 border-0 bg-[rgba(40,54,38,0.24)] ring-0 lg:hidden"
