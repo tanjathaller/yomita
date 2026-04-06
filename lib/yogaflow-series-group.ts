@@ -18,6 +18,7 @@ export const DEFAULT_YOGAFLOW_COURSE_SERIES: YogaflowCourseSeries[] = [
     time: "18:00–19:30 (90 Min.)",
     location: "Neuss",
     price: "12,00 €",
+    bookingBadgeLabel: "Buchung über die App",
   },
   {
     id: "series-yoga-mittwoch",
@@ -29,6 +30,7 @@ export const DEFAULT_YOGAFLOW_COURSE_SERIES: YogaflowCourseSeries[] = [
     time: "18:00–19:30 (90 Min.)",
     location: "Neuss",
     price: "12,00 €",
+    bookingBadgeLabel: "Buchung über die App",
   },
 ];
 

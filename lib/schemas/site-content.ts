@@ -82,6 +82,7 @@ export const yogaflowCourseSeriesSchema = z.object({
   location: z.string().min(1),
   price: z.string().optional(),
   scheduleNote: z.string().optional(),
+  bookingBadgeLabel: z.string().min(1).optional(),
 });
 
 export const generalSettingsSchema = z.object({

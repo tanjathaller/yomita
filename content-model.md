@@ -226,6 +226,7 @@ Kein Feld `externalUrl`.
 | `time` | string | typische Uhrzeit auf der Karte |
 | `location` | string | Ort auf der Karte |
 | `price` | string? | optional |
+| `bookingBadgeLabel` | string? | Pill unter dem Titel (z. B. „Buchung über die App“); leer → Fallback „Buchung über die App“ auf der Website |
 | `scheduleNote` | string? | optional, Hinweis unter dem Kursstil |
 
 ---

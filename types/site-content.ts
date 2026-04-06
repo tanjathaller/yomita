@@ -116,6 +116,8 @@ export type YogaflowCourseSeries = {
   location: string;
   price?: string;
   scheduleNote?: string;
+  /** Pill unter dem Titel (z. B. „Buchung über die App“). */
+  bookingBadgeLabel?: string;
 };
 
 export type GeneralSettings = {

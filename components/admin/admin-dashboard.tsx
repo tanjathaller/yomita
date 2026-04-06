@@ -24,11 +24,13 @@ import {
 import { cn } from "@/lib/utils";
 import { DEFAULT_YOGAFLOW_COURSE_SERIES } from "@/lib/yogaflow-series-group";
 import type {
+  Course,
   NavItem,
   PriceItem,
   SiteContent,
   YogaflowCourseSeries,
 } from "@/types/site-content";
+import { isExternalCourse, isInternalCourse } from "@/types/site-content";
 import {
   AdminImageFieldLabel,
   AdminSortOrderLabelRow,
@@ -45,6 +47,12 @@ const DESKTOP_SAVE_FEEDBACK_VISIBLE_MS = 3000;
 const DESKTOP_SAVE_FEEDBACK_FADE_MS = 520;
 
 const MAX_ITEMS_PER_LIST = 10;
+const MAX_COURSES = 50;
+
+const adminSelectClass = cn(
+  "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-sm outline-none",
+  "focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
+);
 const LINK_TEXT_FALLBACK = "Linktext";
 const MARKDOWN_HISTORY_LIMIT = 120;
 const NEW_WINDOW_LINK_TITLE = "new-window";
@@ -115,6 +123,17 @@ function yogaflowSeriesList(
   return settings.yogaflowCourseSeries?.length
     ? settings.yogaflowCourseSeries
     : DEFAULT_YOGAFLOW_COURSE_SERIES;
+}
+
+function replaceCourseInDraft(
+  prev: SiteContent,
+  courseId: string,
+  next: Course,
+): SiteContent {
+  return {
+    ...prev,
+    courses: prev.courses.map((c) => (c.id === courseId ? next : c)),
+  };
 }
 
 function parseNumber(value: string): number {
@@ -1875,6 +1894,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                               day: "",
                               time: "",
                               location: "",
+                              bookingBadgeLabel: "Buchung über die App",
                             });
                             return {
                               ...prev,
@@ -1997,6 +2017,34 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                   });
                                 }}
                               />
+                            </div>
+                            <div className="space-y-2 sm:col-span-2">
+                              <Label>Badge-Text (Pill unter dem Titel)</Label>
+                              <Input
+                                value={series.bookingBadgeLabel ?? ""}
+                                placeholder="Buchung über die App"
+                                onChange={(event) => {
+                                  const v = event.target.value;
+                                  setDraft((prev) => {
+                                    const list = [...yogaflowSeriesList(prev.settings)];
+                                    list[index] = {
+                                      ...list[index]!,
+                                      bookingBadgeLabel:
+                                        v.trim() === "" ? undefined : v,
+                                    };
+                                    return {
+                                      ...prev,
+                                      settings: {
+                                        ...prev.settings,
+                                        yogaflowCourseSeries: list,
+                                      },
+                                    };
+                                  });
+                                }}
+                              />
+                              <p className="text-muted-foreground text-xs">
+                                Leer lassen = auf der Website erscheint „Buchung über die App“.
+                              </p>
                             </div>
                             <div className="space-y-2">
                               <AdminSortOrderLabelRow htmlFor={`series-sort-${series.id}`} />
@@ -2132,6 +2180,329 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                       ))}
                     </div>
                   </div>
+                  <div className="space-y-4 md:col-span-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <Label className="text-base">
+                        Manuelle Kurs-Karten (erscheinen nach den YogaFlow-Serien)
+                      </Label>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        disabled={draft.courses.length >= MAX_COURSES}
+                        onClick={() => {
+                          const newId = buildId("course");
+                          setDraft((prev) => ({
+                            ...prev,
+                            courses: [
+                              ...prev.courses,
+                              {
+                                id: newId,
+                                type: "internal",
+                                title: "Neuer Kurs",
+                                description: "",
+                                day: "",
+                                time: "",
+                                location: "",
+                                bookingStatus: "available",
+                                sortOrder: getNextSortOrder(prev.courses),
+                              },
+                            ],
+                          }));
+                        }}
+                      >
+                        Kurs hinzufügen
+                      </Button>
+                    </div>
+                    <div className="space-y-4">
+                      {[...draft.courses]
+                        .sort((a, b) => a.sortOrder - b.sortOrder)
+                        .map((course, displayIndex) => {
+                          const courseId = course.id;
+                          const internal = isInternalCourse(course);
+                          const external = isExternalCourse(course);
+                          return (
+                            <Card key={courseId} className="border-dashed">
+                              <CardHeader className="pb-2">
+                                <div className="flex flex-wrap items-start justify-between gap-2">
+                                  <CardTitle className="text-base">
+                                    Manuelle Karte {displayIndex + 1}
+                                    <span className="text-muted-foreground font-normal">
+                                      {" "}
+                                      ({course.title || courseId})
+                                    </span>
+                                  </CardTitle>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    className="text-destructive hover:text-destructive"
+                                    disabled={draft.courses.length === 0}
+                                    onClick={() => {
+                                      blurActiveElementBeforeDomRemoval();
+                                      setDraft((prev) => ({
+                                        ...prev,
+                                        courses: prev.courses.filter((c) => c.id !== courseId),
+                                      }));
+                                    }}
+                                  >
+                                    Entfernen
+                                  </Button>
+                                </div>
+                              </CardHeader>
+                              <CardContent className="grid gap-3 sm:grid-cols-2">
+                                <div className="space-y-2 sm:col-span-2">
+                                  <Label htmlFor={`course-type-${courseId}`}>Kurs-Typ</Label>
+                                  <select
+                                    id={`course-type-${courseId}`}
+                                    className={adminSelectClass}
+                                    value={course.type}
+                                    onChange={(event) => {
+                                      const t = event.target.value as "internal" | "external";
+                                      setDraft((prev) => {
+                                        const cur = prev.courses.find((c) => c.id === courseId)!;
+                                        const shared = {
+                                          id: cur.id,
+                                          title: cur.title,
+                                          description: cur.description,
+                                          day: cur.day,
+                                          time: cur.time,
+                                          location: cur.location,
+                                          bookingStatus: cur.bookingStatus,
+                                          sortOrder: cur.sortOrder,
+                                          price: cur.price,
+                                          remainingSpots: cur.remainingSpots,
+                                          bookingBadgeLabel: cur.bookingBadgeLabel,
+                                        };
+                                        const next: Course =
+                                          t === "internal"
+                                            ? {
+                                                ...shared,
+                                                type: "internal",
+                                                scheduleNote: isInternalCourse(cur)
+                                                  ? cur.scheduleNote
+                                                  : undefined,
+                                                startsOn: isInternalCourse(cur)
+                                                  ? cur.startsOn
+                                                  : undefined,
+                                                endsOn: isInternalCourse(cur)
+                                                  ? cur.endsOn
+                                                  : undefined,
+                                              }
+                                            : {
+                                                ...shared,
+                                                type: "external",
+                                                externalUrl: isExternalCourse(cur)
+                                                  ? cur.externalUrl
+                                                  : "https://",
+                                              };
+                                        return replaceCourseInDraft(prev, courseId, next);
+                                      });
+                                    }}
+                                  >
+                                    <option value="internal">Intern (ohne Anbieter-Link)</option>
+                                    <option value="external">Extern mit URL</option>
+                                  </select>
+                                </div>
+                                <div className="space-y-2 sm:col-span-2">
+                                  <Label htmlFor={`course-title-${courseId}`}>Titel</Label>
+                                  <Input
+                                    id={`course-title-${courseId}`}
+                                    value={course.title}
+                                    onChange={(event) => {
+                                      const v = event.target.value;
+                                      setDraft((prev) => {
+                                        const cur = prev.courses.find((c) => c.id === courseId)!;
+                                        return replaceCourseInDraft(prev, courseId, {
+                                          ...cur,
+                                          title: v,
+                                        });
+                                      });
+                                    }}
+                                  />
+                                </div>
+                                <div className="space-y-2 sm:col-span-2">
+                                  <Label htmlFor={`course-badge-${courseId}`}>
+                                    Badge-Text (Pill unter dem Titel)
+                                  </Label>
+                                  <Input
+                                    id={`course-badge-${courseId}`}
+                                    value={course.bookingBadgeLabel ?? ""}
+                                    placeholder="z. B. Probestunde auf Anfrage"
+                                    onChange={(event) => {
+                                      const v = event.target.value;
+                                      setDraft((prev) => {
+                                        const cur = prev.courses.find((c) => c.id === courseId)!;
+                                        return replaceCourseInDraft(prev, courseId, {
+                                          ...cur,
+                                          bookingBadgeLabel:
+                                            v.trim() === "" ? undefined : v,
+                                        });
+                                      });
+                                    }}
+                                  />
+                                  <p className="text-muted-foreground text-xs">
+                                    Wenn leer, nutzt die Karte den Buchungsstatus (Plätze frei /
+                                    Ausgebucht).
+                                  </p>
+                                </div>
+                                <div className="space-y-2 sm:col-span-2">
+                                  <Label>Kursstil / Beschreibung</Label>
+                                  <Textarea
+                                    rows={2}
+                                    value={course.description}
+                                    onChange={(event) => {
+                                      const v = event.target.value;
+                                      setDraft((prev) => {
+                                        const cur = prev.courses.find((c) => c.id === courseId)!;
+                                        return replaceCourseInDraft(prev, courseId, {
+                                          ...cur,
+                                          description: v,
+                                        });
+                                      });
+                                    }}
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <AdminSortOrderLabelRow htmlFor={`course-sort-${courseId}`} />
+                                  <Input
+                                    id={`course-sort-${courseId}`}
+                                    inputMode="numeric"
+                                    value={String(course.sortOrder)}
+                                    onChange={(event) => {
+                                      const n = parseNumber(event.target.value);
+                                      setDraft((prev) => {
+                                        const cur = prev.courses.find((c) => c.id === courseId)!;
+                                        return replaceCourseInDraft(prev, courseId, {
+                                          ...cur,
+                                          sortOrder: n,
+                                        });
+                                      });
+                                    }}
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor={`course-status-${courseId}`}>
+                                    Buchungsstatus (nur ohne Badge-Text)
+                                  </Label>
+                                  <select
+                                    id={`course-status-${courseId}`}
+                                    className={adminSelectClass}
+                                    value={course.bookingStatus}
+                                    onChange={(event) => {
+                                      const v = event.target.value as "available" | "full";
+                                      setDraft((prev) => {
+                                        const cur = prev.courses.find((c) => c.id === courseId)!;
+                                        return replaceCourseInDraft(prev, courseId, {
+                                          ...cur,
+                                          bookingStatus: v,
+                                        });
+                                      });
+                                    }}
+                                  >
+                                    <option value="available">available (Plätze frei)</option>
+                                    <option value="full">full (Ausgebucht)</option>
+                                  </select>
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor={`course-day-${courseId}`}>Wochentag-Zeile</Label>
+                                  <Input
+                                    id={`course-day-${courseId}`}
+                                    value={course.day}
+                                    onChange={(event) => {
+                                      const v = event.target.value;
+                                      setDraft((prev) => {
+                                        const cur = prev.courses.find((c) => c.id === courseId)!;
+                                        return replaceCourseInDraft(prev, courseId, {
+                                          ...cur,
+                                          day: v,
+                                        });
+                                      });
+                                    }}
+                                  />
+                                </div>
+                                <div className="space-y-2">
+                                  <Label htmlFor={`course-time-${courseId}`}>Zeit</Label>
+                                  <Input
+                                    id={`course-time-${courseId}`}
+                                    value={course.time}
+                                    onChange={(event) => {
+                                      const v = event.target.value;
+                                      setDraft((prev) => {
+                                        const cur = prev.courses.find((c) => c.id === courseId)!;
+                                        return replaceCourseInDraft(prev, courseId, {
+                                          ...cur,
+                                          time: v,
+                                        });
+                                      });
+                                    }}
+                                  />
+                                </div>
+                                <div className="space-y-2 sm:col-span-2">
+                                  <Label htmlFor={`course-loc-${courseId}`}>Ort</Label>
+                                  <Input
+                                    id={`course-loc-${courseId}`}
+                                    value={course.location}
+                                    onChange={(event) => {
+                                      const v = event.target.value;
+                                      setDraft((prev) => {
+                                        const cur = prev.courses.find((c) => c.id === courseId)!;
+                                        return replaceCourseInDraft(prev, courseId, {
+                                          ...cur,
+                                          location: v,
+                                        });
+                                      });
+                                    }}
+                                  />
+                                </div>
+                                {internal ? (
+                                  <div className="space-y-2 sm:col-span-2">
+                                    <Label>Hinweis unter Kursstil (optional)</Label>
+                                    <Textarea
+                                      rows={2}
+                                      value={course.scheduleNote ?? ""}
+                                      onChange={(event) => {
+                                        const v = event.target.value;
+                                        setDraft((prev) => {
+                                          const cur = prev.courses.find((c) => c.id === courseId)!;
+                                          if (!isInternalCourse(cur)) return prev;
+                                          return replaceCourseInDraft(prev, courseId, {
+                                            ...cur,
+                                            scheduleNote: v.trim() ? v : undefined,
+                                          });
+                                        });
+                                      }}
+                                    />
+                                  </div>
+                                ) : null}
+                                {external ? (
+                                  <div className="space-y-2 sm:col-span-2">
+                                    <Label htmlFor={`course-url-${courseId}`}>
+                                      Anbieter-URL (extern)
+                                    </Label>
+                                    <Input
+                                      id={`course-url-${courseId}`}
+                                      value={course.externalUrl}
+                                      onChange={(event) => {
+                                        const v = event.target.value;
+                                        setDraft((prev) => {
+                                          const cur = prev.courses.find((c) => c.id === courseId)!;
+                                          if (!isExternalCourse(cur)) return prev;
+                                          return replaceCourseInDraft(prev, courseId, {
+                                            ...cur,
+                                            externalUrl: v,
+                                          });
+                                        });
+                                      }}
+                                    />
+                                  </div>
+                                ) : null}
+                              </CardContent>
+                            </Card>
+                          );
+                        })}
+                    </div>
+                  </div>
                 </div>
                 <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
                   <strong className="text-foreground">YogaFlow:</strong> Termine kommen aus{" "}
@@ -2139,9 +2510,8 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                   optional Playwright für Restplätze, Secret{" "}
                   <code className="text-xs">YOGAFLOW_APP_URL</code>). Pro Serie eine Karte;
                   konkrete Daten und Status in der aufklappbaren Liste.{" "}
-                  <strong className="text-foreground">Manuelle Kurse</strong> (z. B. Zons,
-                  Düsseldorf) bleiben im Bereich „Kurse“ als <code className="text-xs">courses</code>{" "}
-                  – erscheinen auf der Seite nach den Serienkarten.
+                  <strong className="text-foreground">Manuelle Kurse</strong> lassen sich oben
+                  bearbeiten; auf der Seite erscheinen sie nach den Serienkarten.
                 </div>
               </div>
             ) : null}

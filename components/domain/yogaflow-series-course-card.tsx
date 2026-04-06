@@ -27,6 +27,8 @@ function MetaRow({
   );
 }
 
+const DEFAULT_SERIES_BADGE = "Buchung über die App";
+
 type YogaflowSeriesCourseCardProps = {
   series: YogaflowCourseSeries;
   sessions: InternalCourse[];
@@ -57,10 +59,14 @@ export function YogaflowSeriesCourseCard({
             </span>
           ) : null}
         </div>
-        <div
-          className="flex min-h-[28px] flex-wrap items-center gap-2"
-          aria-hidden
-        />
+        <div className="flex min-h-[28px] flex-wrap items-center gap-2">
+          <CourseStatusBadge
+            bookingStatus="available"
+            staticLabel={
+              series.bookingBadgeLabel?.trim() || DEFAULT_SERIES_BADGE
+            }
+          />
+        </div>
         <dl
           className={cn(
             "grid min-w-0 w-full grid-cols-2 gap-x-3 gap-y-2.5 border-border/50 border-t pt-2.5",

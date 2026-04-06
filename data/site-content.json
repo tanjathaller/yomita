@@ -147,7 +147,8 @@
         "day": "Dienstag",
         "time": "18:00–19:30 (90 Min.)",
         "location": "Neuss",
-        "price": "12,00 €"
+        "price": "12,00 €",
+        "bookingBadgeLabel": "Buchung über die App"
       },
       {
         "id": "series-yoga-mittwoch",
@@ -158,7 +159,8 @@
         "day": "Mittwoch",
         "time": "18:00–19:30 (90 Min.)",
         "location": "Neuss",
-        "price": "12,00 €"
+        "price": "12,00 €",
+        "bookingBadgeLabel": "Buchung über die App"
       }
     ],
     "appUrl": "https://andrethaller-ctrl-yo-gpke.bolt.host/auth",
