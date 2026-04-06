@@ -2,6 +2,62 @@ import { z } from "zod";
 
 const bookingStatusSchema = z.enum(["available", "full"]);
 
+const bookingBadgeLinkSchema = z
+  .object({
+    enabled: z.boolean().optional(),
+    kind: z.enum(["url", "anchor"]).optional(),
+    url: z.string().optional(),
+    anchor: z.string().optional(),
+  })
+  .superRefine((value, ctx) => {
+    if (!value.enabled) {
+      return;
+    }
+    if (value.kind !== "url" && value.kind !== "anchor") {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["kind"],
+        message: "Bitte Link-Art wählen (URL oder Anker).",
+      });
+      return;
+    }
+    if (value.kind === "url") {
+      const u = value.url?.trim() ?? "";
+      if (!u) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["url"],
+          message: "Bitte eine URL eintragen.",
+        });
+        return;
+      }
+      if (!/^https?:\/\/\S+$/i.test(u)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["url"],
+          message: "URL muss mit https:// oder http:// beginnen.",
+        });
+      }
+      return;
+    }
+    const a = (value.anchor ?? "").trim().replace(/^#/, "");
+    if (!a) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["anchor"],
+        message: "Bitte einen Anker wählen oder eintragen.",
+      });
+      return;
+    }
+    if (!/^[a-z0-9-]+$/i.test(a)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["anchor"],
+        message: "Ungültiger Anker (nur Buchstaben, Ziffern, Bindestrich).",
+      });
+    }
+  });
+
 const baseCourseSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -13,6 +69,7 @@ const baseCourseSchema = z.object({
   price: z.string().optional(),
   remainingSpots: z.number().int().min(0).optional(),
   bookingBadgeLabel: z.string().min(1).optional(),
+  bookingBadgeLink: bookingBadgeLinkSchema.optional(),
   sortOrder: z.number(),
 });
 
@@ -83,6 +140,7 @@ export const yogaflowCourseSeriesSchema = z.object({
   price: z.string().optional(),
   scheduleNote: z.string().optional(),
   bookingBadgeLabel: z.string().min(1).optional(),
+  bookingBadgeLink: bookingBadgeLinkSchema.optional(),
 });
 
 export const generalSettingsSchema = z.object({

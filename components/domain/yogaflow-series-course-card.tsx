@@ -4,6 +4,8 @@ import type { InternalCourse, YogaflowCourseSeries } from "@/types/site-content"
 
 import { CourseStatusBadge } from "@/components/domain/course-status-badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MarkdownContent } from "@/components/shared/markdown-content";
+import { resolveBookingBadgeLink } from "@/lib/booking-badge-link";
 import { cn } from "@/lib/utils";
 
 function MetaRow({
@@ -65,6 +67,7 @@ export function YogaflowSeriesCourseCard({
             staticLabel={
               series.bookingBadgeLabel?.trim() || DEFAULT_SERIES_BADGE
             }
+            href={resolveBookingBadgeLink(series.bookingBadgeLink)}
           />
         </div>
         <dl
@@ -97,14 +100,18 @@ export function YogaflowSeriesCourseCard({
           <p className="text-muted-foreground mb-1 text-[0.65rem] font-medium uppercase tracking-wider">
             Kursstil
           </p>
-          <p className="text-[#2F3B2A] text-sm font-medium leading-snug lg:text-[0.95rem] lg:leading-snug">
-            {series.description}
-          </p>
+          <MarkdownContent
+            markdown={series.description}
+            className="max-w-none space-y-1 text-sm font-medium leading-snug text-[#2F3B2A] lg:text-[0.95rem] lg:leading-snug [&_p]:my-0 [&_p+p]:mt-1 [&_strong]:font-semibold [&_em]:italic"
+          />
         </div>
-        {series.scheduleNote ? (
-          <p className="text-muted-foreground text-xs leading-relaxed">
-            {series.scheduleNote}
-          </p>
+        {series.scheduleNote?.trim() ? (
+          <div className="text-muted-foreground text-xs leading-relaxed">
+            <MarkdownContent
+              markdown={series.scheduleNote}
+              className="max-w-none space-y-1 [&_p]:my-0 [&_p+p]:mt-1 [&_strong]:font-semibold [&_em]:italic"
+            />
+          </div>
         ) : null}
 
         <details className="group rounded-lg border border-border/60 bg-background/40">

@@ -1,12 +1,22 @@
+import Link from "next/link";
+import type { ReactNode } from "react";
+
 import type { BookingStatus } from "@/types/site-content";
 
 import { cn } from "@/lib/utils";
+
+type BadgeHref = {
+  href: string;
+  openInNewTab: boolean;
+};
 
 type CourseStatusBadgeProps = {
   bookingStatus: BookingStatus;
   remainingSpots?: number;
   /** Wenn gesetzt: fester Hinweistext statt Live-Status (manuelle Kurse). */
   staticLabel?: string;
+  /** Optional: gesamte Pill als Link (URL oder interner Anker). */
+  href?: BadgeHref;
 };
 
 function labelForRemaining(remaining: number): string {
@@ -17,21 +27,61 @@ function labelForRemaining(remaining: number): string {
   return "Verfügbar";
 }
 
+function BadgeShell({
+  href,
+  className,
+  children,
+}: {
+  href?: BadgeHref;
+  className: string;
+  children: ReactNode;
+}) {
+  const interactive =
+    "cursor-pointer shadow-sm transition-[transform,box-shadow,filter] duration-200 ease-out hover:scale-[1.03] hover:shadow-md hover:brightness-[0.97] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none motion-reduce:hover:scale-100";
+
+  if (!href) {
+    return <span className={className}>{children}</span>;
+  }
+
+  const merged = cn(className, interactive);
+
+  if (href.openInNewTab) {
+    return (
+      <a
+        href={href.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={merged}
+      >
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <Link href={href.href} className={merged}>
+      {children}
+    </Link>
+  );
+}
+
 export function CourseStatusBadge({
   bookingStatus,
   remainingSpots,
   staticLabel,
+  href,
 }: CourseStatusBadgeProps) {
   if (staticLabel?.trim()) {
     return (
-      <span
+      <BadgeShell
+        href={href}
         className={cn(
           "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
           "bg-muted/70 text-muted-foreground",
         )}
       >
         {staticLabel.trim()}
-      </span>
+      </BadgeShell>
     );
   }
 
@@ -53,7 +103,8 @@ export function CourseStatusBadge({
     bookingStatus === "full" ? "Ausgebucht" : "Plätze frei";
 
   return (
-    <span
+    <BadgeShell
+      href={href}
       className={cn(
         "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
         tone === "ok" && "bg-primary/15 text-primary",
@@ -62,6 +113,6 @@ export function CourseStatusBadge({
       )}
     >
       {label ?? fallbackLabel}
-    </span>
+    </BadgeShell>
   );
 }

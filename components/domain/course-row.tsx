@@ -7,6 +7,8 @@ import { isExternalCourse } from "@/types/site-content";
 import { CourseStatusBadge } from "@/components/domain/course-status-badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button-variants";
+import { MarkdownContent } from "@/components/shared/markdown-content";
+import { resolveBookingBadgeLink } from "@/lib/booking-badge-link";
 import { cn } from "@/lib/utils";
 
 function MetaRow({
@@ -51,6 +53,7 @@ export function CourseRow({ course }: { course: Course }) {
             bookingStatus={course.bookingStatus}
             remainingSpots={course.remainingSpots}
             staticLabel={course.bookingBadgeLabel}
+            href={resolveBookingBadgeLink(course.bookingBadgeLink)}
           />
         </div>
         <dl
@@ -86,14 +89,18 @@ export function CourseRow({ course }: { course: Course }) {
           <p className="text-muted-foreground mb-1 text-[0.65rem] font-medium uppercase tracking-wider">
             Kursstil
           </p>
-          <p className="text-[#2F3B2A] text-sm font-medium leading-snug lg:text-[0.95rem] lg:leading-snug">
-            {course.description}
-          </p>
+          <MarkdownContent
+            markdown={course.description}
+            className="max-w-none space-y-1 text-sm font-medium leading-snug text-[#2F3B2A] lg:text-[0.95rem] lg:leading-snug [&_p]:my-0 [&_p+p]:mt-1 [&_strong]:font-semibold [&_em]:italic"
+          />
         </div>
-        {course.type === "internal" && course.scheduleNote ? (
-          <p className="text-muted-foreground text-xs leading-relaxed">
-            {course.scheduleNote}
-          </p>
+        {course.type === "internal" && course.scheduleNote?.trim() ? (
+          <div className="text-muted-foreground text-xs leading-relaxed">
+            <MarkdownContent
+              markdown={course.scheduleNote}
+              className="max-w-none space-y-1 [&_p]:my-0 [&_p+p]:mt-1 [&_strong]:font-semibold [&_em]:italic"
+            />
+          </div>
         ) : null}
         <div className="flex flex-wrap gap-2">
           {external ? (

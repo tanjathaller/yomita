@@ -112,7 +112,7 @@ Jeder Eintrag ist entweder **intern** (eigene Kurse / App) oder **extern** (Frem
 |-------------------|---------|--------------|
 | `id`              | string  | stabile ID (UUID oder Slug) |
 | `title`           | string  | Kursname |
-| `description`     | string  | Kurzbeschreibung |
+| `description`     | string  | Kurzbeschreibung / Kursstil (**Markdown** auf der Karte) |
 | `day`             | string  | z. B. Wochentag oder „Sa., 15.03.“; auf der Karte als **Wochentag** beschriftet |
 | `time`            | string  | z. B. „18:00–19:30“ |
 | `location`        | string  | Ort / Studio |
@@ -120,6 +120,7 @@ Jeder Eintrag ist entweder **intern** (eigene Kurse / App) oder **extern** (Frem
 | `price`           | string? | optional (YogaFlow-Sync), Anzeige z. B. `12,00 €` in der Kurs-Card |
 | `remainingSpots`  | number? | optional, freie Plätze (YogaFlow); steuert Badge-Texte („noch n Restplätze“, „Verfügbar“, „ausgebucht“) |
 | `bookingBadgeLabel` | string? | optional; wenn gesetzt: fester Pill-Text statt Live-Status (z. B. manuelle Kurse) |
+| `bookingBadgeLink` | object? | optional; Pill als Link (**standard aus**): `enabled`, `kind` (`url` \| `anchor`), bei URL `url` (https), bei Anker `anchor` (Fragment ohne `#`, Ziel `/#…` auf der Startseite) |
 | `sortOrder`       | number  | Sortierung im Dashboard (niedrig = weiter oben) |
 
 ### Interner Kurs (`type: "internal"`)
@@ -130,7 +131,7 @@ Zusätzlich optional, für Workshops oder klare Zeiträume:
 |----------------|---------|--------------|
 | `startsOn`     | string? | ISO-Datum (Start) |
 | `endsOn`       | string? | ISO-Datum (Ende), z. B. Kursblock |
-| `scheduleNote` | string? | Freitext, z. B. „wöchentlich“, „nur im März“ |
+| `scheduleNote` | string? | Freitext unter dem Kursstil (**Markdown**), z. B. „wöchentlich“, „nur im März“ |
 
 Kein Feld `externalUrl`.
 
@@ -221,13 +222,14 @@ Kein Feld `externalUrl`.
 | `sortOrder` | number | Reihenfolge der Karten (niedrig zuerst, vor den manuellen `courses`) |
 | `matchTitles` | string[] | exakte(r) `title` aus dem YogaFlow-Sync; mindestens ein Eintrag |
 | `displayTitle` | string | öffentlicher Kartentitel |
-| `description` | string | Kursstil-Text auf der Karte |
+| `description` | string | Kursstil-Text auf der Karte (**Markdown**) |
 | `day` | string | Anzeige in der Wochentag-Zeile auf der Karte |
 | `time` | string | typische Uhrzeit auf der Karte |
 | `location` | string | Ort auf der Karte |
 | `price` | string? | optional |
 | `bookingBadgeLabel` | string? | Pill unter dem Titel (z. B. „Buchung über die App“); leer → Fallback „Buchung über die App“ auf der Website |
-| `scheduleNote` | string? | optional, Hinweis unter dem Kursstil |
+| `bookingBadgeLink` | object? | optional; Pill als Link (gleiche Struktur wie bei manuellen Kursen, `bookingBadgeLink`; standard aus) |
+| `scheduleNote` | string? | optional, Hinweis unter dem Kursstil (**Markdown**) |
 
 ---
 

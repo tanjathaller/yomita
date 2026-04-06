@@ -14,6 +14,20 @@ export type SectionId =
 
 export type BookingStatus = "available" | "full";
 
+/**
+ * Optionaler Link auf der Status-Pill unter dem Kartentitel.
+ * Standard: nicht verlinkt (`enabled` aus oder fehlt).
+ */
+export type BookingBadgeLink = {
+  enabled?: boolean;
+  /** Pflicht, wenn `enabled` true (Speichern validiert). */
+  kind?: "url" | "anchor";
+  /** Bei `kind: "url"`: vollständige http(s)-URL. */
+  url?: string;
+  /** Bei `kind: "anchor"`: DOM-Fragment ohne führendes # (z. B. `kontakt` → `/#kontakt`). */
+  anchor?: string;
+};
+
 export type BaseCourse = {
   id: string;
   title: string;
@@ -35,6 +49,8 @@ export type BaseCourse = {
    * ohne App-Restplätze).
    */
   bookingBadgeLabel?: string;
+  /** Pill als Link (URL oder Anker); nur wirksam wenn `enabled` gesetzt ist. */
+  bookingBadgeLink?: BookingBadgeLink;
   /** Lower values appear first in lists. */
   sortOrder: number;
 };
@@ -118,6 +134,7 @@ export type YogaflowCourseSeries = {
   scheduleNote?: string;
   /** Pill unter dem Titel (z. B. „Buchung über die App“). */
   bookingBadgeLabel?: string;
+  bookingBadgeLink?: BookingBadgeLink;
 };
 
 export type GeneralSettings = {

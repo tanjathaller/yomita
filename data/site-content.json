@@ -44,8 +44,13 @@
       "day": "Montag",
       "time": "19:00-20:00 Uhr",
       "location": "Zons",
-      "bookingBadgeLabel": "Probestunde auf Anfrage",
       "bookingStatus": "available",
+      "bookingBadgeLabel": "Probestunde auf Anfrage",
+      "bookingBadgeLink": {
+        "enabled": true,
+        "kind": "anchor",
+        "anchor": "kontakt"
+      },
       "sortOrder": 10,
       "type": "internal",
       "scheduleNote": "wöchentlich"
@@ -57,8 +62,8 @@
       "day": "Sonntag",
       "time": "17:00-18:30 Uhr",
       "location": "Yoga Sanskriti in Düsseldorf",
-      "bookingBadgeLabel": "Anmeldung über Yoga Sanskriti",
       "bookingStatus": "available",
+      "bookingBadgeLabel": "Anmeldung über Yoga Sanskriti",
       "sortOrder": 20,
       "type": "internal",
       "scheduleNote": "Anmeldung direkt über www.yogasanskriti.de."
@@ -141,7 +146,9 @@
       {
         "id": "series-yoga-dienstag",
         "sortOrder": 10,
-        "matchTitles": ["Yoga am Dienstag"],
+        "matchTitles": [
+          "Yoga am Dienstag"
+        ],
         "displayTitle": "Vinyasa Yoga in Neuss am Dienstag",
         "description": "Vinyasa für Fortgeschrittene",
         "day": "Dienstag",
@@ -153,7 +160,9 @@
       {
         "id": "series-yoga-mittwoch",
         "sortOrder": 20,
-        "matchTitles": ["Yoga am Mittwoch"],
+        "matchTitles": [
+          "Yoga am Mittwoch"
+        ],
         "displayTitle": "Yoga Flow in Neuss am Mittwoch",
         "description": "Vinyasa/Hatha für alle",
         "day": "Mittwoch",

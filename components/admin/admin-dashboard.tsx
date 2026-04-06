@@ -21,9 +21,11 @@ import {
   ADMIN_MOBILE_SAVE_PORTAL_ID,
   ADMIN_SITE_CONTENT_FORM_ID,
 } from "@/lib/admin-dashboard-ui";
+import { BOOKING_BADGE_ANCHOR_PRESETS } from "@/lib/booking-badge-link";
 import { cn } from "@/lib/utils";
 import { DEFAULT_YOGAFLOW_COURSE_SERIES } from "@/lib/yogaflow-series-group";
 import type {
+  BookingBadgeLink,
   Course,
   NavItem,
   PriceItem,
@@ -39,6 +41,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 
 /** Sichtbarkeit der Desktop-Speicher-Meldung vor Beginn des Ausblendens. */
@@ -171,6 +174,140 @@ function blurActiveElementBeforeDomRemoval(): void {
   if (active instanceof HTMLElement) {
     active.blur();
   }
+}
+
+function BookingBadgeLinkEditor({
+  value,
+  onChange,
+  idPrefix,
+}: {
+  value: BookingBadgeLink | undefined;
+  onChange: (next: BookingBadgeLink | undefined) => void;
+  idPrefix: string;
+}) {
+  const enabled = value?.enabled === true;
+  const kind = value?.kind ?? "url";
+  const presetIds = useMemo(
+    () => new Set(BOOKING_BADGE_ANCHOR_PRESETS.map((p) => p.value)),
+    [],
+  );
+  const anchorRaw = (value?.anchor ?? "").trim().replace(/^#/, "");
+  const anchorSelectValue = presetIds.has(anchorRaw) ? anchorRaw : "__custom__";
+
+  return (
+    <div className="space-y-2 rounded-md border border-border/60 bg-muted/20 p-3">
+      <label className="flex cursor-pointer items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          checked={enabled}
+          onChange={(event) => {
+            if (event.target.checked) {
+              onChange({ enabled: true, kind: "url", url: "https://" });
+            } else {
+              onChange(undefined);
+            }
+          }}
+        />
+        <span>Pill als Link aktivieren</span>
+      </label>
+      {enabled ? (
+        <div className="space-y-3">
+          <div className="space-y-2">
+            <Label htmlFor={`${idPrefix}-kind`}>Link-Art</Label>
+            <select
+              id={`${idPrefix}-kind`}
+              className={adminSelectClass}
+              value={kind}
+              onChange={(event) => {
+                const k = event.target.value as "url" | "anchor";
+                if (k === "url") {
+                  onChange({
+                    enabled: true,
+                    kind: "url",
+                    url: value?.url?.trim() ? value.url : "https://",
+                  });
+                } else {
+                  onChange({
+                    enabled: true,
+                    kind: "anchor",
+                    anchor: presetIds.has(anchorRaw)
+                      ? anchorRaw
+                      : BOOKING_BADGE_ANCHOR_PRESETS[0]!.value,
+                  });
+                }
+              }}
+            >
+              <option value="url">Normale URL (https:// …)</option>
+              <option value="anchor">Anker auf der Startseite</option>
+            </select>
+          </div>
+          {kind === "url" ? (
+            <div className="space-y-2">
+              <Label htmlFor={`${idPrefix}-url`}>URL</Label>
+              <Input
+                id={`${idPrefix}-url`}
+                value={value?.url ?? ""}
+                placeholder="https://…"
+                onChange={(event) =>
+                  onChange({
+                    enabled: true,
+                    kind: "url",
+                    url: event.target.value,
+                  })
+                }
+              />
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <Label htmlFor={`${idPrefix}-anchor-preset`}>Anker-Ziel</Label>
+              <select
+                id={`${idPrefix}-anchor-preset`}
+                className={adminSelectClass}
+                value={anchorSelectValue}
+                onChange={(event) => {
+                  const v = event.target.value;
+                  if (v === "__custom__") {
+                    onChange({
+                      enabled: true,
+                      kind: "anchor",
+                      anchor: presetIds.has(anchorRaw) ? "" : anchorRaw,
+                    });
+                  } else {
+                    onChange({ enabled: true, kind: "anchor", anchor: v });
+                  }
+                }}
+              >
+                {BOOKING_BADGE_ANCHOR_PRESETS.map((p) => (
+                  <option key={p.value} value={p.value}>
+                    {p.label}
+                  </option>
+                ))}
+                <option value="__custom__">Eigener Anker …</option>
+              </select>
+              {anchorSelectValue === "__custom__" ? (
+                <Input
+                  id={`${idPrefix}-anchor-custom`}
+                  placeholder="z. B. kontakt"
+                  value={anchorRaw}
+                  onChange={(event) =>
+                    onChange({
+                      enabled: true,
+                      kind: "anchor",
+                      anchor: event.target.value.replace(/^#/, "").trim(),
+                    })
+                  }
+                />
+              ) : null}
+            </div>
+          )}
+        </div>
+      ) : (
+        <p className="text-muted-foreground text-xs">
+          Standard: Die Pill ist nicht anklickbar.
+        </p>
+      )}
+    </div>
+  );
 }
 
 function escapeMarkdownLinkText(rawText: string): string {
@@ -1871,6 +2008,9 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                       }
                     />
                   </div>
+                  <div className="md:col-span-2">
+                    <Separator className="my-4" />
+                  </div>
                   <div className="space-y-4 md:col-span-2">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <Label className="text-base">
@@ -1909,9 +2049,9 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                         Serie hinzufügen
                       </Button>
                     </div>
-                    <div className="space-y-4">
+                    <div className="grid gap-4 md:grid-cols-2">
                       {yogaflowSeriesList(draft.settings).map((series, index) => (
-                        <Card key={series.id} className="border-dashed">
+                        <Card key={series.id} className="min-w-0 border-dashed">
                           <CardHeader className="pb-2">
                             <div className="flex flex-wrap items-start justify-between gap-2">
                               <CardTitle className="text-base">
@@ -1950,8 +2090,8 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                               durch Komma oder Zeilenumbruch).
                             </CardDescription>
                           </CardHeader>
-                          <CardContent className="grid gap-3 sm:grid-cols-2">
-                            <div className="space-y-2 sm:col-span-2">
+                          <CardContent className="flex flex-col gap-3">
+                            <div className="space-y-2">
                               <Label>Match: App-Kurstitel</Label>
                               <Textarea
                                 rows={2}
@@ -1977,7 +2117,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                 }}
                               />
                             </div>
-                            <div className="space-y-2 sm:col-span-2">
+                            <div className="space-y-2">
                               <Label>Anzeige-Titel (Karte)</Label>
                               <Input
                                 value={series.displayTitle}
@@ -1997,28 +2137,25 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                 }}
                               />
                             </div>
-                            <div className="space-y-2 sm:col-span-2">
-                              <Label>Kursstil / Beschreibung</Label>
-                              <Textarea
-                                rows={2}
-                                value={series.description}
-                                onChange={(event) => {
-                                  const v = event.target.value;
-                                  setDraft((prev) => {
-                                    const list = [...yogaflowSeriesList(prev.settings)];
-                                    list[index] = { ...list[index]!, description: v };
-                                    return {
-                                      ...prev,
-                                      settings: {
-                                        ...prev.settings,
-                                        yogaflowCourseSeries: list,
-                                      },
-                                    };
-                                  });
-                                }}
-                              />
-                            </div>
-                            <div className="space-y-2 sm:col-span-2">
+                            <MarkdownEditor
+                              label="Kursstil / Beschreibung (Markdown)"
+                              rows={4}
+                              value={series.description}
+                              onChange={(v) => {
+                                setDraft((prev) => {
+                                  const list = [...yogaflowSeriesList(prev.settings)];
+                                  list[index] = { ...list[index]!, description: v };
+                                  return {
+                                    ...prev,
+                                    settings: {
+                                      ...prev.settings,
+                                      yogaflowCourseSeries: list,
+                                    },
+                                  };
+                                });
+                              }}
+                            />
+                            <div className="space-y-2">
                               <Label>Badge-Text (Pill unter dem Titel)</Label>
                               <Input
                                 value={series.bookingBadgeLabel ?? ""}
@@ -2045,41 +2182,15 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                               <p className="text-muted-foreground text-xs">
                                 Leer lassen = auf der Website erscheint „Buchung über die App“.
                               </p>
-                            </div>
-                            <div className="space-y-2">
-                              <AdminSortOrderLabelRow htmlFor={`series-sort-${series.id}`} />
-                              <Input
-                                id={`series-sort-${series.id}`}
-                                inputMode="numeric"
-                                value={String(series.sortOrder)}
-                                onChange={(event) => {
-                                  const n = parseNumber(event.target.value);
-                                  setDraft((prev) => {
-                                    const list = [...yogaflowSeriesList(prev.settings)];
-                                    list[index] = { ...list[index]!, sortOrder: n };
-                                    return {
-                                      ...prev,
-                                      settings: {
-                                        ...prev.settings,
-                                        yogaflowCourseSeries: list,
-                                      },
-                                    };
-                                  });
-                                }}
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label>Preis (optional)</Label>
-                              <Input
-                                value={series.price ?? ""}
-                                placeholder="12,00 €"
-                                onChange={(event) => {
-                                  const v = event.target.value.trim();
+                              <BookingBadgeLinkEditor
+                                idPrefix={`series-badge-link-${series.id}`}
+                                value={series.bookingBadgeLink}
+                                onChange={(next) => {
                                   setDraft((prev) => {
                                     const list = [...yogaflowSeriesList(prev.settings)];
                                     list[index] = {
                                       ...list[index]!,
-                                      price: v || undefined,
+                                      bookingBadgeLink: next,
                                     };
                                     return {
                                       ...prev,
@@ -2091,48 +2202,98 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                   });
                                 }}
                               />
+                            </div>
+                            <div className="grid gap-3 sm:grid-cols-2 sm:items-end">
+                              <div className="space-y-2">
+                                <AdminSortOrderLabelRow htmlFor={`series-sort-${series.id}`} />
+                                <Input
+                                  id={`series-sort-${series.id}`}
+                                  inputMode="numeric"
+                                  value={String(series.sortOrder)}
+                                  onChange={(event) => {
+                                    const n = parseNumber(event.target.value);
+                                    setDraft((prev) => {
+                                      const list = [...yogaflowSeriesList(prev.settings)];
+                                      list[index] = { ...list[index]!, sortOrder: n };
+                                      return {
+                                        ...prev,
+                                        settings: {
+                                          ...prev.settings,
+                                          yogaflowCourseSeries: list,
+                                        },
+                                      };
+                                    });
+                                  }}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label>Preis (optional)</Label>
+                                <Input
+                                  value={series.price ?? ""}
+                                  placeholder="12,00 €"
+                                  onChange={(event) => {
+                                    const v = event.target.value.trim();
+                                    setDraft((prev) => {
+                                      const list = [...yogaflowSeriesList(prev.settings)];
+                                      list[index] = {
+                                        ...list[index]!,
+                                        price: v || undefined,
+                                      };
+                                      return {
+                                        ...prev,
+                                        settings: {
+                                          ...prev.settings,
+                                          yogaflowCourseSeries: list,
+                                        },
+                                      };
+                                    });
+                                  }}
+                                />
+                              </div>
+                            </div>
+                            <div className="grid gap-3 sm:grid-cols-2 sm:items-end">
+                              <div className="space-y-2">
+                                <Label>Wochentag-Zeile (z. B. Dienstag)</Label>
+                                <Input
+                                  value={series.day}
+                                  onChange={(event) => {
+                                    const v = event.target.value;
+                                    setDraft((prev) => {
+                                      const list = [...yogaflowSeriesList(prev.settings)];
+                                      list[index] = { ...list[index]!, day: v };
+                                      return {
+                                        ...prev,
+                                        settings: {
+                                          ...prev.settings,
+                                          yogaflowCourseSeries: list,
+                                        },
+                                      };
+                                    });
+                                  }}
+                                />
+                              </div>
+                              <div className="space-y-2">
+                                <Label>Zeit</Label>
+                                <Input
+                                  value={series.time}
+                                  onChange={(event) => {
+                                    const v = event.target.value;
+                                    setDraft((prev) => {
+                                      const list = [...yogaflowSeriesList(prev.settings)];
+                                      list[index] = { ...list[index]!, time: v };
+                                      return {
+                                        ...prev,
+                                        settings: {
+                                          ...prev.settings,
+                                          yogaflowCourseSeries: list,
+                                        },
+                                      };
+                                    });
+                                  }}
+                                />
+                              </div>
                             </div>
                             <div className="space-y-2">
-                              <Label>Wochentag-Zeile (z. B. Dienstag)</Label>
-                              <Input
-                                value={series.day}
-                                onChange={(event) => {
-                                  const v = event.target.value;
-                                  setDraft((prev) => {
-                                    const list = [...yogaflowSeriesList(prev.settings)];
-                                    list[index] = { ...list[index]!, day: v };
-                                    return {
-                                      ...prev,
-                                      settings: {
-                                        ...prev.settings,
-                                        yogaflowCourseSeries: list,
-                                      },
-                                    };
-                                  });
-                                }}
-                              />
-                            </div>
-                            <div className="space-y-2">
-                              <Label>Zeit</Label>
-                              <Input
-                                value={series.time}
-                                onChange={(event) => {
-                                  const v = event.target.value;
-                                  setDraft((prev) => {
-                                    const list = [...yogaflowSeriesList(prev.settings)];
-                                    list[index] = { ...list[index]!, time: v };
-                                    return {
-                                      ...prev,
-                                      settings: {
-                                        ...prev.settings,
-                                        yogaflowCourseSeries: list,
-                                      },
-                                    };
-                                  });
-                                }}
-                              />
-                            </div>
-                            <div className="space-y-2 sm:col-span-2">
                               <Label>Ort</Label>
                               <Input
                                 value={series.location}
@@ -2152,33 +2313,35 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                 }}
                               />
                             </div>
-                            <div className="space-y-2 sm:col-span-2">
-                              <Label>Hinweis unter Kursstil (optional)</Label>
-                              <Input
-                                value={series.scheduleNote ?? ""}
-                                onChange={(event) => {
-                                  const v = event.target.value.trim();
-                                  setDraft((prev) => {
-                                    const list = [...yogaflowSeriesList(prev.settings)];
-                                    list[index] = {
-                                      ...list[index]!,
-                                      scheduleNote: v || undefined,
-                                    };
-                                    return {
-                                      ...prev,
-                                      settings: {
-                                        ...prev.settings,
-                                        yogaflowCourseSeries: list,
-                                      },
-                                    };
-                                  });
-                                }}
-                              />
-                            </div>
+                            <MarkdownEditor
+                              label="Hinweis unter Kursstil (optional, Markdown)"
+                              rows={3}
+                              value={series.scheduleNote ?? ""}
+                              onChange={(v) => {
+                                const trimmed = v.trim();
+                                setDraft((prev) => {
+                                  const list = [...yogaflowSeriesList(prev.settings)];
+                                  list[index] = {
+                                    ...list[index]!,
+                                    scheduleNote: trimmed ? v : undefined,
+                                  };
+                                  return {
+                                    ...prev,
+                                    settings: {
+                                      ...prev.settings,
+                                      yogaflowCourseSeries: list,
+                                    },
+                                  };
+                                });
+                              }}
+                            />
                           </CardContent>
                         </Card>
                       ))}
                     </div>
+                  </div>
+                  <div className="md:col-span-2">
+                    <Separator className="my-4" />
                   </div>
                   <div className="space-y-4 md:col-span-2">
                     <div className="flex flex-wrap items-center justify-between gap-2">
@@ -2214,7 +2377,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                         Kurs hinzufügen
                       </Button>
                     </div>
-                    <div className="space-y-4">
+                    <div className="grid gap-4 md:grid-cols-2">
                       {[...draft.courses]
                         .sort((a, b) => a.sortOrder - b.sortOrder)
                         .map((course, displayIndex) => {
@@ -2222,7 +2385,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                           const internal = isInternalCourse(course);
                           const external = isExternalCourse(course);
                           return (
-                            <Card key={courseId} className="border-dashed">
+                            <Card key={courseId} className="min-w-0 border-dashed">
                               <CardHeader className="pb-2">
                                 <div className="flex flex-wrap items-start justify-between gap-2">
                                   <CardTitle className="text-base">
@@ -2250,8 +2413,8 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                   </Button>
                                 </div>
                               </CardHeader>
-                              <CardContent className="grid gap-3 sm:grid-cols-2">
-                                <div className="space-y-2 sm:col-span-2">
+                              <CardContent className="flex flex-col gap-3">
+                                <div className="space-y-2">
                                   <Label htmlFor={`course-type-${courseId}`}>Kurs-Typ</Label>
                                   <select
                                     id={`course-type-${courseId}`}
@@ -2273,6 +2436,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                           price: cur.price,
                                           remainingSpots: cur.remainingSpots,
                                           bookingBadgeLabel: cur.bookingBadgeLabel,
+                                          bookingBadgeLink: cur.bookingBadgeLink,
                                         };
                                         const next: Course =
                                           t === "internal"
@@ -2304,7 +2468,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                     <option value="external">Extern mit URL</option>
                                   </select>
                                 </div>
-                                <div className="space-y-2 sm:col-span-2">
+                                <div className="space-y-2">
                                   <Label htmlFor={`course-title-${courseId}`}>Titel</Label>
                                   <Input
                                     id={`course-title-${courseId}`}
@@ -2321,7 +2485,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                     }}
                                   />
                                 </div>
-                                <div className="space-y-2 sm:col-span-2">
+                                <div className="space-y-2">
                                   <Label htmlFor={`course-badge-${courseId}`}>
                                     Badge-Text (Pill unter dem Titel)
                                   </Label>
@@ -2342,27 +2506,37 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                     }}
                                   />
                                   <p className="text-muted-foreground text-xs">
-                                    Wenn leer, nutzt die Karte den Buchungsstatus (Plätze frei /
-                                    Ausgebucht).
+                                    Ohne Text: die Pill zeigt „Plätze frei“ oder „Ausgebucht“ gemäß
+                                    gespeichertem Kurs.
                                   </p>
-                                </div>
-                                <div className="space-y-2 sm:col-span-2">
-                                  <Label>Kursstil / Beschreibung</Label>
-                                  <Textarea
-                                    rows={2}
-                                    value={course.description}
-                                    onChange={(event) => {
-                                      const v = event.target.value;
+                                  <BookingBadgeLinkEditor
+                                    idPrefix={`course-badge-link-${courseId}`}
+                                    value={course.bookingBadgeLink}
+                                    onChange={(next) => {
                                       setDraft((prev) => {
                                         const cur = prev.courses.find((c) => c.id === courseId)!;
                                         return replaceCourseInDraft(prev, courseId, {
                                           ...cur,
-                                          description: v,
+                                          bookingBadgeLink: next,
                                         });
                                       });
                                     }}
                                   />
                                 </div>
+                                <MarkdownEditor
+                                  label="Kursstil / Beschreibung (Markdown)"
+                                  rows={4}
+                                  value={course.description}
+                                  onChange={(v) => {
+                                    setDraft((prev) => {
+                                      const cur = prev.courses.find((c) => c.id === courseId)!;
+                                      return replaceCourseInDraft(prev, courseId, {
+                                        ...cur,
+                                        description: v,
+                                      });
+                                    });
+                                  }}
+                                />
                                 <div className="space-y-2">
                                   <AdminSortOrderLabelRow htmlFor={`course-sort-${courseId}`} />
                                   <Input
@@ -2381,64 +2555,45 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                     }}
                                   />
                                 </div>
-                                <div className="space-y-2">
-                                  <Label htmlFor={`course-status-${courseId}`}>
-                                    Buchungsstatus (nur ohne Badge-Text)
-                                  </Label>
-                                  <select
-                                    id={`course-status-${courseId}`}
-                                    className={adminSelectClass}
-                                    value={course.bookingStatus}
-                                    onChange={(event) => {
-                                      const v = event.target.value as "available" | "full";
-                                      setDraft((prev) => {
-                                        const cur = prev.courses.find((c) => c.id === courseId)!;
-                                        return replaceCourseInDraft(prev, courseId, {
-                                          ...cur,
-                                          bookingStatus: v,
+                                <div className="grid gap-3 sm:grid-cols-2 sm:items-end">
+                                  <div className="space-y-2">
+                                    <Label htmlFor={`course-day-${courseId}`}>
+                                      Wochentag-Zeile
+                                    </Label>
+                                    <Input
+                                      id={`course-day-${courseId}`}
+                                      value={course.day}
+                                      onChange={(event) => {
+                                        const v = event.target.value;
+                                        setDraft((prev) => {
+                                          const cur = prev.courses.find((c) => c.id === courseId)!;
+                                          return replaceCourseInDraft(prev, courseId, {
+                                            ...cur,
+                                            day: v,
+                                          });
                                         });
-                                      });
-                                    }}
-                                  >
-                                    <option value="available">available (Plätze frei)</option>
-                                    <option value="full">full (Ausgebucht)</option>
-                                  </select>
+                                      }}
+                                    />
+                                  </div>
+                                  <div className="space-y-2">
+                                    <Label htmlFor={`course-time-${courseId}`}>Zeit</Label>
+                                    <Input
+                                      id={`course-time-${courseId}`}
+                                      value={course.time}
+                                      onChange={(event) => {
+                                        const v = event.target.value;
+                                        setDraft((prev) => {
+                                          const cur = prev.courses.find((c) => c.id === courseId)!;
+                                          return replaceCourseInDraft(prev, courseId, {
+                                            ...cur,
+                                            time: v,
+                                          });
+                                        });
+                                      }}
+                                    />
+                                  </div>
                                 </div>
                                 <div className="space-y-2">
-                                  <Label htmlFor={`course-day-${courseId}`}>Wochentag-Zeile</Label>
-                                  <Input
-                                    id={`course-day-${courseId}`}
-                                    value={course.day}
-                                    onChange={(event) => {
-                                      const v = event.target.value;
-                                      setDraft((prev) => {
-                                        const cur = prev.courses.find((c) => c.id === courseId)!;
-                                        return replaceCourseInDraft(prev, courseId, {
-                                          ...cur,
-                                          day: v,
-                                        });
-                                      });
-                                    }}
-                                  />
-                                </div>
-                                <div className="space-y-2">
-                                  <Label htmlFor={`course-time-${courseId}`}>Zeit</Label>
-                                  <Input
-                                    id={`course-time-${courseId}`}
-                                    value={course.time}
-                                    onChange={(event) => {
-                                      const v = event.target.value;
-                                      setDraft((prev) => {
-                                        const cur = prev.courses.find((c) => c.id === courseId)!;
-                                        return replaceCourseInDraft(prev, courseId, {
-                                          ...cur,
-                                          time: v,
-                                        });
-                                      });
-                                    }}
-                                  />
-                                </div>
-                                <div className="space-y-2 sm:col-span-2">
                                   <Label htmlFor={`course-loc-${courseId}`}>Ort</Label>
                                   <Input
                                     id={`course-loc-${courseId}`}
@@ -2456,27 +2611,24 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                   />
                                 </div>
                                 {internal ? (
-                                  <div className="space-y-2 sm:col-span-2">
-                                    <Label>Hinweis unter Kursstil (optional)</Label>
-                                    <Textarea
-                                      rows={2}
-                                      value={course.scheduleNote ?? ""}
-                                      onChange={(event) => {
-                                        const v = event.target.value;
-                                        setDraft((prev) => {
-                                          const cur = prev.courses.find((c) => c.id === courseId)!;
-                                          if (!isInternalCourse(cur)) return prev;
-                                          return replaceCourseInDraft(prev, courseId, {
-                                            ...cur,
-                                            scheduleNote: v.trim() ? v : undefined,
-                                          });
+                                  <MarkdownEditor
+                                    label="Hinweis unter Kursstil (optional, Markdown)"
+                                    rows={3}
+                                    value={course.scheduleNote ?? ""}
+                                    onChange={(v) => {
+                                      setDraft((prev) => {
+                                        const cur = prev.courses.find((c) => c.id === courseId)!;
+                                        if (!isInternalCourse(cur)) return prev;
+                                        return replaceCourseInDraft(prev, courseId, {
+                                          ...cur,
+                                          scheduleNote: v.trim() ? v : undefined,
                                         });
-                                      }}
-                                    />
-                                  </div>
+                                      });
+                                    }}
+                                  />
                                 ) : null}
                                 {external ? (
-                                  <div className="space-y-2 sm:col-span-2">
+                                  <div className="space-y-2">
                                     <Label htmlFor={`course-url-${courseId}`}>
                                       Anbieter-URL (extern)
                                     </Label>
