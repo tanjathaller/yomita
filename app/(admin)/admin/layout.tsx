@@ -16,10 +16,10 @@ export default function AdminLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="bg-muted/20 flex min-h-screen flex-col">
+    <div data-admin-shell className="bg-muted/25 flex min-h-screen flex-col">
       <header
         data-admin-header
-        className="bg-background/90 sticky top-0 z-40 border-b border-border/80 px-4 py-2.5 shadow-[0_1px_0_rgba(0,0,0,0.03)] backdrop-blur sm:px-6 sm:py-3"
+        className="bg-background/92 sticky top-0 z-40 border-b border-primary/20 px-4 py-2.5 shadow-[0_1px_0_oklch(0.45_0.058_146/0.07)] backdrop-blur sm:px-6 sm:py-3"
       >
         <div className="mx-auto flex w-full max-w-7xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3 lg:mx-0 lg:max-w-none">
           <div className="min-w-0 rounded-xl border border-primary/15 bg-primary/[0.04] px-3 py-2">
@@ -56,7 +56,7 @@ export default function AdminLayout({
               <form action={logoutOwnerAction} className="flex-1 sm:flex-none">
                 <button
                   type="submit"
-                  className="inline-flex h-9 w-full items-center justify-center rounded-lg border border-border bg-background px-2.5 text-sm font-medium text-foreground whitespace-nowrap transition-[color,background-color,border-color] duration-200 ease-out hover:bg-muted hover:text-foreground sm:h-8 sm:w-auto"
+                  className="inline-flex h-9 w-full items-center justify-center rounded-lg border border-primary/25 bg-background px-2.5 text-sm font-medium text-foreground whitespace-nowrap transition-[color,background-color,border-color] duration-200 ease-out hover:border-primary/35 hover:bg-muted hover:text-foreground sm:h-8 sm:w-auto"
                 >
                   Abmelden
                 </button>

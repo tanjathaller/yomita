@@ -131,6 +131,44 @@
   --surface-muted-footer: #2f392d;
 }
 
+/**
+ * Admin-Dashboard / Login: Flächen und Rahmen an die öffentliche Site anbinden
+ * (cremiges Papier + dezente Sage/Oliv-Töne statt neutral-grauem Muted).
+ */
+[data-admin-shell] {
+  --background: oklch(0.982 0.012 108);
+  --foreground: oklch(0.27 0.024 146);
+  --card: oklch(0.993 0.008 108);
+  --card-foreground: oklch(0.27 0.024 146);
+  --popover: oklch(0.993 0.008 108);
+  --popover-foreground: oklch(0.27 0.024 146);
+  --muted: oklch(0.926 0.034 136);
+  --muted-foreground: oklch(0.49 0.032 138);
+  --accent: oklch(0.908 0.038 138);
+  --accent-foreground: oklch(0.29 0.043 146);
+  --secondary: oklch(0.936 0.034 134);
+  --secondary-foreground: oklch(0.31 0.042 146);
+  --border: oklch(0.878 0.026 128);
+  --input: oklch(0.878 0.026 128);
+}
+
+.dark [data-admin-shell] {
+  --background: oklch(0.225 0.024 146);
+  --foreground: oklch(0.962 0.012 100);
+  --card: oklch(0.258 0.028 146);
+  --card-foreground: oklch(0.962 0.012 100);
+  --popover: oklch(0.258 0.028 146);
+  --popover-foreground: oklch(0.962 0.012 100);
+  --muted: oklch(0.32 0.034 144);
+  --muted-foreground: oklch(0.74 0.03 135);
+  --accent: oklch(0.36 0.038 145);
+  --accent-foreground: oklch(0.944 0.018 100);
+  --secondary: oklch(0.33 0.036 144);
+  --secondary-foreground: oklch(0.944 0.018 100);
+  --border: oklch(0.92 0.02 130 / 14%);
+  --input: oklch(0.92 0.02 130 / 16%);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

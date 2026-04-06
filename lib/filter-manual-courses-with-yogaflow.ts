@@ -4,7 +4,7 @@ import type { Course } from "@/types/site-content";
 const NEUSS_APP_STUDIO = /neuss|gagelweg/i;
 
 /**
- * Entfernt manuelle `courses`, die dieselben Neuss-Slots abdecken wie die YogaFlow-Serien
+ * Entfernt manuelle `courses`, die dieselben Neuss-Slots abdecken wie die YogaFlow-Kurse
  * (Dienstag/Mittwoch), falls im KV noch Altbestand aus der Zeit vor den Serien-Karten liegt.
  * Admin (`readSiteContent`) bleibt unangetastet.
  */

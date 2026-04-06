@@ -20,7 +20,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
   if (authenticated) {
     return (
       <div className="mx-auto w-full max-w-md">
-        <Card>
+        <Card className="ring-primary/15" noHover>
           <CardHeader>
             <CardTitle>Bereits eingeloggt</CardTitle>
             <CardDescription>Du bist bereits als Owner angemeldet.</CardDescription>
@@ -37,7 +37,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
 
   return (
     <div className="mx-auto w-full max-w-md">
-      <Card>
+      <Card className="ring-primary/15" noHover>
         <CardHeader>
           <CardTitle>Owner Login</CardTitle>
           <CardDescription>Nur der Webseiten-Owner darf auf das Dashboard zugreifen.</CardDescription>

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  type ComponentProps,
   type KeyboardEvent,
   type MouseEvent as ReactMouseEvent,
   type ReactNode,
@@ -38,11 +39,22 @@ import {
   AdminSortOrderLabelRow,
 } from "@/components/admin/admin-image-size-hint";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card as UiCard,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+
+function Card({ className, ...props }: ComponentProps<typeof UiCard>) {
+  return <UiCard noHover className={cn("ring-primary/15", className)} {...props} />;
+}
 
 /** Sichtbarkeit der Desktop-Speicher-Meldung vor Beginn des Ausblendens. */
 const DESKTOP_SAVE_FEEDBACK_VISIBLE_MS = 3000;
@@ -56,6 +68,23 @@ const adminSelectClass = cn(
   "h-8 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-1 text-sm outline-none",
   "focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50",
 );
+
+/** Dezenter Oliv-Verlauf im Card-Header (Rand + Innenabstand je nach Card-Größe). */
+const ADMIN_LIST_CARD_HEADER_GRADIENT =
+  "rounded-t-xl border-b border-primary/20 bg-gradient-to-b from-primary/[0.11] via-primary/[0.045] to-transparent pt-3 pb-2";
+
+/** Für `Card size="sm"` (Aktuelles, Preise). */
+const ADMIN_LIST_CARD_HEADER_CLASS = cn(
+  ADMIN_LIST_CARD_HEADER_GRADIENT,
+  "-mx-3 -mt-3 px-3",
+);
+
+/** Für normale `Card` im Kurse-Bereich (YogaFlow-Kurse, manuelle Kurse). */
+const ADMIN_COURSE_CARD_HEADER_CLASS = cn(
+  ADMIN_LIST_CARD_HEADER_GRADIENT,
+  "-mx-4 -mt-4 px-4",
+);
+
 const LINK_TEXT_FALLBACK = "Linktext";
 const MARKDOWN_HISTORY_LIMIT = 120;
 const NEW_WINDOW_LINK_TITLE = "new-window";
@@ -1531,7 +1560,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
               "pointer-events-auto max-w-md rounded-xl border px-4 py-3 text-center text-sm shadow-lg backdrop-blur-md",
               saveToast.isError
                 ? "border-destructive/40 bg-background/95 text-destructive"
-                : "border-emerald-600/35 bg-background/95 text-emerald-800",
+                : "border-primary/40 bg-background/95 text-primary",
             )}
           >
             {saveToast.text}
@@ -1569,7 +1598,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                   )}
                 >
                   {saveState.message ? (
-                    <p className="text-sm leading-snug text-emerald-700">{saveState.message}</p>
+                    <p className="text-sm leading-snug text-primary">{saveState.message}</p>
                   ) : null}
                   {saveState.error ? (
                     <p className="text-sm leading-snug text-destructive">{saveState.error}</p>
@@ -1882,7 +1911,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                     {draft.aktuell.items.map((item, index) => (
                     <div key={item.id} data-aktuell-card-id={item.id}>
                       <Card size="sm">
-                        <CardHeader className="-mx-3 -mt-3 rounded-t-xl border-b border-border/60 bg-gradient-to-b from-muted/75 via-muted/35 to-transparent px-3 pt-3 pb-2">
+                        <CardHeader className={ADMIN_LIST_CARD_HEADER_CLASS}>
                           <CardTitle className="pl-2 text-sm font-bold leading-none">
                             Card {index + 1}
                           </CardTitle>
@@ -2350,9 +2379,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                   </div>
                   <div className="space-y-4 md:col-span-2">
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <Label className="text-base">
-                        YogaFlow-Serien (Karten mit Terminliste)
-                      </Label>
+                      <Label className="text-base">YogaFlow-Kurse</Label>
                       <Button
                         type="button"
                         variant="outline"
@@ -2366,7 +2393,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                               id: newId,
                               sortOrder: getNextSortOrder(list),
                               matchTitles: ["Neuer App-Kurstitel"],
-                              displayTitle: "Neue Serie",
+                              displayTitle: "Neuer Kurs",
                               description: "",
                               day: "",
                               time: "",
@@ -2383,55 +2410,35 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                           });
                         }}
                       >
-                        Serie hinzufügen
+                        Kurs hinzufügen
                       </Button>
                     </div>
                     <div className="grid gap-4 md:grid-cols-2">
                       {yogaflowSeriesList(draft.settings).map((series, index) => (
-                        <Card key={series.id} className="min-w-0 border-dashed">
-                          <CardHeader className="pb-2">
-                            <div className="flex flex-wrap items-start justify-between gap-2">
+                        <Card
+                          key={series.id}
+                          className="min-w-0 border border-dashed border-primary/30 ring-0"
+                        >
+                          <CardHeader className={ADMIN_COURSE_CARD_HEADER_CLASS}>
+                            <div className="space-y-2 pl-3">
                               <CardTitle className="text-base">
-                                Serie {index + 1}{" "}
+                                Kurs {index + 1}{" "}
                                 <span className="text-muted-foreground font-normal">
                                   ({series.displayTitle || series.id})
                                 </span>
                               </CardTitle>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                className="text-destructive hover:text-destructive"
-                                disabled={yogaflowSeriesList(draft.settings).length <= 1}
-                                onClick={() => {
-                                  blurActiveElementBeforeDomRemoval();
-                                  setDraft((prev) => {
-                                    const list = yogaflowSeriesList(prev.settings).filter(
-                                      (_, i) => i !== index,
-                                    );
-                                    return {
-                                      ...prev,
-                                      settings: {
-                                        ...prev.settings,
-                                        yogaflowCourseSeries: list,
-                                      },
-                                    };
-                                  });
-                                }}
-                              >
-                                Entfernen
-                              </Button>
+                              <CardDescription>
+                                App-Titel müssen exakt zum Sync aus Supabase passen (mehrere
+                                durch Komma oder Zeilenumbruch).
+                              </CardDescription>
                             </div>
-                            <CardDescription>
-                              App-Titel müssen exakt zum Sync aus Supabase passen (mehrere
-                              durch Komma oder Zeilenumbruch).
-                            </CardDescription>
                           </CardHeader>
                           <CardContent className="flex flex-col gap-3">
                             <div className="space-y-2">
                               <Label>Match: App-Kurstitel</Label>
                               <Textarea
-                                rows={2}
+                                rows={1}
+                                className="min-h-9 resize-y"
                                 value={series.matchTitles.join(", ")}
                                 placeholder="Yoga am Dienstag"
                                 onChange={(event) => {
@@ -2673,6 +2680,32 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                               }}
                             />
                           </CardContent>
+                          <CardFooter className="flex justify-end border-border/70 bg-muted/35 px-4 py-3">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="default"
+                              disabled={yogaflowSeriesList(draft.settings).length <= 1}
+                              className="min-w-[7.5rem] border-destructive/35 font-semibold text-destructive shadow-sm hover:border-destructive/55 hover:bg-destructive/10 hover:text-destructive"
+                              onClick={() => {
+                                blurActiveElementBeforeDomRemoval();
+                                setDraft((prev) => {
+                                  const list = yogaflowSeriesList(prev.settings).filter(
+                                    (_, i) => i !== index,
+                                  );
+                                  return {
+                                    ...prev,
+                                    settings: {
+                                      ...prev.settings,
+                                      yogaflowCourseSeries: list,
+                                    },
+                                  };
+                                });
+                              }}
+                            >
+                              Entfernen
+                            </Button>
+                          </CardFooter>
                         </Card>
                       ))}
                     </div>
@@ -2683,7 +2716,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                   <div className="space-y-4 md:col-span-2">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <Label className="text-base">
-                        Manuelle Kurs-Karten (erscheinen nach den YogaFlow-Serien)
+                        Manuelle Kurs-Karten (erscheinen nach den YogaFlow-Kursen)
                       </Label>
                       <Button
                         type="button"
@@ -2722,9 +2755,12 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                           const internal = isInternalCourse(course);
                           const external = isExternalCourse(course);
                           return (
-                            <Card key={courseId} className="min-w-0 border-dashed">
-                              <CardHeader className="pb-2">
-                                <div className="flex flex-wrap items-start justify-between gap-2">
+                            <Card
+                              key={courseId}
+                              className="min-w-0 border border-dashed border-primary/30 ring-0"
+                            >
+                              <CardHeader className={ADMIN_COURSE_CARD_HEADER_CLASS}>
+                                <div className="pl-3">
                                   <CardTitle className="text-base">
                                     Manuelle Karte {displayIndex + 1}
                                     <span className="text-muted-foreground font-normal">
@@ -2732,22 +2768,6 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                       ({course.title || courseId})
                                     </span>
                                   </CardTitle>
-                                  <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="sm"
-                                    className="text-destructive hover:text-destructive"
-                                    disabled={draft.courses.length === 0}
-                                    onClick={() => {
-                                      blurActiveElementBeforeDomRemoval();
-                                      setDraft((prev) => ({
-                                        ...prev,
-                                        courses: prev.courses.filter((c) => c.id !== courseId),
-                                      }));
-                                    }}
-                                  >
-                                    Entfernen
-                                  </Button>
                                 </div>
                               </CardHeader>
                               <CardContent className="flex flex-col gap-3">
@@ -2987,6 +3007,24 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                   </div>
                                 ) : null}
                               </CardContent>
+                              <CardFooter className="flex justify-end border-border/70 bg-muted/35 px-4 py-3">
+                                <Button
+                                  type="button"
+                                  variant="outline"
+                                  size="default"
+                                  disabled={draft.courses.length === 0}
+                                  className="min-w-[7.5rem] border-destructive/35 font-semibold text-destructive shadow-sm hover:border-destructive/55 hover:bg-destructive/10 hover:text-destructive"
+                                  onClick={() => {
+                                    blurActiveElementBeforeDomRemoval();
+                                    setDraft((prev) => ({
+                                      ...prev,
+                                      courses: prev.courses.filter((c) => c.id !== courseId),
+                                    }));
+                                  }}
+                                >
+                                  Entfernen
+                                </Button>
+                              </CardFooter>
                             </Card>
                           );
                         })}
@@ -2997,10 +3035,10 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                   <strong className="text-foreground">YogaFlow:</strong> Termine kommen aus{" "}
                   <code className="text-xs">data/yogaflow-courses.json</code> (Sync: Supabase +
                   optional Playwright für Restplätze, Secret{" "}
-                  <code className="text-xs">YOGAFLOW_APP_URL</code>). Pro Serie eine Karte;
-                  konkrete Daten und Status in der aufklappbaren Liste.{" "}
+                  <code className="text-xs">YOGAFLOW_APP_URL</code>). Pro YogaFlow-Kurs eine Karte
+                  mit Terminliste; konkrete Daten und Status in der aufklappbaren Liste.{" "}
                   <strong className="text-foreground">Manuelle Kurse</strong> lassen sich oben
-                  bearbeiten; auf der Seite erscheinen sie nach den Serienkarten.
+                  bearbeiten; auf der Seite erscheinen sie nach den YogaFlow-Kursen.
                 </div>
               </div>
             ) : null}
@@ -3749,7 +3787,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                   )}
                 >
                   {saveState.message ? (
-                    <p className="text-sm text-emerald-700">{saveState.message}</p>
+                    <p className="text-sm text-primary">{saveState.message}</p>
                   ) : null}
                   {saveState.error ? (
                     <p className="text-sm text-destructive">{saveState.error}</p>
@@ -3802,7 +3840,7 @@ function PriceEditor({
 }) {
   return (
     <Card size="sm">
-      <CardHeader className="-mx-3 -mt-3 rounded-t-xl border-b border-border/60 bg-gradient-to-b from-muted/75 via-muted/35 to-transparent px-3 pt-3 pb-2">
+      <CardHeader className={ADMIN_LIST_CARD_HEADER_CLASS}>
         <CardTitle className="pl-2 text-sm font-bold leading-none">Preis {index + 1}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">

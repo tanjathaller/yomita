@@ -21,7 +21,7 @@ export default async function AdminHomePage() {
     const message = error instanceof Error ? error.message : "Unbekannter Fehler";
     return (
       <div className="mx-auto w-full max-w-3xl">
-        <Card>
+        <Card className="ring-primary/15" noHover>
           <CardHeader>
             <CardTitle>Admin konnte nicht geladen werden</CardTitle>
             <CardDescription>

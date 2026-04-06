@@ -17,7 +17,7 @@ export default function AdminErrorPage({ error, reset }: AdminErrorPageProps) {
 
   return (
     <div className="mx-auto w-full max-w-3xl">
-      <Card>
+      <Card className="ring-primary/15" noHover>
         <CardHeader>
           <CardTitle>Beim Admin ist ein Fehler aufgetreten</CardTitle>
           <CardDescription>
