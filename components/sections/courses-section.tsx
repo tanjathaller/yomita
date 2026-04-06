@@ -1,28 +1,31 @@
 import Link from "next/link";
 
-import type { Course } from "@/types/site-content";
+import type { Course, GeneralSettings } from "@/types/site-content";
 
 import { CourseRow } from "@/components/domain/course-row";
-import { YogaflowCoursesExpandable } from "@/components/domain/yogaflow-courses-expandable";
+import { YogaflowSeriesCourseCard } from "@/components/domain/yogaflow-series-course-card";
 import { MarkdownContent } from "@/components/shared/markdown-content";
 import { SectionShell } from "@/components/shared/section-shell";
 import { buttonVariants } from "@/components/ui/button-variants";
+import { groupYogaflowCoursesIntoSeries } from "@/lib/yogaflow-series-group";
 import { cn } from "@/lib/utils";
 
-const manualGridClass = cn(
+const courseGridClass = cn(
   "flex flex-col gap-4",
-  "lg:flex-row lg:flex-wrap lg:items-center lg:justify-center lg:gap-6 xl:gap-8",
+  "lg:flex-row lg:flex-wrap lg:items-start lg:justify-center lg:gap-6 xl:gap-8",
 );
 
-const manualItemClass = cn(
-  "flex min-w-0 w-full flex-col",
-  "lg:flex-[0_0_calc((100%_-_3rem)/3)]",
-  "xl:flex-[0_0_calc((100%_-_4rem)/3)]",
+const courseGridItemClass = cn(
+  "flex min-w-0 w-full flex-col lg:self-start",
+  "lg:flex-[0_0_calc((100%_-_1.5rem)/2)]",
+  "xl:flex-[0_0_calc((100%_-_2rem)/2)]",
 );
 
 type CoursesSectionProps = {
   /** Aus YogaFlow-Sync (`data/yogaflow-courses.json`). */
   yogaflowCourses: Course[];
+  /** Serien-Konfiguration inkl. Defaults aus `withSortedLists`. */
+  yogaflowCourseSeries: NonNullable<GeneralSettings["yogaflowCourseSeries"]>;
   /** Manuell im Site-Content gepflegt (nicht in der App). */
   manualCourses: Course[];
   appUrl: string;
@@ -32,8 +35,6 @@ type CoursesSectionProps = {
   sectionTitle?: string;
   /** Optionaler Sektionstext (Markdown; Fallback: Standardtext inkl. Link zum Kontakt). */
   sectionIntro?: string;
-  /** Überschrift über den manuellen Kursen, wenn YogaFlow- und manuelle Liste beide sichtbar. */
-  manualSectionTitle?: string;
   /** When true, this block sits below „Aktuelles“ in the same muted band (spacing + divider). */
   afterAktuelles?: boolean;
   /** Wenn es kein Aktuelles gibt: unter dem Kurz-„Über mich“-Teaser (spacing + divider). */
@@ -42,12 +43,12 @@ type CoursesSectionProps = {
 
 export function CoursesSection({
   yogaflowCourses,
+  yogaflowCourseSeries,
   manualCourses,
   appUrl,
   eyebrowLabel,
   sectionTitle,
   sectionIntro,
-  manualSectionTitle,
   afterAktuelles = false,
   afterAboutTeaser = false,
 }: CoursesSectionProps) {
@@ -56,11 +57,14 @@ export function CoursesSection({
   const introMarkdown =
     sectionIntro?.trim() ||
     "Als Bestandskund:in buchst du deine Stunden ganz entspannt über die App. Wenn du neu bist oder Fragen hast, bin ich gern für dich da - schreib mir einfach über das [Kontaktformular](/#kontakt).";
-  const manualHeading =
-    manualSectionTitle?.trim() || "Weitere Angebote";
-  const hasYogaflow = yogaflowCourses.length > 0;
+
+  const seriesBlocks = groupYogaflowCoursesIntoSeries(
+    yogaflowCourseSeries,
+    yogaflowCourses,
+  );
   const hasManual = manualCourses.length > 0;
-  const showManualSubheading = hasYogaflow && hasManual;
+  const hasSeries = seriesBlocks.length > 0;
+  const hasAnyGrid = hasSeries || hasManual;
 
   return (
     <SectionShell
@@ -112,47 +116,22 @@ export function CoursesSection({
       </div>
 
       <div className="mt-8 w-full">
-        {hasYogaflow ? (
-          <YogaflowCoursesExpandable
-            courses={yogaflowCourses}
-            collapseScrollToId="kurse"
-          />
-        ) : null}
-
-        {showManualSubheading ? (
-          <div className="mt-14 max-w-2xl border-border/60 border-t pt-10 pl-4 lg:mt-16 lg:pt-12 lg:pl-6">
-            <div className="relative inline-block pr-6 lg:pr-7">
-              <h3 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight lg:text-6xl">
-                {manualHeading}
-              </h3>
-              <span
-                aria-hidden
-                className="mt-2 ml-3 block h-1 w-40 rounded-full bg-[#D8C9AF]"
-              />
-            </div>
-            <p className="text-muted-foreground mt-4 max-w-prose pl-4 text-sm leading-relaxed lg:mt-5 lg:pl-6 lg:text-base">
-              Diese Termine sind nicht über die YogaFlow-App gebucht – Infos und
-              Anmeldung siehe jeweils auf der Karte oder über das Kontaktformular.
-            </p>
-          </div>
-        ) : null}
-
-        {hasManual ? (
-          <div
-            className={cn(
-              manualGridClass,
-              showManualSubheading ? "mt-8 lg:mt-10" : "mt-8",
-            )}
-          >
+        {hasAnyGrid ? (
+          <div className={courseGridClass}>
+            {seriesBlocks.map(({ series, sessions }) => (
+              <div key={series.id} className={courseGridItemClass}>
+                <YogaflowSeriesCourseCard series={series} sessions={sessions} />
+              </div>
+            ))}
             {manualCourses.map((course) => (
-              <div key={course.id} className={manualItemClass}>
+              <div key={course.id} className={courseGridItemClass}>
                 <CourseRow course={course} />
               </div>
             ))}
           </div>
         ) : null}
 
-        {!hasYogaflow && !hasManual ? (
+        {!hasAnyGrid ? (
           <p className="text-muted-foreground text-center text-sm">
             Aktuell sind keine Kurse hinterlegt.
           </p>

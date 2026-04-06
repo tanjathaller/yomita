@@ -1,3 +1,4 @@
+import { ensureYogaflowCourseSeriesSettings } from "@/lib/yogaflow-series-group";
 import type {
   AktuellesItem,
   Course,
@@ -20,6 +21,7 @@ export function sortPrices(prices: PriceItem[]): PriceItem[] {
 export function withSortedLists(content: SiteContent): SiteContent {
   return {
     ...content,
+    settings: ensureYogaflowCourseSeriesSettings(content.settings),
     aktuell: {
       ...content.aktuell,
       items: sortAktuellesItems(content.aktuell.items),

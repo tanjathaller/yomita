@@ -135,6 +135,30 @@
     },
     "coursesSectionTitle": "Kurse & Termine",
     "coursesSectionIntro": "Als Bestandskund:in buchst du deine Stunden ganz entspannt über die App. Wenn du neu bist oder Fragen hast, bin ich gern für dich da - schreib mir einfach über das [Kontaktformular](#kontakt).",
+    "yogaflowCourseSeries": [
+      {
+        "id": "series-yoga-dienstag",
+        "sortOrder": 10,
+        "matchTitles": ["Yoga am Dienstag"],
+        "displayTitle": "Vinyasa Yoga in Neuss am Dienstag",
+        "description": "Vinyasa für Fortgeschrittene",
+        "day": "Dienstag",
+        "time": "18:00–19:30 (90 Min.)",
+        "location": "Neuss",
+        "price": "12,00 €"
+      },
+      {
+        "id": "series-yoga-mittwoch",
+        "sortOrder": 20,
+        "matchTitles": ["Yoga am Mittwoch"],
+        "displayTitle": "Yoga Flow in Neuss am Mittwoch",
+        "description": "Vinyasa/Hatha für alle",
+        "day": "Mittwoch",
+        "time": "18:00–19:30 (90 Min.)",
+        "location": "Neuss",
+        "price": "12,00 €"
+      }
+    ],
     "appUrl": "https://andrethaller-ctrl-yo-gpke.bolt.host/auth",
     "siteTitle": "Tanja Thaller – Yoga & Achtsamkeit",
     "metaDescription": "Yoga-Kurse und Buchung über die App. Kontakt für Neukundinnen und Neukunden. Platzhalter-SEO-Text.",

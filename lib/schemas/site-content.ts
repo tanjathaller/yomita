@@ -70,6 +70,19 @@ export const navItemSchema = z.object({
   href: z.string(),
 });
 
+export const yogaflowCourseSeriesSchema = z.object({
+  id: z.string().min(1),
+  sortOrder: z.number(),
+  matchTitles: z.array(z.string().min(1)).min(1),
+  displayTitle: z.string().min(1),
+  description: z.string(),
+  day: z.string().min(1),
+  time: z.string().min(1),
+  location: z.string().min(1),
+  price: z.string().optional(),
+  scheduleNote: z.string().optional(),
+});
+
 export const generalSettingsSchema = z.object({
   businessName: z.string(),
   navWordmark: z.string().optional(),
@@ -84,6 +97,7 @@ export const generalSettingsSchema = z.object({
   coursesSectionTitle: z.string().optional(),
   coursesSectionIntro: z.string().optional(),
   coursesManualSectionTitle: z.string().optional(),
+  yogaflowCourseSeries: z.array(yogaflowCourseSeriesSchema).max(10).optional(),
   pricesSectionTitle: z.string().optional(),
   pricesSectionIntro: z.string().optional(),
   appUrl: z.string().min(1),

@@ -137,7 +137,7 @@ Kein Feld `externalUrl`.
 
 - **Quelle:** GitHub Action schreibt `data/yogaflow-courses.json` (`syncedAt` + `courses[]`, gleiche `Course`-Struktur wie oben, i. d. R. nur `type: "internal"`). Kursdaten kommen aus **Supabase REST**; **Restplatz-Status** wird per **Playwright** aus der sichtbaren YogaFlow-Web-App gelesen (Secret `YOGAFLOW_APP_URL`), damit keine Leserechte auf alle `registrations` nötig sind. Ohne `YOGAFLOW_APP_URL` nutzt das Skript nur den unvollständigen `registrations`-Fallback.
 - **Merge:** `getSiteContent()` setzt nach KV/Datei optional `yogaflowCourses` aus dieser Datei, wenn `syncedAt` **nicht leer** ist. Das Feld **`courses`** bleibt die **manuell** gepflegten Kurse (nicht in der YogaFlow-App). Abschalten: Env `YOGAFLOW_USE_SYNCED_COURSES=false` oder leeres `syncedAt`.
-- **Darstellung:** Von `yogaflowCourses` werden standardmäßig die **nächsten 4** Termine auf schmalen Viewports bzw. **6** ab Breakpoint `lg` gezeigt; weitere über „Mehr anzeigen“. Manuelle `courses` erscheinen darunter getrennt (Überschrift optional `settings.coursesManualSectionTitle`, Fallback „Weitere Angebote“), sofern beide Listen Inhalt haben.
+- **Darstellung:** `settings.yogaflowCourseSeries[]` definiert **Serien-Karten** (fester Titel, Kursstil, Wochentag/Ort/Zeit/Preis auf der Karte). Alle Sync-Termine, deren `title` zu `matchTitles` passt, erscheinen **gruppiert** in einer **aufklappbaren Terminliste** (Datum, Uhrzeit, Verfügbarkeit). Reihenfolge der Karten: zuerst Serien nach `sortOrder`, danach manuelle `courses` (z. B. Zons, Düsseldorf) im gleichen Raster – **ohne** separaten Block „Weitere Angebote“. Fehlt `yogaflowCourseSeries` leer im gespeicherten Content, wendet die Site beim Laden Defaults für die beiden Neuss-Serien an (Dienstag/Mittwoch).
 
 ### Externer Kurs (`type: "external"`)
 
@@ -201,7 +201,8 @@ Kein Feld `externalUrl`.
 | `sectionEyebrows`  | object?  | optionale kleine Labels über Abschnitts-Headlines: `hero`, `aktuell`, `courses`, `prices`; Fallbacks: `businessName` bzw. „Journal“, „Angebot“, „Teilnahme“ |
 | `coursesSectionTitle` | string? | optionaler Titel der Kurse-Sektion; Fallback: „Kurse & Termine“ |
 | `coursesSectionIntro` | string? | optionaler Untertext der Kurse-Sektion (**Markdown**); z. B. Link zum Kontakt `[Kontaktformular](/#kontakt)`; Fallback: Standardtext mit diesem Link |
-| `coursesManualSectionTitle` | string? | optional: H3 über manuell gepflegten Kursen; nur wenn YogaFlow- und manuelle Liste sichtbar; Fallback: „Weitere Angebote“ |
+| `coursesManualSectionTitle` | string? | **deprecated** – wird nicht mehr angezeigt (ältere Daten dürfen das Feld noch enthalten) |
+| `yogaflowCourseSeries` | array? | Serien für App-Termine; siehe Tabelle unten. Max. 10. Fehlt oder leer → Laufzeit-Defaults (Dienstag/Mittwoch) |
 | `pricesSectionTitle` | string? | optionaler Titel der Preise-Sektion; Fallback: „Preise“ |
 | `pricesSectionIntro` | string? | optionaler Untertext der Preise-Sektion (**Markdown**); Fallback: Hinweis zu Zahlung/Abwicklung außerhalb der Website |
 | `appUrl`           | string   | Hauptlink zur Kursbuchungs-App (Hero-CTA kann davon abweichen, z. B. Tracking) |
@@ -210,6 +211,21 @@ Kein Feld `externalUrl`.
 | `metaDescription`  | string?  | Meta-Description SEO |
 | `ogImageUrl`       | string?  | Open-Graph-Vorschaubild |
 | `navigation`       | siehe oben | optionale Nav-Einträge |
+
+### `settings.yogaflowCourseSeries[]` (Eintrag)
+
+| Feld | Typ | Beschreibung |
+|------|-----|--------------|
+| `id` | string | stabile ID |
+| `sortOrder` | number | Reihenfolge der Karten (niedrig zuerst, vor den manuellen `courses`) |
+| `matchTitles` | string[] | exakte(r) `title` aus dem YogaFlow-Sync; mindestens ein Eintrag |
+| `displayTitle` | string | öffentlicher Kartentitel |
+| `description` | string | Kursstil-Text auf der Karte |
+| `day` | string | Anzeige in der Datum-Zeile (z. B. fester Wochentag) |
+| `time` | string | typische Uhrzeit auf der Karte |
+| `location` | string | Ort auf der Karte |
+| `price` | string? | optional |
+| `scheduleNote` | string? | optional, Hinweis unter dem Kursstil |
 
 ---
 

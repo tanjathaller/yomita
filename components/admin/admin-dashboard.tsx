@@ -22,7 +22,13 @@ import {
   ADMIN_SITE_CONTENT_FORM_ID,
 } from "@/lib/admin-dashboard-ui";
 import { cn } from "@/lib/utils";
-import type { NavItem, PriceItem, SiteContent } from "@/types/site-content";
+import { DEFAULT_YOGAFLOW_COURSE_SERIES } from "@/lib/yogaflow-series-group";
+import type {
+  NavItem,
+  PriceItem,
+  SiteContent,
+  YogaflowCourseSeries,
+} from "@/types/site-content";
 import {
   AdminImageFieldLabel,
   AdminSortOrderLabelRow,
@@ -94,6 +100,21 @@ function buildId(prefix: string): string {
 
 function getNextSortOrder(items: Array<{ sortOrder: number }>): number {
   return (Math.max(0, ...items.map((item) => item.sortOrder)) || 0) + 10;
+}
+
+function parseMatchTitlesInput(raw: string): string[] {
+  return raw
+    .split(/[,;\n]+/)
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
+function yogaflowSeriesList(
+  settings: SiteContent["settings"],
+): YogaflowCourseSeries[] {
+  return settings.yogaflowCourseSeries?.length
+    ? settings.yogaflowCourseSeries
+    : DEFAULT_YOGAFLOW_COURSE_SERIES;
 }
 
 function parseNumber(value: string): number {
@@ -1831,40 +1852,296 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                       }
                     />
                   </div>
-                  <div className="space-y-2 md:col-span-2">
-                    <Label>Überschrift „weitere“ Kurse (H3)</Label>
-                    <Input
-                      value={draft.settings.coursesManualSectionTitle ?? ""}
-                      placeholder="Weitere Angebote"
-                      onChange={(event) =>
-                        setDraft((prev) => ({
-                          ...prev,
-                          settings: {
-                            ...prev.settings,
-                            coursesManualSectionTitle:
-                              event.target.value || undefined,
-                          },
-                        }))
-                      }
-                    />
-                    <p className="text-muted-foreground text-xs">
-                      Erscheint nur, wenn sowohl YogaFlow-Termine als auch manuelle Kurse
-                      angezeigt werden.
-                    </p>
+                  <div className="space-y-4 md:col-span-2">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <Label className="text-base">
+                        YogaFlow-Serien (Karten mit Terminliste)
+                      </Label>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        disabled={yogaflowSeriesList(draft.settings).length >= MAX_ITEMS_PER_LIST}
+                        onClick={() => {
+                          setDraft((prev) => {
+                            const list = [...yogaflowSeriesList(prev.settings)];
+                            const newId = buildId("series");
+                            list.push({
+                              id: newId,
+                              sortOrder: getNextSortOrder(list),
+                              matchTitles: ["Neuer App-Kurstitel"],
+                              displayTitle: "Neue Serie",
+                              description: "",
+                              day: "",
+                              time: "",
+                              location: "",
+                            });
+                            return {
+                              ...prev,
+                              settings: {
+                                ...prev.settings,
+                                yogaflowCourseSeries: list,
+                              },
+                            };
+                          });
+                        }}
+                      >
+                        Serie hinzufügen
+                      </Button>
+                    </div>
+                    <div className="space-y-4">
+                      {yogaflowSeriesList(draft.settings).map((series, index) => (
+                        <Card key={series.id} className="border-dashed">
+                          <CardHeader className="pb-2">
+                            <div className="flex flex-wrap items-start justify-between gap-2">
+                              <CardTitle className="text-base">
+                                Serie {index + 1}{" "}
+                                <span className="text-muted-foreground font-normal">
+                                  ({series.displayTitle || series.id})
+                                </span>
+                              </CardTitle>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="text-destructive hover:text-destructive"
+                                disabled={yogaflowSeriesList(draft.settings).length <= 1}
+                                onClick={() => {
+                                  blurActiveElementBeforeDomRemoval();
+                                  setDraft((prev) => {
+                                    const list = yogaflowSeriesList(prev.settings).filter(
+                                      (_, i) => i !== index,
+                                    );
+                                    return {
+                                      ...prev,
+                                      settings: {
+                                        ...prev.settings,
+                                        yogaflowCourseSeries: list,
+                                      },
+                                    };
+                                  });
+                                }}
+                              >
+                                Entfernen
+                              </Button>
+                            </div>
+                            <CardDescription>
+                              App-Titel müssen exakt zum Sync aus Supabase passen (mehrere
+                              durch Komma oder Zeilenumbruch).
+                            </CardDescription>
+                          </CardHeader>
+                          <CardContent className="grid gap-3 sm:grid-cols-2">
+                            <div className="space-y-2 sm:col-span-2">
+                              <Label>Match: App-Kurstitel</Label>
+                              <Textarea
+                                rows={2}
+                                value={series.matchTitles.join(", ")}
+                                placeholder="Yoga am Dienstag"
+                                onChange={(event) => {
+                                  const titles = parseMatchTitlesInput(event.target.value);
+                                  setDraft((prev) => {
+                                    const list = [...yogaflowSeriesList(prev.settings)];
+                                    list[index] = {
+                                      ...list[index]!,
+                                      matchTitles:
+                                        titles.length > 0 ? titles : list[index]!.matchTitles,
+                                    };
+                                    return {
+                                      ...prev,
+                                      settings: {
+                                        ...prev.settings,
+                                        yogaflowCourseSeries: list,
+                                      },
+                                    };
+                                  });
+                                }}
+                              />
+                            </div>
+                            <div className="space-y-2 sm:col-span-2">
+                              <Label>Anzeige-Titel (Karte)</Label>
+                              <Input
+                                value={series.displayTitle}
+                                onChange={(event) => {
+                                  const v = event.target.value;
+                                  setDraft((prev) => {
+                                    const list = [...yogaflowSeriesList(prev.settings)];
+                                    list[index] = { ...list[index]!, displayTitle: v };
+                                    return {
+                                      ...prev,
+                                      settings: {
+                                        ...prev.settings,
+                                        yogaflowCourseSeries: list,
+                                      },
+                                    };
+                                  });
+                                }}
+                              />
+                            </div>
+                            <div className="space-y-2 sm:col-span-2">
+                              <Label>Kursstil / Beschreibung</Label>
+                              <Textarea
+                                rows={2}
+                                value={series.description}
+                                onChange={(event) => {
+                                  const v = event.target.value;
+                                  setDraft((prev) => {
+                                    const list = [...yogaflowSeriesList(prev.settings)];
+                                    list[index] = { ...list[index]!, description: v };
+                                    return {
+                                      ...prev,
+                                      settings: {
+                                        ...prev.settings,
+                                        yogaflowCourseSeries: list,
+                                      },
+                                    };
+                                  });
+                                }}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <AdminSortOrderLabelRow htmlFor={`series-sort-${series.id}`} />
+                              <Input
+                                id={`series-sort-${series.id}`}
+                                inputMode="numeric"
+                                value={String(series.sortOrder)}
+                                onChange={(event) => {
+                                  const n = parseNumber(event.target.value);
+                                  setDraft((prev) => {
+                                    const list = [...yogaflowSeriesList(prev.settings)];
+                                    list[index] = { ...list[index]!, sortOrder: n };
+                                    return {
+                                      ...prev,
+                                      settings: {
+                                        ...prev.settings,
+                                        yogaflowCourseSeries: list,
+                                      },
+                                    };
+                                  });
+                                }}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Preis (optional)</Label>
+                              <Input
+                                value={series.price ?? ""}
+                                placeholder="12,00 €"
+                                onChange={(event) => {
+                                  const v = event.target.value.trim();
+                                  setDraft((prev) => {
+                                    const list = [...yogaflowSeriesList(prev.settings)];
+                                    list[index] = {
+                                      ...list[index]!,
+                                      price: v || undefined,
+                                    };
+                                    return {
+                                      ...prev,
+                                      settings: {
+                                        ...prev.settings,
+                                        yogaflowCourseSeries: list,
+                                      },
+                                    };
+                                  });
+                                }}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Datum-Zeile (z. B. Wochentag)</Label>
+                              <Input
+                                value={series.day}
+                                onChange={(event) => {
+                                  const v = event.target.value;
+                                  setDraft((prev) => {
+                                    const list = [...yogaflowSeriesList(prev.settings)];
+                                    list[index] = { ...list[index]!, day: v };
+                                    return {
+                                      ...prev,
+                                      settings: {
+                                        ...prev.settings,
+                                        yogaflowCourseSeries: list,
+                                      },
+                                    };
+                                  });
+                                }}
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label>Zeit</Label>
+                              <Input
+                                value={series.time}
+                                onChange={(event) => {
+                                  const v = event.target.value;
+                                  setDraft((prev) => {
+                                    const list = [...yogaflowSeriesList(prev.settings)];
+                                    list[index] = { ...list[index]!, time: v };
+                                    return {
+                                      ...prev,
+                                      settings: {
+                                        ...prev.settings,
+                                        yogaflowCourseSeries: list,
+                                      },
+                                    };
+                                  });
+                                }}
+                              />
+                            </div>
+                            <div className="space-y-2 sm:col-span-2">
+                              <Label>Ort</Label>
+                              <Input
+                                value={series.location}
+                                onChange={(event) => {
+                                  const v = event.target.value;
+                                  setDraft((prev) => {
+                                    const list = [...yogaflowSeriesList(prev.settings)];
+                                    list[index] = { ...list[index]!, location: v };
+                                    return {
+                                      ...prev,
+                                      settings: {
+                                        ...prev.settings,
+                                        yogaflowCourseSeries: list,
+                                      },
+                                    };
+                                  });
+                                }}
+                              />
+                            </div>
+                            <div className="space-y-2 sm:col-span-2">
+                              <Label>Hinweis unter Kursstil (optional)</Label>
+                              <Input
+                                value={series.scheduleNote ?? ""}
+                                onChange={(event) => {
+                                  const v = event.target.value.trim();
+                                  setDraft((prev) => {
+                                    const list = [...yogaflowSeriesList(prev.settings)];
+                                    list[index] = {
+                                      ...list[index]!,
+                                      scheduleNote: v || undefined,
+                                    };
+                                    return {
+                                      ...prev,
+                                      settings: {
+                                        ...prev.settings,
+                                        yogaflowCourseSeries: list,
+                                      },
+                                    };
+                                  });
+                                }}
+                              />
+                            </div>
+                          </CardContent>
+                        </Card>
+                      ))}
+                    </div>
                   </div>
                 </div>
                 <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
-                  <strong className="text-foreground">YogaFlow:</strong> vier Termine auf
-                  Mobil, sechs ab großem Bildschirm sichtbar, der Rest unter „Mehr anzeigen“.
-                  Sync-Action: Supabase + Playwright (Restplatz-Texte aus der App); Secret{" "}
-                  <code className="text-xs">YOGAFLOW_APP_URL</code>. Ausgabe:{" "}
-                  <code className="text-xs">data/yogaflow-courses.json</code> mit{" "}
-                  <code className="text-xs">syncedAt</code>.{" "}
-                  <strong className="text-foreground">Weitere Kurse</strong> (nicht in der
-                  App) liegen im Content-Feld <code className="text-xs">courses</code> in{" "}
-                  <code className="text-xs">site-content.json</code> bzw. KV – hier im Admin
-                  derzeit ohne Karten-Editor, Anpassung z. B. per JSON-Export/Import oder
-                  direkt in der Datei.
+                  <strong className="text-foreground">YogaFlow:</strong> Termine kommen aus{" "}
+                  <code className="text-xs">data/yogaflow-courses.json</code> (Sync: Supabase +
+                  optional Playwright für Restplätze, Secret{" "}
+                  <code className="text-xs">YOGAFLOW_APP_URL</code>). Pro Serie eine Karte;
+                  konkrete Daten und Status in der aufklappbaren Liste.{" "}
+                  <strong className="text-foreground">Manuelle Kurse</strong> (z. B. Zons,
+                  Düsseldorf) bleiben im Bereich „Kurse“ als <code className="text-xs">courses</code>{" "}
+                  – erscheinen auf der Seite nach den Serienkarten.
                 </div>
               </div>
             ) : null}

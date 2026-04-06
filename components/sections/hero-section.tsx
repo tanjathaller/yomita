@@ -53,7 +53,7 @@ export function HeroSection({
               <img
                 src="/images/tanja-10-mobile.webp"
                 alt={hero.imageAlt}
-                className="absolute -inset-[9.5%] block h-[119%] w-[119%] max-h-none max-w-none border-0 object-cover object-[center_33%] p-0 outline-none ring-0 lg:-inset-[6.5%] lg:h-[113%] lg:w-[113%]"
+                className="absolute -inset-[9.5%] block h-[119%] w-[119%] max-h-none max-w-none translate-x-[4.5%] border-0 object-cover object-[center_33%] p-0 outline-none ring-0 lg:-inset-[6.5%] lg:h-[113%] lg:w-[113%] lg:translate-x-[3.5%]"
                 decoding="async"
                 fetchPriority="high"
               />

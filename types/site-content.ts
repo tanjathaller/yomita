@@ -88,6 +88,31 @@ export type NavItem = {
   href: string;
 };
 
+/**
+ * Steuert eine Karten-Serie für aus der YogaFlow-Sync-Datei kommende Termine:
+ * feste Anzeige auf der Karte, Zuordnung über exakte App-Kurstitel (`matchTitles`).
+ */
+export type YogaflowCourseSeries = {
+  id: string;
+  /** Reihenfolge der Karten (niedrig zuerst). */
+  sortOrder: number;
+  /**
+   * Exakte(r) `title` aus der Synchronisation (z. B. „Yoga am Dienstag“).
+   * Alle passenden Termine erscheinen in der aufklappbaren Liste.
+   */
+  matchTitles: string[];
+  /** Öffentlicher Kartentitel. */
+  displayTitle: string;
+  /** Kurzbeschreibung / Kursstil auf der Karte. */
+  description: string;
+  /** Anzeige „Datum“-Zeile (z. B. fester Wochentag). */
+  day: string;
+  time: string;
+  location: string;
+  price?: string;
+  scheduleNote?: string;
+};
+
 export type GeneralSettings = {
   businessName: string;
   /** Wenn gesetzt: Anzeige im Header und im mobilen Menü-Titel (z. B. Kurzmarke). Sonst `businessName`. */
@@ -107,8 +132,13 @@ export type GeneralSettings = {
   coursesSectionTitle?: string;
   /** Optionaler Untertext der Kurse-Sektion (Markdown; Fallback: Standardtext inkl. Link zu `#kontakt`). */
   coursesSectionIntro?: string;
-  /** Überschrift über manuell gepflegten Kursen (nicht aus YogaFlow), nur wenn beide Listen sichtbar sind. */
+  /**
+   * @deprecated Wird nicht mehr angezeigt (Kurse & Termine: eine gemeinsame Liste).
+   * Beim Parsen erhalten; optional aus Admin entfernt.
+   */
   coursesManualSectionTitle?: string;
+  /** Karten für App-Serien (Vinyasa Dienstag, Flow Mittwoch, …); Termine kommen aus `yogaflowCourses`. */
+  yogaflowCourseSeries?: YogaflowCourseSeries[];
   /** Optionaler Titel der Preise-Sektion (Fallback: „Preise“). */
   pricesSectionTitle?: string;
   /** Optionaler Untertext der Preise-Sektion (Markdown; Fallback: Hinweis zu Zahlung/Abwicklung). */
