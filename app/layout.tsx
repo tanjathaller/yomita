@@ -39,9 +39,9 @@ export default function RootLayout({
   return (
     <html
       lang="de"
-      className={`${geistSans.variable} ${geistMono.variable} ${heroDisplay.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${heroDisplay.variable} h-full overflow-x-clip antialiased`}
     >
-      <body className="bg-background text-foreground flex min-h-full flex-col overflow-x-clip">
+      <body className="bg-background text-foreground flex min-h-full min-w-0 flex-col overflow-x-clip">
         {children}
       </body>
     </html>

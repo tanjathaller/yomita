@@ -121,7 +121,7 @@ export function HeroSection({
         <div
           data-hero-shell
           className={cn(
-            "relative w-full overflow-hidden rounded-t-3xl rounded-b-none border-0 bg-[var(--surface-muted-band)] shadow-none outline-none ring-0",
+            "relative w-full min-w-0 overflow-hidden rounded-t-3xl rounded-b-none border-0 bg-[var(--surface-muted-band)] shadow-none outline-none ring-0",
             "lg:flex lg:items-start lg:justify-start lg:gap-0 lg:overflow-visible lg:rounded-none lg:bg-transparent lg:py-4 xl:py-5",
           )}
         >

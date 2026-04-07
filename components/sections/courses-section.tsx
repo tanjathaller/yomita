@@ -70,7 +70,7 @@ export function CoursesSection({
     <SectionShell
       id="kurse"
       variant="muted"
-      containerClassName="max-w-7xl lg:max-w-[min(88rem,calc(100vw-2rem))] xl:max-w-[min(96rem,calc(100vw-2.5rem))]"
+      containerClassName="max-w-7xl lg:max-w-[min(88rem,calc(100%-2rem))] xl:max-w-[min(96rem,calc(100%-2.5rem))]"
       className={cn(
         afterAktuelles || afterAboutTeaser
           ? "pt-12 pb-24 lg:pt-16 lg:pb-34"

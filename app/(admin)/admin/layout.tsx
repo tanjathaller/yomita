@@ -17,7 +17,7 @@ export default function AdminLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div data-admin-shell className="bg-muted/25 flex min-h-screen flex-col">
+    <div data-admin-shell className="bg-muted/25 flex min-h-screen min-w-0 flex-col">
       <header
         data-admin-header
         className="bg-background/92 sticky top-0 z-40 border-b border-primary/20 px-4 py-2.5 shadow-[0_1px_0_oklch(0.45_0.058_146/0.07)] backdrop-blur sm:px-6 sm:py-3"
@@ -71,7 +71,7 @@ export default function AdminLayout({
           </div>
         </div>
       </header>
-      <div className="flex-1 px-4 pt-0 pb-8 sm:px-6">{children}</div>
+      <div className="min-w-0 flex-1 px-4 pt-0 pb-8 sm:px-6">{children}</div>
     </div>
   );
 }
