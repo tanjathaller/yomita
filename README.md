@@ -57,6 +57,12 @@ Das **Hero-Bild** der Startseite liegt statisch unter [`public/images/hero.png`]
 
 Vorlage: [`.env.example`](./.env.example) → bei Bedarf nach `.env.local` kopieren (Kontakt-API, Revalidate, sobald umgesetzt).
 
+### Deployment / Domain (Live)
+
+- **Kanonische URL:** `https://yomita.de` (Apex, ohne `www`). `www.yomita.de` per Redirect auf die Apex-URL ausrichten (DNS bei IONOS auf Vercel; in Vercel Domains und ggf. Redirect prüfen).
+- **`NEXT_PUBLIC_SITE_URL`:** `https://yomita.de` (ohne trailing slash) in **`.env.local`** und in **Vercel → Project → Settings → Environment Variables** für **Production** setzen. Nach Änderungen einen **Redeploy** auslösen, damit Canonicals, Sitemap, `robots.txt` und JSON-LD die richtige Domain nutzen.
+- Ohne diese Variable fällt die App auf die automatische **`VERCEL_URL`** (`*.vercel.app`) zurück — für das Live-Mapping auf `yomita.de` ist die Variable Pflicht.
+
 ## Hinweis für neue Chat-Sessions (Cursor / KI)
 
 Neue Chats haben **keinen** Zugriff auf frühere Unterhaltungen. Kontext über:

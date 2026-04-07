@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SkipToContentLink } from "@/components/layout/skip-to-content-link";
+import { SiteJsonLd } from "@/components/seo/site-json-ld";
 import { getSiteContent } from "@/lib/get-site-content";
 
 /** `site-content.json` bei jedem Request neu lesen (ohne erneuten `next build`). */
@@ -34,6 +35,7 @@ export default async function PublicLayout({
 
   return (
     <>
+      <SiteJsonLd content={content} />
       <SkipToContentLink />
       <SiteHeader
         settings={content.settings}

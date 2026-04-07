@@ -22,3 +22,20 @@ export function getSiteUrl(): string {
 
   return "http://localhost:3000";
 }
+
+/**
+ * Wandelt eine Asset-URL aus dem Content in eine absolute URL um (Schema.org, JSON-LD).
+ * Bereits absolute http(s)-URLs bleiben unverändert.
+ */
+export function toAbsoluteSiteUrl(resourceUrl: string | undefined): string | undefined {
+  const trimmed = resourceUrl?.trim();
+  if (!trimmed) return undefined;
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  const base = getSiteUrl();
+  try {
+    const path = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
+    return new URL(path, `${base}/`).href;
+  } catch {
+    return undefined;
+  }
+}
