@@ -81,7 +81,8 @@ function splitHeroTitleLines(raw: string): string[] {
   const oneLine = /^Namaste\s+und\s+herzlich\s+willkommen(!?)\s*$/iu.exec(collapsed);
   if (oneLine) {
     const bang = oneLine[1] ?? "";
-    return ["Namaste\u00a0und", `herzlich\u00a0willkommen${bang}`];
+    /* NBSP nur in Zeile 1: „Namaste und“ kompakt. Zeile 2 mit normalem Space, damit mobil umbrechen kann (sonst overflow durch overflow-hidden am Shell). Desktop: lg:whitespace-nowrap hält „herzlich willkommen“ in einer Zeile. */
+    return ["Namaste\u00a0und", `herzlich willkommen${bang}`];
   }
   return [single];
 }
@@ -130,12 +131,12 @@ export function HeroSection({
               id="hero-primary-card"
               data-hero-primary-card
               className={cn(
-                "max-w-2xl space-y-4 p-6",
+                "min-w-0 w-full max-w-2xl space-y-4 p-6",
                 "lg:flex lg:w-full lg:max-w-none lg:items-stretch lg:gap-0 lg:space-y-0 lg:overflow-hidden lg:rounded-l-2xl lg:rounded-r-none lg:bg-primary lg:p-0 lg:shadow-[0_20px_48px_-24px_rgba(25,38,26,0.5)]",
                 "xl:rounded-l-[1.35rem] xl:rounded-r-none",
               )}
             >
-              <div className="space-y-4 lg:flex-1 lg:min-w-0 lg:space-y-5 lg:p-8 lg:pr-16 lg:text-primary-foreground xl:space-y-6 xl:p-9 xl:pr-[4.5rem]">
+              <div className="min-w-0 space-y-4 lg:flex-1 lg:min-w-0 lg:space-y-5 lg:p-8 lg:pr-16 lg:text-primary-foreground xl:space-y-6 xl:p-9 xl:pr-[4.5rem]">
                 {eyebrow ? (
                 <div className="lg:flex lg:items-center lg:gap-3">
                   <HeroEyebrowFlourish className="hidden lg:block" />
@@ -151,7 +152,7 @@ export function HeroSection({
               ) : null}
               <h1
                 className={cn(
-                  "font-heading text-balance text-4xl font-bold leading-[1.08] tracking-tight text-white drop-shadow-[0_2px_28px_rgba(0,0,0,0.45)] lg:text-[3.95rem] xl:text-[4.15rem]",
+                  "max-w-full font-heading text-balance text-4xl font-bold leading-[1.08] tracking-tight text-white break-words drop-shadow-[0_2px_28px_rgba(0,0,0,0.45)] lg:break-normal lg:text-[3.95rem] xl:text-[4.15rem]",
                   "lg:max-w-[min(100%,21rem)] lg:text-pretty lg:drop-shadow-none lg:leading-[1.06] lg:tracking-[-0.025em] lg:text-primary-foreground",
                   "xl:max-w-[min(100%,23.5rem)] xl:leading-[1.05]",
                   "lg:[font-family:var(--font-hero-display),ui-serif,Georgia,serif] lg:font-bold",
