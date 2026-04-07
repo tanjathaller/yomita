@@ -83,7 +83,7 @@ export function SiteFooter({ settings }: SiteFooterProps) {
             </div>
           </nav>
 
-          {/* Mobil: @-Zeile rechts bündig zum Wordmark-Block; Desktop: beides zentriert. */}
+          {/* Mobil: Copyright-Zeile rechts bündig zum Wordmark-Block; Desktop: beides zentriert. */}
           {/* pointer-events-none: große Wordmark-Glyphen (clamp bis 18rem, enge Zeilenhöhe) können
               optisch über die darüberliegenden Rechts-Links ragen und sonst alle Klicks abfangen. */}
           <div className="pointer-events-none [&_*]:pointer-events-none mx-auto flex w-max min-w-0 max-w-full flex-col items-stretch lg:w-full lg:max-w-none lg:items-center">
@@ -94,7 +94,7 @@ export function SiteFooter({ settings }: SiteFooterProps) {
               {name}
             </p>
             <p className="text-muted-foreground mt-2 text-right text-xs tabular-nums lg:text-center">
-              @Tanja Thaller {year}
+              © Tanja Thaller {year}
             </p>
           </div>
         </div>
