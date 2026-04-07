@@ -63,6 +63,29 @@ function HeroPhotoWaves({ className }: { className?: string }) {
   );
 }
 
+/** Zwei Zeilen + NBSPs; Fallback wenn der Titel aus dem Admin als Einzeiler gespeichert wurde. */
+function splitHeroTitleLines(raw: string): string[] {
+  const trimmed = raw.trim();
+  const fromBreaks = trimmed
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+  if (fromBreaks.length > 1) {
+    return fromBreaks;
+  }
+  const single = (fromBreaks[0] ?? trimmed) || "";
+  if (!single) {
+    return ["\u00a0"];
+  }
+  const collapsed = single.replace(/\s+/g, " ");
+  const oneLine = /^Namaste\s+und\s+herzlich\s+willkommen(!?)\s*$/iu.exec(collapsed);
+  if (oneLine) {
+    const bang = oneLine[1] ?? "";
+    return ["Namaste\u00a0und", `herzlich\u00a0willkommen${bang}`];
+  }
+  return [single];
+}
+
 type HeroSectionProps = {
   hero: HeroModel;
   /** Erscheint als dezente Zeile über der Headline (z. B. Marken- oder Studioname). */
@@ -80,12 +103,7 @@ export function HeroSection({
   waveInto,
 }: HeroSectionProps) {
   const eyebrow = eyebrowLabel?.trim() || businessName?.trim();
-  const heroTitleLines = hero.title
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter((line) => line.length > 0);
-  const titleLines =
-    heroTitleLines.length > 0 ? heroTitleLines : [hero.title.trim() || "\u00a0"];
+  const titleLines = splitHeroTitleLines(hero.title);
   return (
     <section
       id="hero"
@@ -136,7 +154,7 @@ export function HeroSection({
                   "font-heading text-balance text-4xl font-bold leading-[1.08] tracking-tight text-white drop-shadow-[0_2px_28px_rgba(0,0,0,0.45)] lg:text-[3.95rem] xl:text-[4.15rem]",
                   "lg:max-w-[min(100%,21rem)] lg:text-pretty lg:drop-shadow-none lg:leading-[1.06] lg:tracking-[-0.025em] lg:text-primary-foreground",
                   "xl:max-w-[min(100%,23.5rem)] xl:leading-[1.05]",
-                  "lg:[font-family:var(--font-hero-display),ui-serif,Georgia,serif] lg:font-semibold",
+                  "lg:[font-family:var(--font-hero-display),ui-serif,Georgia,serif] lg:font-bold",
                 )}
               >
                 {titleLines.map((line, index) => (
