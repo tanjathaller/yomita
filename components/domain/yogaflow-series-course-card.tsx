@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { ChevronDown } from "lucide-react";
 
 import type { InternalCourse, YogaflowCourseSeries } from "@/types/site-content";
 
@@ -144,12 +145,11 @@ export function YogaflowSeriesCourseCard({
           >
             <span className="flex items-center justify-between gap-2">
               <span>{summaryLabel}</span>
-              <span
+              <ChevronDown
                 aria-hidden
-                className="text-muted-foreground text-xs font-normal transition-transform group-open:rotate-180"
-              >
-                ▾
-              </span>
+                className="size-[1.125rem] shrink-0 text-[#2F3B2A]/75 transition-transform group-open:rotate-180"
+                strokeWidth={2.75}
+              />
             </span>
           </summary>
           <div className="border-border/50 border-t px-3 py-2 pb-3">
