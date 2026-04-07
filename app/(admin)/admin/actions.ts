@@ -137,6 +137,7 @@ export async function saveSiteContentAction(
   revalidatePath("/");
   revalidatePath("/impressum");
   revalidatePath("/datenschutz");
+  revalidatePath("/llms.txt");
 
   return {
     ok: true,

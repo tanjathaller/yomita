@@ -1,5 +1,5 @@
 /**
- * Zentrale öffentliche Site-URL für Canonicals, robots.txt und sitemap.xml.
+ * Zentrale öffentliche Site-URL für Canonicals, robots.txt, sitemap.xml und /llms.txt.
  *
  * Später IONOS-Domain: in Vercel (Production/Preview) und optional lokal in
  * `.env.local` `NEXT_PUBLIC_SITE_URL` setzen, z. B. https://www.example.de
