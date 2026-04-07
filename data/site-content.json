@@ -1,6 +1,6 @@
 {
   "hero": {
-    "title": "Namaste\u00a0und\nherzlich\u00a0willkommen",
+    "title": "Namaste und herzlich willkommen! ",
     "claim": "Ich bin Tanja Thaller, freiberufliche Yogalehrerin im Raum Neuss/Düsseldorf und freue mich sehr, dass Du mich gefunden hast.",
     "primaryCtaLabel": "Mehr über mich",
     "primaryCtaUrl": "#ueber-mich",
@@ -22,7 +22,7 @@
         "id": "aktuell-yin-workshop",
         "title": "Yoga-Retreat GOLDEN LIGHT (11.-13.09.2026)",
         "badgeLabel": "Aktuelles",
-        "text": "Gemeinsam mit der wunderbaren Yogalehrerin Michaela direkt buchen *(nur noch wenige Plätze frei)*.",
+        "text": "Im September 2026 findet das Yoga-Retreat GOLDEN LIGHT im wunderschönen Kloster Steinfeld in der Eifel statt. Gemeinsam mit der Yogalehrerin Michaela lade ich dich zu einem Wochenende ein, das ganz im Zeichen von Ruhe, Bewegung und neuer Energie steht.\n\nInmitten unberührter Natur hast du die Möglichkeit, durch Yoga, frische Luft und bewusste Auszeiten vom Alltag neue Kraft zu tanken. Neben einem abwechslungsreichen, auf den Spätsommer abgestimmten Yogaprogramm bleibt genügend Raum für Entspannung, Spaziergänge oder einfach zum Innehalten.\n\nDas Retreat umfasst zwei Übernachtungen im Einzelzimmer sowie Verpflegung und findet in einer kleinen, persönlichen Gruppe statt.\n\nEs sind nur noch wenige Plätze verfügbar.",
         "image": {
           "alt": "Yoga-Retreat Golden Light mit Michaela",
           "mobile": {
@@ -33,7 +33,9 @@
           }
         },
         "cta": {
-          "enabled": false
+          "enabled": true,
+          "label": "Alle Infos zum Yoga-Retreat GOLDEN LIGHT (September 2026)",
+          "href": "https://www.yogaflux.de/mein-angebot/yogaretreats/"
         },
         "sortOrder": 10
       }
@@ -82,7 +84,7 @@
       "id": "price-neuss-90",
       "title": "Yogastunde · 90 Minuten · Neuss",
       "price": "12 €",
-      "description": "oder 5er-Karte für 50 €\nKleingruppe\n\n",
+      "description": "- oder 5er-Karte für 50 €\n- Kleingruppe\n\n",
       "sortOrder": 10,
       "highlighted": true
     },
@@ -90,7 +92,7 @@
       "id": "price-zons-60",
       "title": "Yogastunde · 60 Minuten · Zons",
       "price": "Preis auf Anfrage",
-      "description": "Bestehende Yogagruppe\nProbestunde auf Anfrage über das Kontaktformular möglich",
+      "description": "- Bestehende Yogagruppe\n- Probestunde auf Anfrage über das Kontaktformular möglich",
       "linkUrl": "#kontakt",
       "sortOrder": 20,
       "highlighted": true
@@ -99,7 +101,7 @@
       "id": "price-duesseldorf-90",
       "title": "Yoga Sanskriti · 90 Minuten · Düsseldorf",
       "price": "Preise bei Yoga Sanskriti",
-      "description": "Kurs im Studio Yoga Sanskriti\nBuchung & Preise direkt über das Studio\n",
+      "description": "- Kurs im Studio Yoga Sanskriti\n- Buchung & Preise direkt über das Studio\n",
       "linkUrl": "https://yogasanskriti.de/preise/",
       "sortOrder": 30,
       "highlighted": true
@@ -108,7 +110,7 @@
       "id": "price-private-firmen",
       "title": "Privatstunde / Firmenyoga",
       "price": "99 €",
-      "description": "Individuell abgestimmt",
+      "description": "- Individuell abgestimmt",
       "sortOrder": 40,
       "highlighted": true
     },
@@ -116,7 +118,7 @@
       "id": "price-retreats",
       "title": "Yoga-Retreats",
       "price": "Infos zum Retreat",
-      "description": "Workshops & besondere Events  \nAlle aktuellen Retreat-Angebote findest du im Bereich [„Aktuelles“](#aktuelles)",
+      "description": "- Workshops & besondere Events  \n- Alle aktuellen Retreat-Angebote findest du im Bereich [„Aktuelles“](#aktuelles)",
       "linkUrl": "#aktuelles",
       "sortOrder": 50,
       "highlighted": true
