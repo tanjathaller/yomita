@@ -94,7 +94,7 @@ export function AktuellesSection({
               className={cn(
                 "flex min-w-0 w-full flex-col",
                 isSingleCard
-                  ? "lg:flex-[0_0_min(100%,52rem)] xl:flex-[0_0_min(100%,60rem)] 2xl:flex-[0_0_min(100%,68rem)]"
+                  ? "lg:flex-[0_0_min(100%,58rem)] xl:flex-[0_0_min(100%,68rem)] 2xl:flex-[0_0_min(100%,76rem)]"
                   : [
                       "lg:flex-[0_0_calc((100%_-_1.5rem)/2)]",
                       "xl:flex-[0_0_calc((100%_-_2rem)/2)]",
@@ -107,7 +107,7 @@ export function AktuellesSection({
                   "lg:rounded-2xl",
                   "transition-[box-shadow,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:hover:-translate-y-0.5 hover:shadow-md motion-reduce:hover:translate-y-0",
                   isSingleCard
-                    ? "flex h-full w-full flex-col gap-6 p-5 lg:flex-row lg:items-center lg:gap-8 lg:p-7 xl:p-8"
+                    ? "flex h-full w-full flex-col gap-5 p-5 lg:flex-row lg:items-stretch lg:gap-7 lg:p-6 xl:gap-8 xl:p-7"
                     : "h-full w-full",
                 )}
               >
@@ -117,7 +117,7 @@ export function AktuellesSection({
                     isSingleCard
                       ? [
                           "aspect-[4/3] w-full rounded-2xl border border-border/60 shadow-sm",
-                          "lg:aspect-[4/5] lg:w-[min(100%,18.5rem)] xl:w-[min(100%,21rem)]",
+                          "lg:aspect-[4/5] lg:w-[min(100%,20.25rem)] lg:shrink-0 lg:self-center xl:w-[min(100%,22.5rem)]",
                         ]
                       : "aspect-[4/3] lg:aspect-auto lg:h-[19.5rem]",
                   )}
@@ -156,9 +156,9 @@ export function AktuellesSection({
                 >
                   <div
                     className={cn(
-                      isSingleCard
-                        ? [
-                            "space-y-4 rounded-2xl border border-[#D8C9AF]/35 bg-gradient-to-br from-muted/45 via-card to-[#D8C9AF]/[0.12] p-6 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.45)] lg:space-y-5 lg:p-7 xl:p-8",
+                    isSingleCard
+                      ? [
+                            "space-y-2.5 rounded-2xl border border-[#D8C9AF]/35 bg-gradient-to-br from-muted/45 via-card to-[#D8C9AF]/[0.12] p-5 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.45)] lg:space-y-3 lg:p-5 xl:p-6",
                             "ring-1 ring-inset ring-[#2F3B2A]/[0.04]",
                           ]
                         : "contents",
@@ -169,7 +169,7 @@ export function AktuellesSection({
                         className={cn(
                           "text-[#2F3B2A] text-3xl font-semibold tracking-tight",
                           isSingleCard
-                            ? "text-[1.65rem] leading-snug lg:text-3xl xl:text-[1.85rem] xl:leading-tight"
+                            ? "text-[1.55rem] leading-snug lg:text-[1.65rem] xl:text-[1.75rem] xl:leading-snug"
                             : "lg:text-2xl lg:leading-snug xl:text-[1.65rem]",
                         )}
                       >
@@ -186,17 +186,17 @@ export function AktuellesSection({
                       className={cn(
                         "text-muted-foreground leading-relaxed",
                         isSingleCard
-                          ? "text-base lg:text-[1.05rem] lg:leading-relaxed xl:max-w-prose"
+                          ? "text-[0.9375rem] leading-snug lg:text-[1rem] lg:leading-[1.45] xl:max-w-none"
                           : "text-base lg:text-sm lg:leading-snug xl:text-[0.95rem]",
                       )}
                     >
                       <MarkdownContent
                         markdown={item.text}
                         className={cn(
-                          "max-w-none space-y-2",
+                          "max-w-none",
                           isSingleCard
-                            ? "lg:space-y-2.5 [&_p]:leading-relaxed lg:[&_p]:leading-relaxed"
-                            : "lg:space-y-1.5 [&_p]:leading-snug lg:[&_p]:leading-snug",
+                            ? "space-y-0 [&_p+p]:mt-2 [&_p]:leading-[1.45]"
+                            : "space-y-2 lg:space-y-1.5 [&_p]:leading-snug lg:[&_p]:leading-snug",
                         )}
                       />
                     </div>

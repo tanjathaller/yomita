@@ -1,6 +1,6 @@
 {
   "hero": {
-    "title": "Namaste\u00a0und\nherzlich\u00a0willkommen",
+    "title": "Namaste und herzlich willkommen! ",
     "claim": "Ich bin Tanja Thaller, freiberufliche Yogalehrerin im Raum Neuss/Düsseldorf und freue mich sehr, dass Du mich gefunden hast.",
     "primaryCtaLabel": "Mehr über mich",
     "primaryCtaUrl": "#ueber-mich",
@@ -38,6 +38,24 @@
           "href": "https://www.yogaflux.de/mein-angebot/yogaretreats/"
         },
         "sortOrder": 10
+      },
+      {
+        "id": "aktuell-ef368e49-9a23-4cce-b498-b055b2a54bcb",
+        "title": "Neues Thema",
+        "text": "dbwudgh hqd89qwhde q9dhq89wdh qw89dh qdhqw89d qhdq89hd aosijd ohofdbfsioeu sf s",
+        "image": {
+          "alt": "tanja 3 mobile",
+          "mobile": {
+            "url": "https://3ym7pno5nt6e8eux.private.blob.vercel-storage.com/aktuelles/2026-04-07/2f4982d2-6fad-47e9-bec7-7c09e2f840bd-tanja-3-mobile.webp"
+          },
+          "desktop": {
+            "url": "https://3ym7pno5nt6e8eux.private.blob.vercel-storage.com/aktuelles/2026-04-07/163640c3-c550-4e12-896a-a4f9c9262ac0-tanja-3-mobile.webp"
+          }
+        },
+        "cta": {
+          "enabled": false
+        },
+        "sortOrder": 20
       }
     ]
   },
