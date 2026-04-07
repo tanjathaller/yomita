@@ -8,6 +8,7 @@ import { logoutOwnerAction } from "./actions";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard Tanja Thaller",
+  robots: { index: false, follow: false },
 };
 
 export default function AdminLayout({

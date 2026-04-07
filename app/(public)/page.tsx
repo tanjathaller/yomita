@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+
 import { getSiteContent } from "@/lib/get-site-content";
 import { AboutSection } from "@/components/sections/about-section";
 import { AktuellesSection } from "@/components/sections/aktuell-section";
@@ -6,6 +8,13 @@ import { CoursesSection } from "@/components/sections/courses-section";
 import { HeroSection } from "@/components/sections/hero-section";
 import { PricesSection } from "@/components/sections/prices-section";
 import { HeroSeamDebug } from "@/components/debug/hero-seam-debug";
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    alternates: { canonical: "/" },
+    robots: { index: true, follow: true },
+  };
+}
 
 export default async function HomePage() {
   const content = await getSiteContent();

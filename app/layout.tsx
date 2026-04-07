@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, Geist, Geist_Mono } from "next/font/google";
 
+import { getSiteUrl } from "@/lib/site-url";
+
 import "./globals.css";
 
 const geistSans = Geist({
@@ -22,6 +24,7 @@ const heroDisplay = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: {
     default: "Yoga",
     template: "%s",
