@@ -1,6 +1,6 @@
 {
   "hero": {
-    "title": "Namaste\u00a0und\nherzlich\u00a0willkommen!",
+    "title": "Namaste\u00a0und\nherzlich\u00a0willkommen",
     "claim": "Ich bin Tanja Thaller, freiberufliche Yogalehrerin im Raum Neuss/Düsseldorf und freue mich sehr, dass Du mich gefunden hast.",
     "primaryCtaLabel": "Mehr über mich",
     "primaryCtaUrl": "#ueber-mich",
@@ -22,7 +22,7 @@
         "id": "aktuell-yin-workshop",
         "title": "Yoga-Retreat GOLDEN LIGHT (11.-13.09.2026)",
         "badgeLabel": "Aktuelles",
-        "text": "Im September 2026 findet das Yoga-Retreat GOLDEN LIGHT im wunderschönen Kloster Steinfeld in der Eifel statt. Gemeinsam mit der Yogalehrerin Michaela lade ich dich zu einem Wochenende ein, das ganz im Zeichen von Ruhe, Bewegung und neuer Energie steht.\n\nInmitten unberührter Natur hast du die Möglichkeit, durch Yoga, frische Luft und bewusste Auszeiten vom Alltag neue Kraft zu tanken. Neben einem abwechslungsreichen, auf den Spätsommer abgestimmten Yogaprogramm bleibt genügend Raum für Entspannung, Spaziergänge oder einfach zum Innehalten.\n\nDas Retreat umfasst zwei Übernachtungen im Einzelzimmer sowie Verpflegung und findet in einer kleinen, persönlichen Gruppe statt.\n\nEs sind nur noch wenige Plätze verfügbar.",
+        "text": "Gemeinsam mit der wunderbaren Yogalehrerin Michaela direkt buchen *(nur noch wenige Plätze frei)*.",
         "image": {
           "alt": "Yoga-Retreat Golden Light mit Michaela",
           "mobile": {
@@ -82,15 +82,15 @@
       "id": "price-neuss-90",
       "title": "Yogastunde · 90 Minuten · Neuss",
       "price": "12 €",
-      "description": "Kleingruppe\noder 5er-Karte für 50 €\n",
+      "description": "oder 5er-Karte für 50 €\nKleingruppe\n\n",
       "sortOrder": 10,
       "highlighted": true
     },
     {
       "id": "price-zons-60",
       "title": "Yogastunde · 60 Minuten · Zons",
-      "price": "Probestunde auf Anfrage",
-      "description": "Bestehende Yogagruppe",
+      "price": "Preis auf Anfrage",
+      "description": "Bestehende Yogagruppe\nProbestunde auf Anfrage über das Kontaktformular möglich",
       "linkUrl": "#kontakt",
       "sortOrder": 20,
       "highlighted": true
@@ -98,9 +98,9 @@
     {
       "id": "price-duesseldorf-90",
       "title": "Yoga Sanskriti · 90 Minuten · Düsseldorf",
-      "price": "Zum Studio",
-      "description": "Kurs im Studio Yoga Sanskriti",
-      "linkUrl": "https://www.yogasanskriti.de",
+      "price": "Preise bei Yoga Sanskriti",
+      "description": "Kurs im Studio Yoga Sanskriti\nBuchung & Preise direkt über das Studio\n",
+      "linkUrl": "https://yogasanskriti.de/preise/",
       "sortOrder": 30,
       "highlighted": true
     },
@@ -115,8 +115,8 @@
     {
       "id": "price-retreats",
       "title": "Yoga-Retreats",
-      "price": "",
-      "description": "Weitere Informationen unter „Aktuelles“",
+      "price": "Infos zum Retreat",
+      "description": "Workshops & besondere Events  \nAlle aktuellen Retreat-Angebote findest du im Bereich [„Aktuelles“](#aktuelles)",
       "linkUrl": "#aktuelles",
       "sortOrder": 50,
       "highlighted": true
@@ -185,6 +185,7 @@
         "bookingBadgeLabel": "Buchung über die App"
       }
     ],
+    "pricesSectionIntro": "Alle Preise verstehen sich als Übersicht. Die Bezahlung erfolgt je nach Angebot ganz unkompliziert vor Ort oder per Rechnung.\nBei externen Kursen oder besonderen Events gelten die Preise des jeweiligen Anbieters.",
     "appUrl": "https://andrethaller-ctrl-yo-gpke.bolt.host/auth",
     "siteTitle": "Yoga in Neuss – persönliche Yogakurse mit klarer Anleitung | Tanja Thaller",
     "metaDescription": "Yogakurse in Neuss & Düsseldorf: persönlich, präzise und ohne Esoterik. Kleine Gruppen, individuelle Begleitung und verständlich angeleitet. Melde dich gern für eine Stunde oder bei Fragen.",

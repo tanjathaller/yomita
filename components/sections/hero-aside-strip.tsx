@@ -4,32 +4,55 @@ import { useLayoutEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-const PRIMARY_SELECTOR = "[data-hero-primary-card]";
+const HERO_PRIMARY_ID = "hero-primary-card";
 
 /**
  * Schmaler Primary-Streifen rechts neben dem Hero-Bild.
- * Höhe folgt der linken Hero-Karte (Inhalt + innerer Steg), damit beide grünen Flächen bündig enden.
+ * Höhe = linke Hero-Karte (`#hero-primary-card`), inkl. nachgeladenen Schriften / Layout.
  */
 export function HeroAsideStrip() {
   const [heightPx, setHeightPx] = useState<number | undefined>(undefined);
 
   useLayoutEffect(() => {
-    const primary = document.querySelector<HTMLElement>(PRIMARY_SELECTOR);
-    if (!primary) return;
-
     const sync = () => {
-      setHeightPx(Math.round(primary.getBoundingClientRect().height));
+      const el = document.getElementById(HERO_PRIMARY_ID);
+      if (!el) return;
+      setHeightPx(Math.ceil(el.getBoundingClientRect().height));
     };
 
-    sync();
+    const run = () => {
+      requestAnimationFrame(() => {
+        sync();
+        requestAnimationFrame(sync);
+      });
+    };
 
-    const ro = new ResizeObserver(sync);
-    ro.observe(primary);
-    window.addEventListener("resize", sync);
+    let ro: ResizeObserver | null = null;
+    let attempts = 0;
+
+    const attach = () => {
+      const el = document.getElementById(HERO_PRIMARY_ID);
+      if (!el) {
+        if (attempts < 40) {
+          attempts += 1;
+          requestAnimationFrame(attach);
+        }
+        return;
+      }
+
+      run();
+      void document.fonts.ready.then(run);
+
+      ro = new ResizeObserver(run);
+      ro.observe(el);
+      window.addEventListener("resize", run);
+    };
+
+    attach();
 
     return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", sync);
+      ro?.disconnect();
+      window.removeEventListener("resize", run);
     };
   }, []);
 

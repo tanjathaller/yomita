@@ -80,6 +80,12 @@ export function HeroSection({
   waveInto,
 }: HeroSectionProps) {
   const eyebrow = eyebrowLabel?.trim() || businessName?.trim();
+  const heroTitleLines = hero.title
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter((line) => line.length > 0);
+  const titleLines =
+    heroTitleLines.length > 0 ? heroTitleLines : [hero.title.trim() || "\u00a0"];
   return (
     <section
       id="hero"
@@ -103,6 +109,7 @@ export function HeroSection({
           {/* Text: mobil Overlay; Desktop = Primary-Block inkl. schmalem rechten Steg (gleiche Höhe), Bild direkt anschließend */}
           <div className="pointer-events-none absolute inset-0 z-10 flex flex-col justify-end lg:pointer-events-auto lg:relative lg:inset-auto lg:z-20 lg:min-w-0 lg:flex-1 lg:justify-start lg:self-start lg:py-0">
             <div
+              id="hero-primary-card"
               data-hero-primary-card
               className={cn(
                 "max-w-2xl space-y-4 p-6",
@@ -110,7 +117,7 @@ export function HeroSection({
                 "xl:rounded-l-[1.35rem] xl:rounded-r-none",
               )}
             >
-              <div className="space-y-4 lg:flex-1 lg:min-w-0 lg:space-y-5 lg:p-8 lg:pr-7 lg:text-primary-foreground xl:space-y-6 xl:p-9 xl:pr-8">
+              <div className="space-y-4 lg:flex-1 lg:min-w-0 lg:space-y-5 lg:p-8 lg:pr-16 lg:text-primary-foreground xl:space-y-6 xl:p-9 xl:pr-[4.5rem]">
                 {eyebrow ? (
                 <div className="lg:flex lg:items-center lg:gap-3">
                   <HeroEyebrowFlourish className="hidden lg:block" />
@@ -126,13 +133,13 @@ export function HeroSection({
               ) : null}
               <h1
                 className={cn(
-                  "font-heading text-balance text-4xl font-bold leading-[1.08] tracking-tight text-white drop-shadow-[0_2px_28px_rgba(0,0,0,0.45)] lg:text-6xl xl:text-[3.55rem]",
-                  "lg:max-w-[min(100%,17rem)] lg:text-pretty lg:drop-shadow-none lg:leading-[1.08] lg:tracking-[-0.025em] lg:text-primary-foreground",
-                  "xl:max-w-[min(100%,19.5rem)] xl:leading-[1.06]",
+                  "font-heading text-balance text-4xl font-bold leading-[1.08] tracking-tight text-white drop-shadow-[0_2px_28px_rgba(0,0,0,0.45)] lg:text-[3.95rem] xl:text-[4.15rem]",
+                  "lg:max-w-[min(100%,21rem)] lg:text-pretty lg:drop-shadow-none lg:leading-[1.06] lg:tracking-[-0.025em] lg:text-primary-foreground",
+                  "xl:max-w-[min(100%,23.5rem)] xl:leading-[1.05]",
                   "lg:[font-family:var(--font-hero-display),ui-serif,Georgia,serif] lg:font-semibold",
                 )}
               >
-                {hero.title.split("\n").map((line, index) => (
+                {titleLines.map((line, index) => (
                   <Fragment key={index}>
                     {index > 0 ? <br /> : null}
                     <span className="lg:inline-block lg:whitespace-nowrap">
@@ -179,8 +186,8 @@ export function HeroSection({
           <div
             className={cn(
               "relative z-[1] w-full shrink-0 lg:z-30",
-              "lg:-ml-[6rem] lg:-mt-2.5 lg:-mr-2 lg:w-[min(23rem,38vw)] lg:min-w-[19rem] lg:max-w-[23rem] lg:flex-none lg:basis-[min(23rem,38vw)]",
-              "xl:-ml-[7rem] xl:-mt-3 xl:-mr-2.5 xl:w-[min(25rem,36vw)] xl:min-w-[21rem] xl:max-w-[25rem] xl:basis-[min(25rem,36vw)]",
+              "lg:-ml-[4rem] lg:-mt-2.5 lg:-mr-2 lg:w-[min(23rem,38vw)] lg:min-w-[19rem] lg:max-w-[23rem] lg:flex-none lg:basis-[min(23rem,38vw)]",
+              "xl:-ml-[4.5rem] xl:-mt-3 xl:-mr-2.5 xl:w-[min(25rem,36vw)] xl:min-w-[21rem] xl:max-w-[25rem] xl:basis-[min(25rem,36vw)]",
             )}
           >
             <div
@@ -241,7 +248,7 @@ export function HeroSection({
           {/*
             Eigener Flex-Nachbar rechts vom Bild — nicht Kind der Primary-Karte, sonst verdeckt z-30 das
             gesamte Karten-Substacking inkl. absolutem Schweif.
-            Höhe = linke Primary-Karte (HeroAsideStrip misst data-hero-primary-card).
+            Höhe = linke Primary-Karte (HeroAsideStrip misst #hero-primary-card).
           */}
           <HeroAsideStrip />
         </div>
