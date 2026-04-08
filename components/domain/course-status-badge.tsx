@@ -76,7 +76,7 @@ export function CourseStatusBadge({
       <BadgeShell
         href={href}
         className={cn(
-          "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+          "inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium leading-snug",
           "bg-muted/70 text-muted-foreground",
         )}
       >
@@ -106,7 +106,7 @@ export function CourseStatusBadge({
     <BadgeShell
       href={href}
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+        "inline-flex items-center rounded-full px-3 py-0.5 text-sm font-medium leading-snug",
         tone === "ok" && "bg-primary/15 text-primary",
         tone === "few" && "bg-amber-500/15 text-amber-900 dark:text-amber-100",
         tone === "full" && "bg-muted text-muted-foreground",
