@@ -235,8 +235,7 @@ export function HeroSection({
               <div
                 aria-hidden
                 className={cn(
-                  "pointer-events-none absolute inset-x-0 top-0 z-[3] hidden h-[62%] border-2 border-b-0 border-[#2F3B2A]",
-                  "[mask-image:linear-gradient(to_bottom,black_0%,black_35%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_35%,transparent_100%)]",
+                  "hero-media-frame-fade pointer-events-none absolute inset-x-0 top-0 z-[3] hidden h-[62%] border-2 border-b-0 border-[#2F3B2A]",
                   "rounded-t-2xl rounded-br-2xl rounded-bl-none lg:block",
                   "xl:rounded-t-[1.35rem] xl:rounded-br-[1.35rem]",
                 )}
@@ -251,14 +250,7 @@ export function HeroSection({
                 aria-hidden
               />
               <div
-                className="pointer-events-none absolute inset-x-0 -bottom-[2px] z-[6] h-52 border-0 ring-0 md:h-64 lg:h-56 xl:h-64"
-                style={{
-                  background:
-                    "linear-gradient(to top, var(--surface-muted-band) 0%, color-mix(in oklab, var(--surface-muted-band) 90%, transparent) 34%, color-mix(in oklab, var(--surface-muted-band) 52%, transparent) 64%, transparent 100%)",
-                  maskImage: "linear-gradient(to top, black 0%, black 88%, transparent 100%)",
-                  WebkitMaskImage:
-                    "linear-gradient(to top, black 0%, black 88%, transparent 100%)",
-                }}
+                className="hero-media-bottom-fade pointer-events-none absolute inset-x-0 -bottom-[2px] z-[6] h-52 border-0 ring-0 md:h-64 lg:h-56 xl:h-64"
                 aria-hidden
               />
             </div>
