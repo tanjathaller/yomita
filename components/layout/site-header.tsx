@@ -69,7 +69,7 @@ export function SiteHeader({ settings, hasAktuellesItems }: SiteHeaderProps) {
                 </picture>
               </span>
             ) : null}
-            <span className="truncate text-base font-semibold tracking-tight lg:text-lg">
+            <span className="truncate text-base font-semibold tracking-tight lg:text-2xl lg:leading-none">
               {headerTitle}
             </span>
           </HashScrollLink>
