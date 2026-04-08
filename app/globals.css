@@ -233,4 +233,15 @@
     border: none !important;
     outline: none !important;
   }
+
+  /**
+   * Über-mich-Portrait: wie Hero — globales `border-border` + Inline-Baseline von <picture>
+   * können eine helle Kante im Fade ergeben (v. a. mobil).
+   */
+  #ueber-mich [data-about-portrait] picture,
+  #ueber-mich [data-about-portrait] img {
+    display: block !important;
+    border: none !important;
+    outline: none !important;
+  }
 }

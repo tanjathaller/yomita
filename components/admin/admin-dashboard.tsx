@@ -3220,9 +3220,8 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                     className="min-h-[4.5rem] resize-y"
                   />
                   <p className="text-muted-foreground text-sm">
-                    Wird auf dem Desktop in der Karte und auf Mobil am Portrait angezeigt. Optional Zeile 1 und
-                    Zeile 2 auf Mobil: Zeilenumbruch hier einfügen oder ein Leerzeichen (z. B. „Über mich“ wird
-                    zu zwei Zeilen wie bisher).
+                    Wird in der Textkarte auf allen Viewports gleich dargestellt. Optional mehrzeilig mit
+                    Zeilenumbruch in diesem Feld.
                   </p>
                 </div>
                 <MarkdownEditor

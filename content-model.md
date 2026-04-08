@@ -170,8 +170,8 @@ Kein Feld `externalUrl`.
 
 | Feld     | Typ    | Beschreibung |
 |----------|--------|--------------|
-| `title`  | string | Überschrift: **Desktop** in der Textkarte; **Mobil** groß am Portrait. Optional zwei Zeilen: Zeilenumbruch im Text, sonst Aufteilung nach erstem Wort („Über“ / „mich …“). |
-| `eyebrow`| string?| optional; kleines Label **nur Desktop** über `title` (Fallback in der UI: „Kurz zu mir“, wenn leer/fehlend). |
+| `title`  | string | Überschrift in der **Textkarte** (alle Viewports). Mehrzeilig möglich per Zeilenumbruch im Text. |
+| `eyebrow`| string?| optional; kleines Label oberhalb von `title` in der Karte (Fallback in der UI: „Kurz zu mir“, wenn leer/fehlend). |
 | `text`   | string | Fließtext (Markdown möglich, je nach Renderer) |
 
 ### Bild (`about.image`)
