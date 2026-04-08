@@ -37,7 +37,7 @@ export function AboutSection({ about }: AboutSectionProps) {
                 <ResponsiveSiteImage
                   image={about.image}
                   pictureClassName="block h-full min-h-0 w-full border-0"
-                  imgClassName="absolute inset-0 block h-full w-full border-0 object-cover object-center [transform:translateZ(0)_scale(1.045)]"
+                  imgClassName="absolute inset-0 block h-full w-full border-0 object-cover object-top"
                 />
                 <div
                   aria-hidden
