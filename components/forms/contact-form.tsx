@@ -21,6 +21,7 @@ type ContactFormProps = {
 
 export function ContactForm({ successMessage, submitLabel }: ContactFormProps) {
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const form = useForm<ContactFormValues>({
     resolver: zodResolver(contactFormSchema),
@@ -32,10 +33,52 @@ export function ContactForm({ successMessage, submitLabel }: ContactFormProps) {
     },
   });
 
-  function onSubmit() {
-    // POST /api/contact folgt (tech-decisions.md); Payload: form.getValues()
-    setSubmitted(true);
-    form.reset();
+  async function onSubmit(values: ContactFormValues) {
+    setSubmitError(null);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+
+      let data: {
+        error?: string;
+        message?: string;
+        fieldErrors?: Record<string, string[] | undefined>;
+      } = {};
+      try {
+        data = (await res.json()) as typeof data;
+      } catch {
+        // ignore invalid JSON body
+      }
+
+      if (res.ok) {
+        setSubmitted(true);
+        form.reset();
+        return;
+      }
+
+      if (res.status === 400 && data.error === "validation_error" && data.fieldErrors) {
+        for (const key of Object.keys(data.fieldErrors)) {
+          const msgs = data.fieldErrors[key];
+          const first = msgs?.[0];
+          if (first && key in values) {
+            form.setError(key as keyof ContactFormValues, { message: first });
+          }
+        }
+        return;
+      }
+
+      setSubmitError(
+        data.message ??
+          "Die Nachricht konnte nicht gesendet werden. Bitte versuche es später erneut.",
+      );
+    } catch {
+      setSubmitError(
+        "Netzwerkfehler. Bitte prüfe deine Verbindung und versuche es erneut.",
+      );
+    }
   }
 
   if (submitted) {
@@ -45,8 +88,7 @@ export function ContactForm({ successMessage, submitLabel }: ContactFormProps) {
         role="status"
         aria-live="polite"
       >
-        {successMessage ??
-          "Danke für deine Nachricht. Wir melden uns bald. (Demo – Backend folgt.)"}
+        {successMessage ?? "Danke für deine Nachricht. Wir melden uns bald."}
       </div>
     );
   }
@@ -120,6 +162,11 @@ export function ContactForm({ successMessage, submitLabel }: ContactFormProps) {
       <Button type="submit" disabled={form.formState.isSubmitting} className="w-full sm:w-auto">
         {submitLabel}
       </Button>
+      {submitError ? (
+        <p className="text-destructive text-sm" role="alert">
+          {submitError}
+        </p>
+      ) : null}
       <p className="text-muted-foreground text-xs">
         Ich melde mich in der Regel innerhalb von 1-2 Werktagen.
       </p>

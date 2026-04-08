@@ -71,7 +71,7 @@ export function AktuellesSection({
       <div
         className={cn(
           "mt-10 flex flex-col gap-6",
-          "lg:flex-row lg:flex-wrap lg:justify-center lg:gap-6 xl:gap-8",
+          "lg:flex-row lg:flex-wrap lg:items-start lg:justify-center lg:gap-6 xl:gap-8",
         )}
       >
         {items.map((item, index) => {
@@ -108,7 +108,7 @@ export function AktuellesSection({
                   "transition-[box-shadow,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:hover:-translate-y-0.5 hover:shadow-md motion-reduce:hover:translate-y-0",
                   isSingleCard
                     ? "flex h-full w-full flex-col gap-5 p-5 lg:flex-row lg:items-stretch lg:gap-7 lg:p-6 xl:gap-8 xl:p-7"
-                    : "h-full w-full",
+                    : "w-full lg:h-auto",
                 )}
               >
                 <div
