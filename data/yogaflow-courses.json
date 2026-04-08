@@ -1,5 +1,5 @@
 {
-  "syncedAt": "2026-04-08T07:19:49.734Z",
+  "syncedAt": "2026-04-08T13:24:01.621Z",
   "courses": [
     {
       "id": "92d08f36-a410-4a90-850a-497e7807757d",
@@ -9,9 +9,9 @@
       "day": "08.04.2026",
       "time": "18:00–19:30 (90 Min.)",
       "location": "Gagelweg",
-      "bookingStatus": "available",
+      "bookingStatus": "full",
       "price": "12,00 €",
-      "remainingSpots": 1,
+      "remainingSpots": 0,
       "sortOrder": 10,
       "startsOn": "2026-04-08"
     },
@@ -154,6 +154,20 @@
       "remainingSpots": 6,
       "sortOrder": 110,
       "startsOn": "2026-05-26"
+    },
+    {
+      "id": "d0cfc4a6-3189-4365-b86c-b478dcadbf68",
+      "type": "internal",
+      "title": "Yoga am Mittwoch",
+      "description": "Hatha-Yoga/Vinyasa für alle",
+      "day": "27.05.2026",
+      "time": "18:00–19:30 (90 Min.)",
+      "location": "Gagelweg",
+      "bookingStatus": "available",
+      "price": "12,00 €",
+      "remainingSpots": 8,
+      "sortOrder": 120,
+      "startsOn": "2026-05-27"
     }
   ]
 }
