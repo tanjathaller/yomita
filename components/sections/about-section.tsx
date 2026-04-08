@@ -31,7 +31,7 @@ export function AboutSection({ about }: AboutSectionProps) {
           />
           <div
             data-about-portrait
-            className="relative aspect-[4/5] max-h-[26rem] w-full max-w-md shrink-0 rounded-t-3xl rounded-b-none border-0 bg-[var(--surface-muted-band)] outline-none ring-0 lg:max-h-[35rem] lg:w-full lg:max-w-none lg:-rotate-1 lg:rounded-3xl lg:rounded-br-[2.25rem] lg:shadow-xl lg:shadow-[#2F3B2A]/12 lg:ring-2 lg:ring-[#D8C9AF]/45 xl:max-h-[38rem] xl:ring-[#D8C9AF]/55"
+            className="relative aspect-[19/30] max-h-[31rem] w-full max-w-md shrink-0 rounded-t-3xl rounded-b-none border-0 bg-[var(--surface-muted-band)] outline-none ring-0 lg:max-h-[41rem] lg:w-full lg:max-w-none lg:-rotate-1 lg:rounded-3xl lg:rounded-br-[2.25rem] lg:shadow-xl lg:shadow-[#2F3B2A]/12 lg:ring-2 lg:ring-[#D8C9AF]/45 xl:max-h-[45rem] xl:ring-[#D8C9AF]/55"
           >
               <div className="absolute inset-0 isolate overflow-hidden rounded-t-3xl rounded-b-none border-0 will-change-transform lg:inset-[3px] lg:rounded-[calc(1.5rem-3px)] lg:rounded-br-[2rem]">
                 <ResponsiveSiteImage
