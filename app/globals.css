@@ -235,9 +235,8 @@
   }
 
   /**
-   * Hero-Bild: Unterblendung + Rahmenmaske.
-   * Fallback ohne CSS-Masken (alte Browser / problematische GPUs): nur Verlauf, kein mask-image.
-   * Mit Maske + oklab color-mix: unverändert zum bisherigen Design.
+   * Hero-Bildunterblendung: absichtlich ohne CSS mask-image (alte Chrome/GPU-Bugs trotz @supports true).
+   * Zuvor Verlauf + Maske — hier ein einziger Verlauf mit extra Stops, um den früheren Verlauf+88%-Masken-Look anzunähern.
    */
   .hero-media-bottom-fade {
     background: linear-gradient(
@@ -247,63 +246,18 @@
     );
   }
 
-  @supports (color: color-mix(in srgb, red 50%, blue)) {
+  @supports (color: color-mix(in oklab, red, blue)) {
     .hero-media-bottom-fade {
       background: linear-gradient(
         to top,
         var(--surface-muted-band) 0%,
-        color-mix(in srgb, var(--surface-muted-band) 82%, transparent) 32%,
-        color-mix(in srgb, var(--surface-muted-band) 48%, transparent) 58%,
+        color-mix(in oklab, var(--surface-muted-band) 90%, transparent) 30%,
+        color-mix(in oklab, var(--surface-muted-band) 52%, transparent) 52%,
+        color-mix(in oklab, var(--surface-muted-band) 24%, transparent) 66%,
+        color-mix(in oklab, var(--surface-muted-band) 8%, transparent) 78%,
+        transparent 88%,
         transparent 100%
       );
-    }
-  }
-
-  @supports ((-webkit-mask-image: linear-gradient(to top, #000, transparent)) or
-    (mask-image: linear-gradient(to top, #000, transparent))) {
-    .hero-media-bottom-fade {
-      -webkit-mask-image: linear-gradient(
-        to top,
-        black 0%,
-        black 88%,
-        transparent 100%
-      );
-      mask-image: linear-gradient(to top, black 0%, black 88%, transparent 100%);
-    }
-  }
-
-  @supports ((-webkit-mask-image: linear-gradient(to top, #000, transparent)) or
-    (mask-image: linear-gradient(to top, #000, transparent))) {
-    @supports (color: color-mix(in oklab, red, blue)) {
-      .hero-media-bottom-fade {
-        background: linear-gradient(
-          to top,
-          var(--surface-muted-band) 0%,
-          color-mix(in oklab, var(--surface-muted-band) 90%, transparent) 34%,
-          color-mix(in oklab, var(--surface-muted-band) 52%, transparent) 64%,
-          transparent 100%
-        );
-      }
-    }
-  }
-
-  @media (min-width: 1024px) {
-    @supports ((-webkit-mask-image: linear-gradient(to bottom, #000, transparent)) or
-      (mask-image: linear-gradient(to bottom, #000, transparent))) {
-      .hero-media-frame-fade {
-        -webkit-mask-image: linear-gradient(
-          to bottom,
-          black 0%,
-          black 35%,
-          transparent 100%
-        );
-        mask-image: linear-gradient(
-          to bottom,
-          black 0%,
-          black 35%,
-          transparent 100%
-        );
-      }
     }
   }
 

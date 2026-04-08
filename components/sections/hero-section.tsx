@@ -122,7 +122,7 @@ export function HeroSection({
           data-hero-shell
           className={cn(
             "relative w-full min-w-0 overflow-hidden rounded-t-3xl rounded-b-none border-0 bg-[var(--surface-muted-band)] shadow-none outline-none ring-0",
-            "lg:flex lg:items-start lg:justify-start lg:gap-0 lg:overflow-visible lg:rounded-none lg:bg-transparent lg:py-4 xl:py-5",
+            "lg:flex lg:items-stretch lg:justify-start lg:gap-0 lg:overflow-visible lg:rounded-none lg:bg-transparent lg:py-4 xl:py-5",
           )}
         >
           {/* Text: mobil Overlay; Desktop = Primary-Block inkl. schmalem rechten Steg (gleiche Höhe), Bild direkt anschließend */}
@@ -205,16 +205,17 @@ export function HeroSection({
           <div
             className={cn(
               "relative z-[1] w-full shrink-0 lg:z-30",
-              "lg:-ml-[4rem] lg:-mt-2.5 lg:-mr-2 lg:w-[min(23rem,38vw)] lg:min-w-[19rem] lg:max-w-[23rem] lg:flex-none lg:basis-[min(23rem,38vw)]",
-              "xl:-ml-[4.5rem] xl:-mt-3 xl:-mr-2.5 xl:w-[min(25rem,36vw)] xl:min-w-[21rem] xl:max-w-[25rem] xl:basis-[min(25rem,36vw)]",
+              "lg:-ml-[4rem] lg:-mt-3 lg:-mr-2 lg:flex lg:min-h-0 lg:w-[min(23rem,38vw)] lg:min-w-[19rem] lg:max-w-[23rem] lg:flex-none lg:basis-[min(23rem,38vw)] lg:flex-col",
+              "xl:-ml-[4.5rem] xl:-mr-2.5 xl:w-[min(25rem,36vw)] xl:min-w-[21rem] xl:max-w-[25rem] xl:basis-[min(25rem,36vw)]",
             )}
           >
             <div
               data-hero-media
               className={cn(
                 "relative min-h-[280px] h-[76vh] w-full max-h-[36rem] overflow-hidden rounded-t-3xl rounded-b-none border-0 bg-[var(--surface-muted-band)] ring-0",
-                "lg:my-0 lg:h-[clamp(19.5rem,54vh,30rem)] lg:min-h-[19.5rem] lg:max-h-[30rem] lg:w-full lg:rounded-2xl lg:rounded-bl-none lg:shadow-xl lg:shadow-[#2F3B2A]/12 lg:ring-2 lg:ring-[#D8C9AF]/45",
-                "xl:h-[clamp(21rem,56vh,32rem)] xl:max-h-[32rem] xl:rounded-[1.35rem] xl:rounded-bl-none xl:ring-[#D8C9AF]/55",
+                /* Desktop: Kasten ragt unter die Primary-Zeile (100% = Höhe der Bild-Spalte = Kartenhöhe) — so überlappt das Foto sichtbar den unteren grünen Abschluss. Mobil unverändert. */
+                "lg:my-0 lg:flex-none lg:h-[calc(100%+2rem)] lg:max-h-none lg:min-h-[clamp(21rem,56vh,32rem)] lg:w-full lg:rounded-2xl lg:shadow-xl lg:shadow-[#2F3B2A]/12",
+                "xl:rounded-[1.35rem]",
               )}
             >
               <div className="absolute inset-0 overflow-hidden rounded-[inherit]">
@@ -225,21 +226,34 @@ export function HeroSection({
                   imgClassName={cn(
                     "block h-full w-full border-0 object-cover p-0 outline-none ring-0",
                     "max-lg:absolute max-lg:max-h-none max-lg:max-w-none max-lg:-inset-[9.5%] max-lg:h-[119%] max-lg:w-[119%] max-lg:translate-x-[4.5%] max-lg:object-[center_33%]",
-                    "lg:static lg:translate-x-0 lg:object-[center_16%]",
+                    /* Desktop: leicht gezoomt + nach unten, Motiv füllt die verlängerte Box; unterer Überstand kommt primär durch data-hero-media calc(100%+…). */
+                    "lg:absolute lg:inset-x-0 lg:top-[55%] lg:h-[122%] lg:w-full lg:max-h-none lg:-translate-y-1/2 lg:translate-x-0 lg:object-[center_22%]",
                   )}
                 />
               </div>
               {/*
-                Nur Desktop: dezenter Rahmen wie mobil im Über-mich-Bild — Border oben/seitlich, per Mask nach unten ausgeblendet.
+                Nur Desktop: dezenter Rahmen — ohne CSS-Masken (GPU-sicher); senkrechte Kanten per Verlauf wie frühere Maske.
               */}
               <div
                 aria-hidden
                 className={cn(
-                  "hero-media-frame-fade pointer-events-none absolute inset-x-0 top-0 z-[3] hidden h-[62%] border-2 border-b-0 border-[#2F3B2A]",
-                  "rounded-t-2xl rounded-br-2xl rounded-bl-none lg:block",
-                  "xl:rounded-t-[1.35rem] xl:rounded-br-[1.35rem]",
+                  "pointer-events-none absolute inset-x-0 top-0 z-[3] hidden h-[62%] overflow-hidden lg:block",
+                  "rounded-t-2xl rounded-br-2xl rounded-bl-none xl:rounded-t-[1.35rem] xl:rounded-br-[1.35rem]",
                 )}
-              />
+              >
+                <div
+                  className={cn(
+                    "absolute top-0 left-0 h-full w-0.5 bg-gradient-to-b from-[#2F3B2A] from-[0%] via-[#2F3B2A] via-[35%] to-transparent to-[100%]",
+                    "rounded-tl-2xl xl:rounded-tl-[1.35rem]",
+                  )}
+                />
+                <div
+                  className={cn(
+                    "absolute top-0 right-0 h-full w-0.5 bg-gradient-to-b from-[#2F3B2A] from-[0%] via-[#2F3B2A] via-[35%] to-transparent to-[100%]",
+                    "rounded-tr-2xl xl:rounded-tr-[1.35rem]",
+                  )}
+                />
+              </div>
               <HeroPhotoWaves className="hidden lg:block" />
               <div
                 className="absolute inset-0 border-0 bg-[rgba(40,54,38,0.24)] ring-0 lg:hidden"
