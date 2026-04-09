@@ -1,5 +1,5 @@
 {
-  "syncedAt": "2026-04-09T07:22:16.763Z",
+  "syncedAt": "2026-04-09T13:26:47.287Z",
   "courses": [
     {
       "id": "0e0f7a00-eedd-418b-b21e-d30739e2a6fd",
@@ -37,9 +37,9 @@
       "day": "21.04.2026",
       "time": "18:00–19:30 (90 Min.)",
       "location": "Gagelweg",
-      "bookingStatus": "available",
+      "bookingStatus": "full",
       "price": "12,00 €",
-      "remainingSpots": 1,
+      "remainingSpots": 0,
       "sortOrder": 30,
       "startsOn": "2026-04-21"
     },
@@ -151,7 +151,7 @@
       "location": "Gagelweg",
       "bookingStatus": "available",
       "price": "12,00 €",
-      "remainingSpots": 4,
+      "remainingSpots": 3,
       "sortOrder": 110,
       "startsOn": "2026-05-27"
     }
