@@ -157,12 +157,13 @@
     }
   },
   "contact": {
-    "email": "namaste@yomita.de",
+    "email": "Namaste@yomita.de",
     "phone": "0152 09464468",
     "formHeadline": "Kontakt",
-    "formText": "Schreib uns – wir melden uns schnellstmöglich. (Beispieltext, E-Mail-Adresse später anpassen.)",
+    "formText": "Schreib uns – wir melden uns schnellstmöglich.",
     "formSubmitLabel": "Unverbindlich anfragen",
-    "formSuccessMessage": "Danke! Deine Nachricht ist angekommen. (Demo – Backend folgt.)"
+    "formSuccessMessage": "Danke! Deine Nachricht ist angekommen.",
+    "formRecipientEmail": "Namaste@yomita.de"
   },
   "settings": {
     "businessName": "Tanja Thaller",
@@ -219,7 +220,7 @@
     }
   },
   "legal": {
-    "imprintText": "# Impressum (Platzhalter)\n\n**Angaben gemäß § 5 TMG**\n\nMusterfirma / Name  \nMusterstraße 1  \n12345 Musterstadt\n\n**Kontakt**  \nTelefon: …  \nE-Mail: …\n\n*Dieser Text ist ein Platzhalter und muss durch die finalen Angaben ersetzt werden.*",
-    "privacyText": "## Beispiel für eine Datenschutzerklärung (Kurzfassung)\n\nDer Schutz Ihrer persönlichen Daten ist uns ein wichtiges Anliegen. Wir verarbeiten Ihre Daten ausschließlich auf Grundlage der gesetzlichen Bestimmungen (DSGVO, BDSG).\n\n1. Verantwortliche Stelle\nVerantwortlich für die Datenverarbeitung ist:\n[Name des Unternehmens / der Person]\n[Adresse]\n[E-Mail-Adresse]\n\n2. Erhebung und Verarbeitung personenbezogener Daten\nWir erheben personenbezogene Daten nur, wenn Sie uns diese freiwillig mitteilen, z. B. im Rahmen einer Anfrage, Registrierung oder Bestellung. Dazu können Name, E-Mail-Adresse, Telefonnummer oder weitere Angaben gehören.\n\n3. Zweck der Datenverarbeitung\nDie Verarbeitung Ihrer Daten erfolgt zu folgenden Zwecken:\n\nBearbeitung von Anfragen\nVertragsabwicklung\nVerbesserung unserer Dienstleistungen\nEinhaltung gesetzlicher Verpflichtungen\n\n4. Weitergabe von Daten\nIhre Daten werden nicht an Dritte weitergegeben, es sei denn, dies ist zur Vertragserfüllung erforderlich oder wir sind gesetzlich dazu verpflichtet.\n\n5. Speicherung und Löschung\nIhre Daten werden nur so lange gespeichert, wie es für die jeweiligen Zwecke notwendig ist oder gesetzliche Aufbewahrungsfristen bestehen.\n\n6. Ihre Rechte\nSie haben jederzeit das Recht auf:\n\nAuskunft über Ihre gespeicherten Daten\nBerichtigung unrichtiger Daten\nLöschung Ihrer Daten (sofern zulässig)\nEinschränkung der Verarbeitung\nWiderspruch gegen die Verarbeitung\nDatenübertragbarkeit\n\nBitte wenden Sie sich hierzu an die oben genannte verantwortliche Stelle.\n\n7. Datensicherheit\nWir setzen technische und organisatorische Maßnahmen ein, um Ihre Daten gegen Verlust, Manipulation oder unbefugten Zugriff zu schützen.\n\n8. Änderungen der Datenschutzerklärung\nWir behalten uns vor, diese Datenschutzerklärung bei Bedarf anzupassen."
+    "imprintText": "# Impressum (Platzhalter)\n\n**Angaben gemäß § 5 TMG**\n\nMusterfirma / Name  \nMusterstraße 1  \n12345 Musterstadt\n\n**Kontakt**  \nTelefon: 0152 09464468  \nE-Mail: Namaste@yomita.de\n\n*Dieser Text ist ein Platzhalter und muss durch die finalen Angaben ersetzt werden.*",
+    "privacyText": "## Beispiel für eine Datenschutzerklärung (Kurzfassung)\n\nDer Schutz Ihrer persönlichen Daten ist uns ein wichtiges Anliegen. Wir verarbeiten Ihre Daten ausschließlich auf Grundlage der gesetzlichen Bestimmungen (DSGVO, BDSG).\n\n1. Verantwortliche Stelle\nVerantwortlich für die Datenverarbeitung ist:\n[Name des Unternehmens / der Person]\n[Adresse]\nNamaste@yomita.de\n\n2. Erhebung und Verarbeitung personenbezogener Daten\nWir erheben personenbezogene Daten nur, wenn Sie uns diese freiwillig mitteilen, z. B. im Rahmen einer Anfrage, Registrierung oder Bestellung. Dazu können Name, E-Mail-Adresse, Telefonnummer oder weitere Angaben gehören.\n\n3. Zweck der Datenverarbeitung\nDie Verarbeitung Ihrer Daten erfolgt zu folgenden Zwecken:\n\nBearbeitung von Anfragen\nVertragsabwicklung\nVerbesserung unserer Dienstleistungen\nEinhaltung gesetzlicher Verpflichtungen\n\n4. Weitergabe von Daten\nIhre Daten werden nicht an Dritte weitergegeben, es sei denn, dies ist zur Vertragserfüllung erforderlich oder wir sind gesetzlich dazu verpflichtet.\n\n5. Speicherung und Löschung\nIhre Daten werden nur so lange gespeichert, wie es für die jeweiligen Zwecke notwendig ist oder gesetzliche Aufbewahrungsfristen bestehen.\n\n6. Ihre Rechte\nSie haben jederzeit das Recht auf:\n\nAuskunft über Ihre gespeicherten Daten\nBerichtigung unrichtiger Daten\nLöschung Ihrer Daten (sofern zulässig)\nEinschränkung der Verarbeitung\nWiderspruch gegen die Verarbeitung\nDatenübertragbarkeit\n\nBitte wenden Sie sich hierzu an die oben genannte verantwortliche Stelle.\n\n7. Datensicherheit\nWir setzen technische und organisatorische Maßnahmen ein, um Ihre Daten gegen Verlust, Manipulation oder unbefugten Zugriff zu schützen.\n\n8. Änderungen der Datenschutzerklärung\nWir behalten uns vor, diese Datenschutzerklärung bei Bedarf anzupassen."
   }
 }

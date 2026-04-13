@@ -3,7 +3,7 @@ import "server-only";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-import { createClient } from "@vercel/kv";
+import { Redis } from "@upstash/redis";
 
 import { siteContentSchema } from "@/lib/schemas/site-content";
 import type { SiteContent } from "@/types/site-content";
@@ -19,10 +19,11 @@ const kvRestToken =
   process.env.KV_REST_API_TOKEN ??
   process.env.UPSTASH_REDIS_REST_TOKEN ??
   process.env.yomita_KV_REST_API_TOKEN;
-const kvClient = kvRestUrl && kvRestToken ? createClient({ url: kvRestUrl, token: kvRestToken }) : null;
+const redisClient =
+  kvRestUrl && kvRestToken ? new Redis({ url: kvRestUrl, token: kvRestToken }) : null;
 
-function hasKvConfig(): boolean {
-  return Boolean(kvClient);
+function hasRedisConfig(): boolean {
+  return Boolean(redisClient);
 }
 
 async function readSiteContentFromFile(): Promise<SiteContent> {
@@ -37,14 +38,14 @@ async function writeSiteContentToFile(content: SiteContent): Promise<void> {
 }
 
 export async function readSiteContent(): Promise<SiteContent> {
-  if (!hasKvConfig()) {
+  if (!hasRedisConfig()) {
     return readSiteContentFromFile();
   }
 
-  const record = await kvClient!.get<unknown>(SITE_CONTENT_KV_KEY);
+  const record = await redisClient!.get<unknown>(SITE_CONTENT_KV_KEY);
   if (!record) {
     const fallback = await readSiteContentFromFile();
-    await kvClient!.set(SITE_CONTENT_KV_KEY, fallback);
+    await redisClient!.set(SITE_CONTENT_KV_KEY, fallback);
     return fallback;
   }
 
@@ -53,8 +54,8 @@ export async function readSiteContent(): Promise<SiteContent> {
 
 export async function saveSiteContent(content: SiteContent): Promise<SiteContent> {
   const parsed = siteContentSchema.parse(content);
-  if (hasKvConfig()) {
-    await kvClient!.set(SITE_CONTENT_KV_KEY, parsed);
+  if (hasRedisConfig()) {
+    await redisClient!.set(SITE_CONTENT_KV_KEY, parsed);
     return parsed;
   }
 
@@ -69,13 +70,13 @@ export async function saveSiteContent(content: SiteContent): Promise<SiteContent
 }
 
 export async function seedSiteContentFromFileToKv(): Promise<SiteContent> {
-  if (!hasKvConfig()) {
+  if (!hasRedisConfig()) {
     throw new Error(
       "KV/Redis REST-Variablen fehlen (KV_REST_* oder UPSTASH_REDIS_REST_* oder yomita_KV_REST_*).",
     );
   }
 
   const parsed = await readSiteContentFromFile();
-  await kvClient!.set(SITE_CONTENT_KV_KEY, parsed);
+  await redisClient!.set(SITE_CONTENT_KV_KEY, parsed);
   return parsed;
 }

@@ -57,6 +57,8 @@ Das **Hero-Bild** der Startseite liegt statisch unter [`public/images/hero.png`]
 
 Vorlage: [`.env.example`](./.env.example) → bei Bedarf nach `.env.local` kopieren (Kontakt-API, Revalidate, sobald umgesetzt).
 
+**Kontaktformular (Resend):** In **`.env.local`** und in **Vercel → Environment Variables** (Production) mindestens `RESEND_API_KEY`, `RESEND_FROM_EMAIL` und **`CONTACT_TO_EMAIL`** setzen, sofern im Admin kein Feld **Formular-Empfänger** (`formRecipientEmail`) gepflegt ist. Zieladresse für Anfragen: **`Namaste@yomita.de`**. Domain **`yomita.de`** bei [Resend](https://resend.com) verifizieren; `RESEND_FROM_EMAIL` muss zur verifizierten Domain passen (z. B. `Kontakt <Namaste@yomita.de>`).
+
 ### Deployment / Domain (Live)
 
 - **Kanonische URL:** `https://yomita.de` (Apex, ohne `www`). `www.yomita.de` per Redirect auf die Apex-URL ausrichten (DNS bei IONOS auf Vercel; in Vercel Domains und ggf. Redirect prüfen).
