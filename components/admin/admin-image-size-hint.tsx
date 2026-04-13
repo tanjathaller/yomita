@@ -120,7 +120,7 @@ const HINT_COPY: Record<AdminImageHintVariant, AdminHintContent> = {
   logoMobile: {
     title: "Logo · Mobil-Datei",
     paragraphs: [
-      "Die Anzeige ist **quadratisch** (object-cover im Quadrat). **Exakt quadratische** Datei = **kein Zuschnitt** (das ganze Logo bleibt sichtbar). Im aktuellen Header wird das Logo nur am Desktop gezeigt; die Mobil-Datei dient der Vollständigkeit.",
+      "Die Anzeige ist **quadratisch** (object-cover im Quadrat). **Exakt quadratische** Datei = **kein Zuschnitt** (das ganze Logo bleibt sichtbar). **Mobil** und **Desktop** nutzen jeweils die passende Datei im fixierten Header.",
     ],
     bullets: [
       "**Optimal:** **1 : 1**, z. B. **512 × 512 px** oder **384 × 384 px** (für Retina).",

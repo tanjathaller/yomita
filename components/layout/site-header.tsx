@@ -28,13 +28,26 @@ export function SiteHeader({ settings, hasAktuellesItems }: SiteHeaderProps) {
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50 bg-transparent">
       <div className="mx-auto max-w-6xl px-4 py-1.5 sm:px-6 sm:py-2.5 lg:px-8">
-        {/* Mobile: nur Marke + Burger im Pill */}
+        {/* Mobile: Logo + Marke + Burger im Pill */}
         <div className={cn(pillShell, "justify-between gap-3 lg:hidden")}>
           <HashScrollLink
             href="/#hero"
-            className="text-footer-wordmark min-w-0 truncate text-2xl font-semibold leading-none tracking-tight"
+            className="text-footer-wordmark flex min-w-0 flex-1 items-center gap-2.5"
           >
-            {headerTitle}
+            {settings.logo ? (
+              <span className="relative size-9 shrink-0 overflow-hidden rounded-md">
+                <img
+                  src={resolveImageUrl(settings.logo.mobile.url)}
+                  alt=""
+                  width={36}
+                  height={36}
+                  className="size-full object-cover"
+                />
+              </span>
+            ) : null}
+            <span className="min-w-0 truncate text-2xl font-semibold leading-none tracking-tight">
+              {headerTitle}
+            </span>
           </HashScrollLink>
           <MobileNav
             items={navItems}
