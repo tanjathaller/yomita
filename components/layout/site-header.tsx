@@ -32,7 +32,7 @@ export function SiteHeader({ settings, hasAktuellesItems }: SiteHeaderProps) {
         <div className={cn(pillShell, "justify-between gap-3 lg:hidden")}>
           <HashScrollLink
             href="/#hero"
-            className="min-w-0 truncate text-2xl font-semibold leading-none tracking-tight text-foreground"
+            className="text-footer-wordmark min-w-0 truncate text-2xl font-semibold leading-none tracking-tight"
           >
             {headerTitle}
           </HashScrollLink>
@@ -50,7 +50,7 @@ export function SiteHeader({ settings, hasAktuellesItems }: SiteHeaderProps) {
         <div className={cn(pillShell, "hidden min-h-[3rem] gap-4 lg:flex lg:items-center lg:justify-between")}>
           <HashScrollLink
             href="/#hero"
-            className="flex min-w-0 shrink-0 items-center gap-2.5 text-foreground"
+            className="text-footer-wordmark flex min-w-0 shrink-0 items-center gap-2.5"
           >
             {settings.logo ? (
               <span className="relative size-9 shrink-0 overflow-hidden rounded-md">

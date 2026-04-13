@@ -64,7 +64,7 @@ export function MobileNav({
       >
         <SheetHeader className="@container border-b border-[rgba(72,90,68,0.30)] px-4 pb-6 pt-14 text-center dark:border-[rgba(169,194,158,0.26)] sm:px-6">
           <SheetTitle
-            className="font-heading text-black text-center leading-[0.82] font-black tracking-[0.065em] uppercase select-none drop-shadow-[0_2px_20px_rgba(0,0,0,0.08)]"
+            className="font-heading text-footer-wordmark text-center leading-[0.82] font-black tracking-[0.065em] uppercase select-none drop-shadow-[0_2px_20px_rgba(0,0,0,0.08)]"
             style={wordmarkStyle}
           >
             {name}
