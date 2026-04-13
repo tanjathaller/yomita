@@ -131,7 +131,7 @@ export function HeroSection({
               id="hero-primary-card"
               data-hero-primary-card
               className={cn(
-                "min-w-0 w-full max-w-2xl space-y-4 p-6",
+                "pointer-events-auto min-w-0 w-full max-w-2xl space-y-4 p-6",
                 "lg:flex lg:w-full lg:max-w-none lg:items-stretch lg:gap-0 lg:space-y-0 lg:overflow-hidden lg:rounded-l-2xl lg:rounded-r-none lg:bg-primary lg:p-0 lg:shadow-[0_20px_48px_-24px_rgba(25,38,26,0.5)]",
                 "xl:rounded-l-[1.35rem] xl:rounded-r-none",
               )}
