@@ -203,7 +203,11 @@ export function CoursesSection({
                 className={courseGridItemClass}
               >
                 {entry.type === "series" ? (
-                  <YogaflowSeriesCourseCard series={entry.block.series} sessions={entry.block.sessions} />
+                  <YogaflowSeriesCourseCard
+                    series={entry.block.series}
+                    sessions={entry.block.sessions}
+                    appUrl={appUrl}
+                  />
                 ) : (
                   <CourseRow course={entry.course} />
                 )}

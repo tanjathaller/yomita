@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 
 import type { InternalCourse, YogaflowCourseSeries } from "@/types/site-content";
@@ -6,7 +7,9 @@ import type { InternalCourse, YogaflowCourseSeries } from "@/types/site-content"
 import { CourseStatusBadge } from "@/components/domain/course-status-badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MarkdownContent } from "@/components/shared/markdown-content";
+import { buttonVariants } from "@/components/ui/button-variants";
 import { resolveBookingBadgeLink } from "@/lib/booking-badge-link";
+import { resolveYogaflowAppCoursesPageUrl } from "@/lib/yogaflow-app-courses-url";
 import { cn } from "@/lib/utils";
 
 function MetaRow({
@@ -37,15 +40,23 @@ function MetaRow({
 
 const DEFAULT_SERIES_BADGE = "Buchung über die App";
 
+function sessionShowsWaitingList(session: InternalCourse): boolean {
+  const r = session.remainingSpots;
+  return r !== undefined && Number.isFinite(r) && r <= 0;
+}
+
 type YogaflowSeriesCourseCardProps = {
   series: YogaflowCourseSeries;
   sessions: InternalCourse[];
+  appUrl: string;
 };
 
 export function YogaflowSeriesCourseCard({
   series,
   sessions,
+  appUrl,
 }: YogaflowSeriesCourseCardProps) {
+  const sessionBookingHref = resolveYogaflowAppCoursesPageUrl(appUrl);
   const sessionCount = sessions.length;
   const summaryLabel =
     sessionCount === 0
@@ -153,32 +164,65 @@ export function YogaflowSeriesCourseCard({
               />
             </span>
           </summary>
-          <div className="border-border/50 border-t px-3 py-2 pb-3">
+          <div className="@container/termine min-w-0 border-border/50 border-t px-3 py-2 pb-3">
             {sessionCount === 0 ? (
               <p className="text-muted-foreground text-sm leading-relaxed">
                 Aktuell keine Termine in der App.
               </p>
             ) : (
               <ul className="space-y-0 divide-y divide-border/50">
-                {sessions.map((session) => (
-                  <li
-                    key={session.id}
-                    className="flex flex-col gap-2 py-3 first:pt-1 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
-                  >
-                    <div className="grid min-w-0 flex-1 grid-cols-2 gap-x-3 gap-y-1 sm:grid-cols-[minmax(0,7rem)_minmax(0,1fr)] sm:items-center">
-                      <span className="text-[#2F3B2A] text-sm font-medium tabular-nums">
-                        {session.day}
-                      </span>
-                      <span className="text-muted-foreground text-sm">
-                        {session.time}
-                      </span>
-                    </div>
-                    <CourseStatusBadge
-                      bookingStatus={session.bookingStatus}
-                      remainingSpots={session.remainingSpots}
-                    />
-                  </li>
-                ))}
+                {sessions.map((session) => {
+                  const waitingList = sessionShowsWaitingList(session);
+                  return (
+                    <li
+                      key={session.id}
+                      className={cn(
+                        "grid min-w-0 gap-3 py-3 first:pt-1",
+                        // Nebeneinander nur bei genug Kartenbreite (z. B. 2-Spalten-Grid auf Desktop),
+                        // sonst stapeln — verhindert Überlagerung von Zeit-Text und Status-Pill.
+                        "grid-cols-1",
+                        "@min-[40rem]/termine:grid-cols-[minmax(0,1fr)_auto]",
+                        "@min-[40rem]/termine:items-center",
+                        "@min-[40rem]/termine:gap-x-4",
+                      )}
+                    >
+                      <div
+                        className={cn(
+                          "grid min-w-0 gap-x-3 gap-y-1",
+                          "grid-cols-2",
+                          "@min-[40rem]/termine:grid-cols-[minmax(0,7rem)_minmax(0,1fr)]",
+                          "@min-[40rem]/termine:items-center",
+                        )}
+                      >
+                        <span className="shrink-0 text-[#2F3B2A] text-sm font-medium tabular-nums">
+                          {session.day}
+                        </span>
+                        <span className="min-w-0 text-muted-foreground text-sm [overflow-wrap:anywhere]">
+                          {session.time}
+                        </span>
+                      </div>
+                      <div className="flex min-w-0 flex-wrap items-center justify-start gap-2 @min-[40rem]/termine:justify-end">
+                        <CourseStatusBadge
+                          bookingStatus={session.bookingStatus}
+                          remainingSpots={session.remainingSpots}
+                        />
+                        <Link
+                          href={sessionBookingHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={cn(
+                            buttonVariants({ size: "sm" }),
+                            "border border-[#6F8B63]/30 bg-[#7A956E] font-semibold text-white shadow-sm hover:bg-[#6F8B63] hover:text-white",
+                          )}
+                        >
+                          {waitingList
+                            ? "Warteliste eintragen"
+                            : "Kurs buchen"}
+                        </Link>
+                      </div>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </div>
