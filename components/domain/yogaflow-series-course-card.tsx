@@ -178,20 +178,20 @@ export function YogaflowSeriesCourseCard({
                       key={session.id}
                       className={cn(
                         "grid min-w-0 gap-3 py-3 first:pt-1",
-                        // Nebeneinander nur bei genug Kartenbreite (z. B. 2-Spalten-Grid auf Desktop),
-                        // sonst stapeln — verhindert Überlagerung von Zeit-Text und Status-Pill.
+                        // Nebeneinander nur ab lg-Viewport und genug Kartenbreite (Desktop),
+                        // darunter immer eine Spalte — Badge/Button stapeln sich zuverlässig.
                         "grid-cols-1",
-                        "@min-[40rem]/termine:grid-cols-[minmax(0,1fr)_auto]",
-                        "@min-[40rem]/termine:items-center",
-                        "@min-[40rem]/termine:gap-x-4",
+                        "lg:@min-[40rem]/termine:grid-cols-[minmax(0,1fr)_auto]",
+                        "lg:@min-[40rem]/termine:items-center",
+                        "lg:@min-[40rem]/termine:gap-x-4",
                       )}
                     >
                       <div
                         className={cn(
                           "grid min-w-0 gap-x-3 gap-y-1",
                           "grid-cols-2",
-                          "@min-[40rem]/termine:grid-cols-[minmax(0,7rem)_minmax(0,1fr)]",
-                          "@min-[40rem]/termine:items-center",
+                          "lg:@min-[40rem]/termine:grid-cols-[minmax(0,7rem)_minmax(0,1fr)]",
+                          "lg:@min-[40rem]/termine:items-center",
                         )}
                       >
                         <span className="shrink-0 text-[#2F3B2A] text-sm font-medium tabular-nums">
@@ -201,7 +201,7 @@ export function YogaflowSeriesCourseCard({
                           {session.time}
                         </span>
                       </div>
-                      <div className="flex min-w-0 flex-wrap items-center justify-start gap-2 @min-[40rem]/termine:justify-end">
+                      <div className="flex min-w-0 flex-col items-start gap-2 lg:flex-row lg:flex-wrap lg:items-center lg:justify-start lg:@min-[40rem]/termine:justify-end">
                         <CourseStatusBadge
                           bookingStatus={session.bookingStatus}
                           remainingSpots={session.remainingSpots}
@@ -211,7 +211,7 @@ export function YogaflowSeriesCourseCard({
                           target="_blank"
                           rel="noopener noreferrer"
                           className={cn(
-                            buttonVariants({ size: "sm" }),
+                            buttonVariants({ size: "default" }),
                             "border border-[#6F8B63]/30 bg-[#7A956E] font-semibold text-white shadow-sm hover:bg-[#6F8B63] hover:text-white",
                           )}
                         >
