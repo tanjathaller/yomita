@@ -8,7 +8,7 @@ import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { loginOwnerAction } from "../actions";
 
 type LoginPageProps = {
-  searchParams: { next?: string };
+  searchParams: Promise<{ next?: string }>;
 };
 
 export const metadata: Metadata = {
@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
+  const { next: nextPath } = await searchParams;
   const authenticated = await isAdminAuthenticated();
   if (authenticated) {
     return (
@@ -43,7 +44,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
           <CardDescription>Nur der Webseiten-Owner darf auf das Dashboard zugreifen.</CardDescription>
         </CardHeader>
         <CardContent>
-          <LoginForm action={loginOwnerAction} nextPath={searchParams.next} />
+          <LoginForm action={loginOwnerAction} nextPath={nextPath} />
         </CardContent>
       </Card>
     </div>

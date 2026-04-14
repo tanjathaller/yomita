@@ -93,9 +93,7 @@
         "url": "https://yogasanskriti.de/"
       },
       "sortOrder": 20,
-      "type": "external",
-      "externalUrl": "https://yogasanskriti.de/",
-      "externalLinkLabel": "Zur Website von Yoga Sanskriti"
+      "type": "internal"
     }
   ],
   "prices": [
