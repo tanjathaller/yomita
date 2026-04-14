@@ -1190,6 +1190,10 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
   const [selectedLogoFileNameDesktop, setSelectedLogoFileNameDesktop] = useState("");
   const logoImageMobileFileInputRef = useRef<HTMLInputElement | null>(null);
   const logoImageDesktopFileInputRef = useRef<HTMLInputElement | null>(null);
+  const [uploadingFavicon, setUploadingFavicon] = useState(false);
+  const [uploadErrorFavicon, setUploadErrorFavicon] = useState("");
+  const [selectedFaviconFileName, setSelectedFaviconFileName] = useState("");
+  const faviconFileInputRef = useRef<HTMLInputElement | null>(null);
 
   const [mobileSaveHost, setMobileSaveHost] = useState<HTMLElement | null>(null);
   const [saveToast, setSaveToast] = useState<{ text: string; isError: boolean } | null>(null);
@@ -1532,6 +1536,45 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
       setUploadErrorLogo(message);
     } finally {
       setUploadingLogoSlot(null);
+    }
+  };
+
+  const uploadFaviconImage = async (file: File) => {
+    setUploadingFavicon(true);
+    setUploadErrorFavicon("");
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("scope", "favicon");
+
+    try {
+      const response = await fetch("/api/admin/upload-image", {
+        method: "POST",
+        body: formData,
+      });
+      const raw = await response.text();
+      let data: { error?: string; url?: string } = {};
+      if (raw.trim()) {
+        try {
+          data = JSON.parse(raw) as { error?: string; url?: string };
+        } catch {
+          throw new Error(`Upload-Antwort ungueltig (HTTP ${response.status}).`);
+        }
+      }
+
+      if (!response.ok || !data.url) {
+        throw new Error(data.error ?? "Upload fehlgeschlagen.");
+      }
+
+      setDraft((prev) => ({
+        ...prev,
+        settings: { ...prev.settings, faviconUrl: data.url! },
+      }));
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Upload fehlgeschlagen.";
+      setUploadErrorFavicon(message);
+    } finally {
+      setUploadingFavicon(false);
     }
   };
 
@@ -3887,6 +3930,94 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                       ) : null}
                       {uploadErrorOg ? <p className="text-xs text-destructive">{uploadErrorOg}</p> : null}
                     </div>
+                  </div>
+                  <div className="space-y-4 rounded-lg border border-border/60 bg-muted/10 p-4 md:col-span-2">
+                    <div className="space-y-1">
+                      <h3 className="text-sm font-semibold">Favicon</h3>
+                      <p className="text-xs text-muted-foreground">
+                        Symbol im Browser-Tab; JPG, PNG oder WebP (max. 5 MB).
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <AdminImageFieldLabel variant="favicon" htmlFor="settings-favicon-url">
+                        Favicon-URL
+                      </AdminImageFieldLabel>
+                      <Input
+                        id="settings-favicon-url"
+                        value={draft.settings.faviconUrl ?? ""}
+                        onChange={(event) => {
+                          const v = event.target.value.trim();
+                          setDraft((prev) => ({
+                            ...prev,
+                            settings: {
+                              ...prev.settings,
+                              faviconUrl: v || undefined,
+                            },
+                          }));
+                        }}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <AdminImageFieldLabel variant="favicon">Favicon hochladen</AdminImageFieldLabel>
+                      <input
+                        ref={faviconFileInputRef}
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        className="sr-only"
+                        disabled={uploadingFavicon}
+                        onChange={async (event) => {
+                          const file = event.target.files?.[0];
+                          if (!file) {
+                            return;
+                          }
+                          setSelectedFaviconFileName(file.name);
+                          await uploadFaviconImage(file);
+                          event.target.value = "";
+                        }}
+                      />
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="border-primary/40 bg-primary/5 text-primary"
+                          disabled={uploadingFavicon}
+                          onClick={() => faviconFileInputRef.current?.click()}
+                        >
+                          Datei wählen
+                        </Button>
+                        <span className="text-xs text-muted-foreground">{selectedFaviconFileName || "—"}</span>
+                      </div>
+                    </div>
+                    {draft.settings.faviconUrl?.trim() ? (
+                      <div className="flex items-center gap-3">
+                        <img
+                          src={draft.settings.faviconUrl.trim()}
+                          alt=""
+                          className="size-8 rounded border border-border/60 bg-background object-contain"
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="text-destructive hover:text-destructive"
+                          onClick={() =>
+                            setDraft((prev) => ({
+                              ...prev,
+                              settings: { ...prev.settings, faviconUrl: undefined },
+                            }))
+                          }
+                        >
+                          Favicon entfernen
+                        </Button>
+                      </div>
+                    ) : null}
+                    {uploadingFavicon ? (
+                      <p className="text-xs text-muted-foreground">Upload läuft…</p>
+                    ) : null}
+                    {uploadErrorFavicon ? (
+                      <p className="text-xs text-destructive">{uploadErrorFavicon}</p>
+                    ) : null}
                   </div>
                   <div className="space-y-4 rounded-lg border border-border/60 bg-muted/10 p-4 md:col-span-2">
                     <div className="space-y-1">

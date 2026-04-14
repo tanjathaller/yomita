@@ -16,6 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const ogUrl =
     content.settings.ogImage?.desktop.url?.trim() ||
     content.settings.ogImage?.mobile.url?.trim();
+  const faviconUrl = content.settings.faviconUrl?.trim();
   return {
     title: {
       default: defaultTitle,
@@ -23,6 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description: content.settings.metaDescription ?? undefined,
     openGraph: ogUrl ? { images: [{ url: ogUrl }] } : undefined,
+    icons: faviconUrl ? { icon: [{ url: faviconUrl }] } : undefined,
   };
 }
 

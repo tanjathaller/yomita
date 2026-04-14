@@ -55,6 +55,7 @@ Pflege aller Inhalte der Website über ein simples, übersichtliches Dashboard.
 - Seitenname
 - App-URL
 - Logo-URL
+- Favicon-URL (optional, Upload)
 - Meta Description
 - OG Image URL
 

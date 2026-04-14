@@ -240,6 +240,7 @@ export const generalSettingsSchema = z
     /** @deprecated Nur für alte JSON-Daten; wird zu `ogImage` zusammengeführt. */
     ogImageUrl: z.string().optional(),
     ogImage: optionalUrlPairSchema,
+    faviconUrl: z.string().optional(),
     navigation: z.array(navItemSchema).optional(),
   })
   .superRefine((settings, ctx) => {
@@ -257,11 +258,21 @@ export const generalSettingsSchema = z
         message: "Mindestens Logo oder Nav Wordmark muss aktiviert sein.",
       });
     }
+    const fav = settings.faviconUrl?.trim();
+    if (fav && !/^https?:\/\/\S+$/i.test(fav)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["faviconUrl"],
+        message: "Favicon-URL muss mit https:// oder http:// beginnen.",
+      });
+    }
   })
   .transform((s) => {
-    const { logoUrl, ogImageUrl, logo, ogImage, ...rest } = s;
+    const { logoUrl, ogImageUrl, logo, ogImage, faviconUrl, ...rest } = s;
+    const fav = faviconUrl?.trim();
     return {
       ...rest,
+      faviconUrl: fav && /^https?:\/\/\S+$/i.test(fav) ? fav : undefined,
       logo: normalizeOptionalUrlPair(logo, logoUrl),
       ogImage: normalizeOptionalUrlPair(ogImage, ogImageUrl),
     };

@@ -24,7 +24,8 @@ export type AdminImageHintVariant =
   | "ogMobile"
   | "ogDesktop"
   | "logoMobile"
-  | "logoDesktop";
+  | "logoDesktop"
+  | "favicon";
 
 const HINT_COPY: Record<AdminImageHintVariant, AdminHintContent> = {
   aktuellMobile: {
@@ -135,6 +136,16 @@ const HINT_COPY: Record<AdminImageHintVariant, AdminHintContent> = {
     bullets: [
       "**Optimal:** **1 : 1**, z. B. **512 × 512 px** oder mindestens **256 × 256 px**.",
       "PNG mit Transparenz oder WebP; max. 5 MB.",
+    ],
+  },
+  favicon: {
+    title: "Favicon",
+    paragraphs: [
+      "Kleines Symbol im **Browser-Tab** und in Lesezeichen. Moderne Browser akzeptieren **PNG** oder **WebP** neben klassischem ICO.",
+    ],
+    bullets: [
+      "**Optimal:** **quadratisch**, z. B. **32 × 32 px** bis **512 × 512 px** (höhere Auflösung = schärfer auf HiDPI-Displays).",
+      "Einfaches, gut erkennbares Motiv; JPG, PNG oder WebP; max. 5 MB.",
     ],
   },
 };

@@ -218,6 +218,7 @@ Kein Feld `externalUrl`.
 | `siteTitle`        | string?  | `<title>` / Branding |
 | `metaDescription`  | string?  | Meta-Description SEO |
 | `ogImage`          | object?  | optional; `mobile.url` und `desktop.url` für Link-Vorschauen; in Metadaten wird primär die Desktop-URL genutzt. Legacy: `ogImageUrl` → beide URLs |
+| `faviconUrl`       | string?  | optional; absolute `https`-URL (z. B. nach Admin-Upload); Browser-Tab-Icon auf der öffentlichen Site |
 | `navigation`       | siehe oben | optionale Nav-Einträge |
 
 ### `settings.yogaflowCourseSeries[]` (Eintrag)

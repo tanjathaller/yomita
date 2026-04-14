@@ -60,15 +60,17 @@ export async function POST(request: Request) {
             ? "hero"
             : scopeRaw === "logo"
               ? "logo"
-              : scopeRaw === "aktuelles" || scopeRaw === null || scopeRaw === ""
-                ? "aktuelles"
-                : null;
+              : scopeRaw === "favicon"
+                ? "favicon"
+                : scopeRaw === "aktuelles" || scopeRaw === null || scopeRaw === ""
+                  ? "aktuelles"
+                  : null;
 
     if (blobPrefix === null) {
       return NextResponse.json(
         {
           error:
-            "Ungueltiger Upload-Bereich (scope). Erlaubt: aktuelles, about, og, hero, logo.",
+            "Ungueltiger Upload-Bereich (scope). Erlaubt: aktuelles, about, og, hero, logo, favicon.",
         },
         { status: 400 },
       );

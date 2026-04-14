@@ -206,6 +206,8 @@ export type GeneralSettings = {
   metaDescription?: string;
   /** Open-Graph-Vorschau; für Metadaten wird primär die Desktop-URL genutzt. */
   ogImage?: SiteResponsiveImageUrls;
+  /** Optionales Favicon (Browser-Tab); absolute `https`-URL, z. B. nach Upload. */
+  faviconUrl?: string;
   navigation?: NavItem[];
 };
 
