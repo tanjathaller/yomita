@@ -212,6 +212,10 @@ export const generalSettingsSchema = z
     navWordmark: z.string().optional(),
     logoEnabled: z.boolean().optional(),
     wordmarkEnabled: z.boolean().optional(),
+    heroEyebrowEnabled: z.boolean().optional(),
+    aktuellEyebrowEnabled: z.boolean().optional(),
+    coursesEyebrowEnabled: z.boolean().optional(),
+    pricesEyebrowEnabled: z.boolean().optional(),
     sectionEyebrows: z
       .object({
         hero: z.string().optional(),

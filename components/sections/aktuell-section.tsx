@@ -29,7 +29,7 @@ export function AktuellesSection({
   }
 
   const heading = title?.trim() || DEFAULT_TITLE;
-  const eyebrow = eyebrowLabel?.trim() || "Journal";
+  const eyebrow = eyebrowLabel?.trim();
   const isSingleCard = items.length === 1;
 
   return (
@@ -45,9 +45,11 @@ export function AktuellesSection({
     >
       <div className="max-w-2xl pl-4 lg:pl-6">
         <div className="relative inline-block pr-6 lg:pr-7">
-          <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#5F7F53] uppercase lg:text-sm">
-            {eyebrow}
-          </p>
+          {eyebrow ? (
+            <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#5F7F53] uppercase lg:text-sm">
+              {eyebrow}
+            </p>
+          ) : null}
           <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight lg:text-6xl">
             {heading}
           </h2>

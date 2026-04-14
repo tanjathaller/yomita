@@ -162,6 +162,14 @@ export type GeneralSettings = {
   logoEnabled?: boolean;
   /** Steuert die Wordmark-Anzeige in der Navigation; fehlend entspricht `true`. */
   wordmarkEnabled?: boolean;
+  /** Steuert die kleine Hero-Kopfzeile; fehlend entspricht `true`. */
+  heroEyebrowEnabled?: boolean;
+  /** Steuert das Aktuelles-Label ueber der Section-Headline; fehlend entspricht `true`. */
+  aktuellEyebrowEnabled?: boolean;
+  /** Steuert das Kurse-Label ueber der Section-Headline; fehlend entspricht `true`. */
+  coursesEyebrowEnabled?: boolean;
+  /** Steuert das Preise-Label ueber der Section-Headline; fehlend entspricht `true`. */
+  pricesEyebrowEnabled?: boolean;
   /** Optionale kleine Labels oberhalb von Sektions-Headlines. */
   sectionEyebrows?: {
     /** Hero-Eyebrow; Fallback ist `businessName`. */

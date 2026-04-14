@@ -19,7 +19,7 @@ const DEFAULT_PRICES_INTRO_MARKDOWN =
   "Zahlung und Abwicklung erfolgen außerhalb dieser Website (z. B. vor Ort oder per Rechnung) – hier nur die Übersicht.";
 
 export function PricesSection({ prices, eyebrowLabel, sectionTitle, sectionIntro }: PricesSectionProps) {
-  const eyebrow = eyebrowLabel?.trim() || "Teilnahme";
+  const eyebrow = eyebrowLabel?.trim();
   const heading = sectionTitle?.trim() || "Preise";
   const introMarkdown = sectionIntro?.trim() || DEFAULT_PRICES_INTRO_MARKDOWN;
   return (
@@ -29,9 +29,11 @@ export function PricesSection({ prices, eyebrowLabel, sectionTitle, sectionIntro
     >
       <div className="max-w-2xl pl-4 lg:pl-6">
         <div className="relative inline-block pr-6 lg:pr-7">
-          <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#7A956E] uppercase lg:text-sm">
-            {eyebrow}
-          </p>
+          {eyebrow ? (
+            <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#7A956E] uppercase lg:text-sm">
+              {eyebrow}
+            </p>
+          ) : null}
           <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight lg:text-6xl">
             {heading}
           </h2>

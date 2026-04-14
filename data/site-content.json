@@ -170,6 +170,8 @@
     "navWordmark": "YOMITA",
     "logoEnabled": true,
     "wordmarkEnabled": true,
+    "heroEyebrowEnabled": false,
+    "aktuellEyebrowEnabled": false,
     "sectionEyebrows": {
       "hero": "Tanja Thaller",
       "aktuell": "Journal",

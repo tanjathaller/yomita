@@ -1638,6 +1638,22 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
             {activeSection === "hero" ? (
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2 md:col-span-2">
+                  <Label className="text-sm font-medium">Hero Label anzeigen</Label>
+                  <label className="flex cursor-pointer items-center gap-2 rounded-md border border-border/60 bg-muted/15 px-3 py-2 text-sm">
+                    <input
+                      type="checkbox"
+                      checked={draft.settings.heroEyebrowEnabled !== false}
+                      onChange={(event) =>
+                        setDraft((prev) => ({
+                          ...prev,
+                          settings: { ...prev.settings, heroEyebrowEnabled: event.target.checked },
+                        }))
+                      }
+                    />
+                    <span>Kleine Zeile über dem Hero-Titel anzeigen</span>
+                  </label>
+                </div>
+                <div className="space-y-2 md:col-span-2">
                   <Label>Hero Label (kleine Zeile)</Label>
                   <Input
                     value={draft.settings.sectionEyebrows?.hero ?? ""}
@@ -1837,6 +1853,22 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
             {activeSection === "aktuell" ? (
               <div className="space-y-4">
                 <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label>Aktuelles Label anzeigen</Label>
+                    <label className="flex h-9 cursor-pointer items-center gap-2 rounded-md border border-border/60 bg-muted/15 px-3 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={draft.settings.aktuellEyebrowEnabled !== false}
+                        onChange={(event) =>
+                          setDraft((prev) => ({
+                            ...prev,
+                            settings: { ...prev.settings, aktuellEyebrowEnabled: event.target.checked },
+                          }))
+                        }
+                      />
+                      <span>Kleine Zeile anzeigen</span>
+                    </label>
+                  </div>
                   <div className="space-y-2">
                     <Label>Aktuelles Label (kleine Zeile)</Label>
                     <Input
@@ -2326,6 +2358,22 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
             {activeSection === "courses" ? (
               <div className="space-y-3">
                 <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2 md:col-span-2">
+                    <Label className="text-sm font-medium">Kurse Label anzeigen</Label>
+                    <label className="flex cursor-pointer items-center gap-2 rounded-md border border-border/60 bg-muted/15 px-3 py-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={draft.settings.coursesEyebrowEnabled !== false}
+                        onChange={(event) =>
+                          setDraft((prev) => ({
+                            ...prev,
+                            settings: { ...prev.settings, coursesEyebrowEnabled: event.target.checked },
+                          }))
+                        }
+                      />
+                      <span>Kleine Zeile über dem Kurse-Titel anzeigen</span>
+                    </label>
+                  </div>
                   <div className="space-y-2 md:col-span-2">
                     <Label>Kurse Label (kleine Zeile über H2)</Label>
                     <Input
@@ -3084,6 +3132,22 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
             {activeSection === "prices" ? (
               <div className="space-y-3">
                 <div className="grid gap-4 md:grid-cols-2">
+                  <div className="space-y-2 md:col-span-2">
+                    <Label className="text-sm font-medium">Preise Label anzeigen</Label>
+                    <label className="flex cursor-pointer items-center gap-2 rounded-md border border-border/60 bg-muted/15 px-3 py-2 text-sm">
+                      <input
+                        type="checkbox"
+                        checked={draft.settings.pricesEyebrowEnabled !== false}
+                        onChange={(event) =>
+                          setDraft((prev) => ({
+                            ...prev,
+                            settings: { ...prev.settings, pricesEyebrowEnabled: event.target.checked },
+                          }))
+                        }
+                      />
+                      <span>Kleine Zeile über dem Preise-Titel anzeigen</span>
+                    </label>
+                  </div>
                   <div className="space-y-2 md:col-span-2">
                     <Label>Preise Label (kleine Zeile über H2)</Label>
                     <Input

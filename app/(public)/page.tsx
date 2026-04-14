@@ -19,27 +19,31 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function HomePage() {
   const content = await getSiteContent();
   const hasAktuelles = content.aktuell.items.length > 0;
+  const heroEyebrowEnabled = content.settings.heroEyebrowEnabled !== false;
+  const aktuellEyebrowEnabled = content.settings.aktuellEyebrowEnabled !== false;
+  const coursesEyebrowEnabled = content.settings.coursesEyebrowEnabled !== false;
+  const pricesEyebrowEnabled = content.settings.pricesEyebrowEnabled !== false;
 
   return (
     <>
       <HeroSection
         hero={content.hero}
-        businessName={content.settings.businessName}
-        eyebrowLabel={content.settings.sectionEyebrows?.hero}
+        businessName={heroEyebrowEnabled ? content.settings.businessName : undefined}
+        eyebrowLabel={heroEyebrowEnabled ? content.settings.sectionEyebrows?.hero : undefined}
         waveInto={hasAktuelles ? undefined : "muted-band"}
       />
       <HeroSeamDebug />
       <AktuellesSection
         aktuell={content.aktuell}
         afterAboutTeaser={hasAktuelles}
-        eyebrowLabel={content.settings.sectionEyebrows?.aktuell}
+        eyebrowLabel={aktuellEyebrowEnabled ? content.settings.sectionEyebrows?.aktuell : undefined}
       />
       <CoursesSection
         yogaflowCourses={content.yogaflowCourses ?? []}
         yogaflowCourseSeries={content.settings.yogaflowCourseSeries ?? []}
         manualCourses={content.courses}
         appUrl={content.settings.appUrl}
-        eyebrowLabel={content.settings.sectionEyebrows?.courses}
+        eyebrowLabel={coursesEyebrowEnabled ? content.settings.sectionEyebrows?.courses : undefined}
         sectionTitle={content.settings.coursesSectionTitle}
         sectionIntro={content.settings.coursesSectionIntro}
         afterAktuelles={hasAktuelles}
@@ -47,7 +51,7 @@ export default async function HomePage() {
       />
       <PricesSection
         prices={content.prices}
-        eyebrowLabel={content.settings.sectionEyebrows?.prices}
+        eyebrowLabel={pricesEyebrowEnabled ? content.settings.sectionEyebrows?.prices : undefined}
         sectionTitle={content.settings.pricesSectionTitle}
         sectionIntro={content.settings.pricesSectionIntro}
       />

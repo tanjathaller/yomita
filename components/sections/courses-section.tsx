@@ -52,7 +52,7 @@ export function CoursesSection({
   afterAktuelles = false,
   afterAboutTeaser = false,
 }: CoursesSectionProps) {
-  const eyebrow = eyebrowLabel?.trim() || "Angebot";
+  const eyebrow = eyebrowLabel?.trim();
   const heading = sectionTitle?.trim() || "Kurse & Termine";
   const introMarkdown =
     sectionIntro?.trim() ||
@@ -80,9 +80,11 @@ export function CoursesSection({
     >
       <div className="max-w-2xl pl-4 lg:pl-6">
         <div className="relative inline-block pr-6 lg:pr-7">
-          <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#7A956E] uppercase lg:text-sm">
-            {eyebrow}
-          </p>
+          {eyebrow ? (
+            <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#7A956E] uppercase lg:text-sm">
+              {eyebrow}
+            </p>
+          ) : null}
           <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight lg:text-6xl">
             {heading}
           </h2>
