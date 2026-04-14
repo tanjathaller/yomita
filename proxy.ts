@@ -5,6 +5,14 @@ import { ADMIN_SESSION_COOKIE_NAME } from "@/lib/admin-auth-constants";
 
 export function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
+
+  if (pathname === "/favicon.ico") {
+    const url = request.nextUrl.clone();
+    url.pathname = "/api/favicon";
+    url.search = "";
+    return NextResponse.rewrite(url);
+  }
+
   if (pathname.startsWith("/admin/login")) {
     return NextResponse.next();
   }
@@ -25,5 +33,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/favicon.ico"],
 };

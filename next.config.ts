@@ -1,12 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  async rewrites() {
-    return [
-      /** Browser-Default `/favicon.ico` → CMS-Favicon (ersetzt Vercel-Platzhalter). */
-      { source: "/favicon.ico", destination: "/api/favicon" },
-    ];
-  },
   images: {
     remotePatterns: [
       {
