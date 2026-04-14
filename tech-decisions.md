@@ -21,7 +21,7 @@
 - Visual patterns and token roles: [`design-reference/design-system-profile.json`](design-reference/design-system-profile.json) (implement via shadcn/Tailwind, e.g. `globals.css` CSS variables).
 
 ## Content rendering (fest für diese Codebasis)
-- `legal.imprintText` / `legal.privacyText` und Markdown in `about.text`: **react-markdown** (Komponente `MarkdownContent`). Kein rohes HTML aus dem JSON ohne weitere Absicherung.
+- `legal.imprintText` / `legal.privacyText`: **react-markdown** (Komponente `MarkdownContent`). `about.text` ist **Klartext** (Absätze per Leerzeile) und wird ohne Markdown-Renderer ausgegeben. Kein rohes HTML aus dem JSON ohne weitere Absicherung.
 
 ## Admin/Auth/Persistenz (festgelegt)
 - Owner-only Login unter `/admin/login` mit Session-Cookie.

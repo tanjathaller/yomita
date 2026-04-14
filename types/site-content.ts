@@ -102,10 +102,11 @@ export type PriceItem = {
 };
 
 export type AboutSection = {
-  /** Sektionsüberschrift (Desktop in der Textkarte; Mobil groß am Portrait). Zeilenumbruch optional: zwei Zeilen. */
+  /** Sektionsüberschrift in der Textkarte (alle Viewports); Zeilenumbruch optional. */
   title: string;
-  /** Kleines Label über der Überschrift, nur Desktop („Eyebrow“). */
+  /** Kleines Label oberhalb der Überschrift („Eyebrow“). */
   eyebrow?: string;
+  /** Fließtext (Klartext); Absätze durch Leerzeile(n), Zeilenumbrüche innerhalb eines Absatzes möglich. */
   text: string;
   image: SiteResponsiveImage;
 };

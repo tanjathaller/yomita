@@ -172,7 +172,7 @@ Kein Feld `externalUrl`.
 |----------|--------|--------------|
 | `title`  | string | Überschrift in der **Textkarte** (alle Viewports). Mehrzeilig möglich per Zeilenumbruch im Text. |
 | `eyebrow`| string?| optional; kleines Label oberhalb von `title` in der Karte (Fallback in der UI: „Kurz zu mir“, wenn leer/fehlend). |
-| `text`   | string | Fließtext (Markdown möglich, je nach Renderer) |
+| `text`   | string | Fließtext (**Klartext**); Absätze durch eine oder mehrere Leerzeilen, Zeilenumbruch innerhalb eines Absatzes möglich |
 
 ### Bild (`about.image`)
 

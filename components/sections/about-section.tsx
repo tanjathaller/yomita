@@ -1,6 +1,7 @@
+import { Fragment } from "react";
+
 import type { AboutSection as AboutModel } from "@/types/site-content";
 
-import { MarkdownContent } from "@/components/shared/markdown-content";
 import { ResponsiveSiteImage } from "@/components/shared/responsive-site-image";
 import { SectionShell } from "@/components/shared/section-shell";
 import { cn } from "@/lib/utils";
@@ -11,6 +12,30 @@ const ABOUT_TITLE_FALLBACK = "Über mich";
 type AboutSectionProps = {
   about: AboutModel;
 };
+
+function AboutPlainText({ text }: { text: string }) {
+  const blocks = text
+    .split(/\n\n+/)
+    .map((block) => block.trim())
+    .filter(Boolean);
+  if (blocks.length === 0) {
+    return null;
+  }
+  return (
+    <div className="max-w-none space-y-4 text-pretty text-foreground/90 leading-relaxed lg:max-w-none lg:text-[1.05rem] lg:leading-snug">
+      {blocks.map((block, i) => (
+        <p key={i}>
+          {block.split("\n").map((line, j, lines) => (
+            <Fragment key={j}>
+              {line}
+              {j < lines.length - 1 ? <br /> : null}
+            </Fragment>
+          ))}
+        </p>
+      ))}
+    </div>
+  );
+}
 
 export function AboutSection({ about }: AboutSectionProps) {
   const eyebrow = about.eyebrow?.trim() || ABOUT_EYEBROW_FALLBACK;
@@ -68,21 +93,17 @@ export function AboutSection({ about }: AboutSectionProps) {
                 aria-hidden
                 className="ml-1 mb-3 block h-1 w-20 rounded-full bg-[#D8C9AF] lg:mb-3.5 lg:w-24"
               />
-              <h2 className="font-heading text-balance whitespace-pre-line text-[1.85rem] font-bold leading-[1.08] tracking-tight text-[#2F3B2A] sm:text-[2rem] lg:text-[2.35rem] lg:leading-[1.05] xl:text-[2.65rem]">
-                {displayTitle}
-              </h2>
+              <div className="flex items-stretch gap-3 lg:gap-5">
+                <span
+                  aria-hidden
+                  className="w-[3px] shrink-0 self-stretch rounded-full bg-[#7A956E]/35"
+                />
+                <h2 className="font-heading min-w-0 flex-1 text-balance whitespace-pre-line text-[1.85rem] font-bold leading-[1.08] tracking-tight text-[#2F3B2A] sm:text-[2rem] lg:text-[2.35rem] lg:leading-[1.05] xl:text-[2.65rem]">
+                  {displayTitle}
+                </h2>
+              </div>
             </header>
-            <MarkdownContent
-              markdown={about.text}
-              className={cn(
-                "max-w-none lg:max-w-none",
-                "space-y-4 lg:space-y-3",
-                "[&_strong]:font-bold",
-                "[&_p:first-of-type]:-ml-px [&_p:first-of-type]:border-l-[3px] [&_p:first-of-type]:border-[#7A956E]/35 [&_p:first-of-type]:pl-4 [&_p:first-of-type]:text-lg [&_p:first-of-type]:font-medium [&_p:first-of-type]:leading-snug [&_p:first-of-type]:text-[#2F3B2A] [&_p:first-of-type]:lg:pl-5 [&_p:first-of-type]:lg:text-xl",
-                "[&_p]:text-foreground/90 [&_p]:leading-relaxed [&_p]:lg:text-[1.05rem] [&_p]:lg:leading-snug",
-                "[&_h2]:mt-6 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:lg:mt-7 [&_h2]:lg:text-[1.35rem]",
-              )}
-            />
+            <AboutPlainText text={about.text} />
         </div>
       </div>
     </SectionShell>

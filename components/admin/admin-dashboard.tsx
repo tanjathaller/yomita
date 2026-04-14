@@ -3328,21 +3328,29 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                     className="min-h-[4.5rem] resize-y"
                   />
                   <p className="text-muted-foreground text-sm">
-                    Wird in der Textkarte auf allen Viewports gleich dargestellt. Optional mehrzeilig mit
+                    Hauptüberschrift in der Textkarte (alle Viewports). Optional mehrzeilig mit
                     Zeilenumbruch in diesem Feld.
                   </p>
                 </div>
-                <MarkdownEditor
-                  label="Fließtext (Markdown)"
-                  value={draft.about.text}
-                  rows={8}
-                  onChange={(value) =>
-                    setDraft((prev) => ({
-                      ...prev,
-                      about: { ...prev.about, text: value },
-                    }))
-                  }
-                />
+                <div className="space-y-2">
+                  <Label htmlFor="about-text">Fließtext</Label>
+                  <Textarea
+                    id="about-text"
+                    rows={10}
+                    value={draft.about.text}
+                    onChange={(event) =>
+                      setDraft((prev) => ({
+                        ...prev,
+                        about: { ...prev.about, text: event.target.value },
+                      }))
+                    }
+                    className="min-h-[12rem] resize-y font-sans"
+                  />
+                  <p className="text-muted-foreground text-sm">
+                    Nur Klartext. Absätze mit einer Leerzeile trennen; einfacher Zeilenumbruch erzeugt eine
+                    neue Zeile im selben Absatz.
+                  </p>
+                </div>
                 <div className="grid gap-3 md:grid-cols-2 md:items-start">
                   <div className="space-y-2 md:col-span-2">
                     <AdminImageFieldLabel variant="aboutMobile" htmlFor="about-image-mobile-url">
