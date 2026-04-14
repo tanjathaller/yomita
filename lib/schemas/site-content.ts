@@ -226,6 +226,7 @@ export const generalSettingsSchema = z
       .optional(),
     coursesSectionTitle: z.string().optional(),
     coursesSectionIntro: z.string().optional(),
+    coursesSectionAppButtonLabel: z.string().optional(),
     coursesManualSectionTitle: z.string().optional(),
     yogaflowCourseSeries: z.array(yogaflowCourseSeriesSchema).max(10).optional(),
     pricesSectionTitle: z.string().optional(),

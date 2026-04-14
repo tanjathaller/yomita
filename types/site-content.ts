@@ -185,6 +185,8 @@ export type GeneralSettings = {
   coursesSectionTitle?: string;
   /** Optionaler Untertext der Kurse-Sektion (Markdown; Fallback: Standardtext inkl. Link zu `#kontakt`). */
   coursesSectionIntro?: string;
+  /** Beschriftung des App-Buttons unter dem Kurse-Einleitungstext (`appUrl`); Fallback: „Kurs buchen“. */
+  coursesSectionAppButtonLabel?: string;
   /**
    * @deprecated Wird nicht mehr angezeigt (Kurse & Termine: eine gemeinsame Liste).
    * Beim Parsen erhalten; optional aus Admin entfernt.

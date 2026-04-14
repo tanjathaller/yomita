@@ -83,6 +83,8 @@ type CoursesSectionProps = {
   sectionTitle?: string;
   /** Optionaler Sektionstext (Markdown; Fallback: Standardtext inkl. Link zum Kontakt). */
   sectionIntro?: string;
+  /** Button unter dem Einleitungstext → `appUrl`; Fallback: „Kurs buchen“. */
+  appButtonLabel?: string;
   /** When true, this block sits below „Aktuelles“ in the same muted band (spacing + divider). */
   afterAktuelles?: boolean;
   /** Wenn es kein Aktuelles gibt: unter dem Kurz-„Über mich“-Teaser (spacing + divider). */
@@ -97,11 +99,13 @@ export function CoursesSection({
   eyebrowLabel,
   sectionTitle,
   sectionIntro,
+  appButtonLabel,
   afterAktuelles = false,
   afterAboutTeaser = false,
 }: CoursesSectionProps) {
   const eyebrow = eyebrowLabel?.trim();
   const heading = sectionTitle?.trim() || "Kurse & Termine";
+  const appCtaLabel = appButtonLabel?.trim() || "Kurs buchen";
   const introMarkdown =
     sectionIntro?.trim() ||
     "Als Bestandskund:in buchst du deine Stunden ganz entspannt über die App. Wenn du neu bist oder Fragen hast, bin ich gern für dich da - schreib mir einfach über das [Kontaktformular](/#kontakt).";
@@ -185,7 +189,7 @@ export function CoursesSection({
               "min-h-11 rounded-lg border border-[#6F8B63]/30 bg-[#7A956E] px-6 text-base font-semibold text-white shadow-sm hover:bg-[#6F8B63] hover:text-white",
             )}
           >
-            Kurse in der App ansehen
+            {appCtaLabel}
           </Link>
         </div>
       </div>

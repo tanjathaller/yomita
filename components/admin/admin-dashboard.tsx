@@ -2446,6 +2446,26 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                       }
                     />
                   </div>
+                  <div className="space-y-2 md:col-span-2">
+                    <Label>Button zur App (unter dem Einleitungstext)</Label>
+                    <Input
+                      value={draft.settings.coursesSectionAppButtonLabel ?? ""}
+                      placeholder="Kurs buchen"
+                      onChange={(event) =>
+                        setDraft((prev) => ({
+                          ...prev,
+                          settings: {
+                            ...prev.settings,
+                            coursesSectionAppButtonLabel: event.target.value || undefined,
+                          },
+                        }))
+                      }
+                    />
+                    <p className="text-xs text-muted-foreground">
+                      Verlinkt auf die App-URL aus den allgemeinen Einstellungen. Leer lassen für den
+                      Standardtext „Kurs buchen“.
+                    </p>
+                  </div>
                   <div className="md:col-span-2">
                     <Separator className="my-4" />
                   </div>

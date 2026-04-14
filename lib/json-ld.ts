@@ -49,7 +49,8 @@ function buildWebApplications(content: SiteContent, baseUrl: string): JsonLdThin
     });
   }
 
-  const coursesSectionButtonLabel = "Kurse in der App ansehen";
+  const coursesSectionButtonLabel =
+    settings.coursesSectionAppButtonLabel?.trim() || "Kurs buchen";
   if (
     appUrl &&
     (!heroUrl || normalizedUrlHref(appUrl) !== normalizedUrlHref(heroUrl))

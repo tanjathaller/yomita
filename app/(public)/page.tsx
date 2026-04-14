@@ -46,6 +46,7 @@ export default async function HomePage() {
         eyebrowLabel={coursesEyebrowEnabled ? content.settings.sectionEyebrows?.courses : undefined}
         sectionTitle={content.settings.coursesSectionTitle}
         sectionIntro={content.settings.coursesSectionIntro}
+        appButtonLabel={content.settings.coursesSectionAppButtonLabel}
         afterAktuelles={hasAktuelles}
         afterAboutTeaser={false}
       />

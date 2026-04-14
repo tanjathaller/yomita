@@ -208,6 +208,7 @@ Kein Feld `externalUrl`.
 | `sectionEyebrows`  | object?  | optionale kleine Labels über Abschnitts-Headlines: `hero`, `aktuell`, `courses`, `prices`; Fallbacks: `businessName` bzw. „Journal“, „Angebot“, „Teilnahme“ |
 | `coursesSectionTitle` | string? | optionaler Titel der Kurse-Sektion; Fallback: „Kurse & Termine“ |
 | `coursesSectionIntro` | string? | optionaler Untertext der Kurse-Sektion (**Markdown**); z. B. Link zum Kontakt `[Kontaktformular](/#kontakt)`; Fallback: Standardtext mit diesem Link |
+| `coursesSectionAppButtonLabel` | string? | Beschriftung des Buttons unter dem Kurse-Einleitungstext (Ziel: `appUrl`); Fallback: „Kurs buchen“ |
 | `coursesManualSectionTitle` | string? | **deprecated** – wird nicht mehr angezeigt (ältere Daten dürfen das Feld noch enthalten) |
 | `yogaflowCourseSeries` | array? | Serien für App-Termine; siehe Tabelle unten. Max. 10. Fehlt oder leer → Laufzeit-Defaults (Dienstag/Mittwoch) |
 | `pricesSectionTitle` | string? | optionaler Titel der Preise-Sektion; Fallback: „Preise“ |
