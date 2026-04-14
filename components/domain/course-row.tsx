@@ -36,8 +36,8 @@ export function CourseRow({ course }: { course: Course }) {
   const external = isExternalCourse(course);
 
   return (
-    <Card className="w-full min-w-0 gap-2.5 py-3 border-border/80 shadow-sm transition-[box-shadow,border-color,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] lg:gap-2.5 lg:py-2.5">
-      <CardHeader className="!flex !flex-col gap-2 space-y-0 px-4 pb-2.5 pt-0 lg:gap-2.5 lg:px-5 lg:pb-4 lg:pt-5">
+    <Card className="w-full min-w-0 gap-2.5 py-3 border-border/80 shadow-sm transition-[box-shadow,border-color,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] lg:min-h-0 lg:gap-2.5 lg:py-2.5">
+      <CardHeader className="!flex !flex-col shrink-0 gap-2 space-y-0 px-4 pb-2.5 pt-0 lg:gap-2.5 lg:px-5 lg:pb-4 lg:pt-5">
         <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
           <CardTitle className="text-[#2F3B2A] text-xl leading-snug lg:min-w-0 lg:flex-1 lg:text-[1.35rem]">
             {course.title}
@@ -84,8 +84,8 @@ export function CourseRow({ course }: { course: Course }) {
           </MetaRow>
         </dl>
       </CardHeader>
-      <CardContent className="space-y-2.5 border-0 px-4 pt-0 pb-0 lg:space-y-2.5 lg:px-5 lg:pb-4 lg:pt-2">
-        <div className="rounded-lg border border-[#6F8B63]/20 bg-[#6F8B63]/[0.07] p-4 lg:px-3 lg:py-2">
+      <CardContent className="space-y-2.5 border-0 px-4 pt-0 pb-0 lg:flex lg:min-h-0 lg:flex-1 lg:flex-col lg:space-y-2.5 lg:px-5 lg:pb-4 lg:pt-2">
+        <div className="shrink-0 rounded-lg border border-[#6F8B63]/20 bg-[#6F8B63]/[0.07] p-4 lg:px-3 lg:py-2">
           <p className="text-muted-foreground mb-1 text-[0.65rem] font-medium uppercase tracking-wider">
             Kursstil
           </p>
@@ -95,14 +95,15 @@ export function CourseRow({ course }: { course: Course }) {
           />
         </div>
         {course.type === "internal" && course.scheduleNote?.trim() ? (
-          <div className="text-muted-foreground text-xs leading-relaxed">
+          <div className="shrink-0 text-muted-foreground text-xs leading-relaxed">
             <MarkdownContent
               markdown={course.scheduleNote}
               className="max-w-none space-y-1 [&_p]:my-0 [&_p+p]:mt-1 [&_strong]:font-semibold [&_em]:italic"
             />
           </div>
         ) : null}
-        <div className="flex flex-wrap gap-2">
+        <div className="hidden min-h-0 lg:block lg:flex-1" aria-hidden />
+        <div className="mt-auto flex flex-wrap gap-2">
           {external ? (
             <Link
               href={course.externalUrl}

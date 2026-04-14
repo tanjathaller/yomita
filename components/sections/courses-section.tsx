@@ -12,14 +12,62 @@ import { cn } from "@/lib/utils";
 
 const courseGridClass = cn(
   "flex flex-col gap-4",
-  "lg:flex-row lg:flex-wrap lg:items-center lg:justify-center lg:gap-6 xl:gap-8",
+  // start: Jede Karte nur so hoch wie ihr Inhalt (z. B. geöffnete Terminliste vergrößert nicht die Nachbar-Karte).
+  "lg:flex-row lg:flex-wrap lg:items-start lg:justify-center lg:gap-6 xl:gap-8",
 );
 
 const courseGridItemClass = cn(
   "flex min-w-0 w-full flex-col",
-  "lg:flex-[0_0_calc((100%_-_1.5rem)/2)]",
-  "xl:flex-[0_0_calc((100%_-_2rem)/2)]",
+  "lg:min-h-[320px] lg:flex-[0_0_calc((100%_-_1.5rem)/2)]",
+  "xl:min-h-[320px] xl:flex-[0_0_calc((100%_-_2rem)/2)]",
 );
+
+const WEEKDAY_ORDER = [
+  "montag",
+  "dienstag",
+  "mittwoch",
+  "donnerstag",
+  "freitag",
+  "samstag",
+  "sonntag",
+] as const;
+
+function normalizeDayValue(value: string): string {
+  return value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9 ]+/g, " ")
+    .trim();
+}
+
+function getWeekdaySortIndex(dayRaw: string): number {
+  const day = normalizeDayValue(dayRaw);
+  if (!day) {
+    return Number.MAX_SAFE_INTEGER;
+  }
+
+  const direct = WEEKDAY_ORDER.findIndex((weekday) => day.includes(weekday));
+  if (direct >= 0) {
+    return direct;
+  }
+
+  const shortMatches: Array<{ token: string; index: number }> = [
+    { token: "mo", index: 0 },
+    { token: "di", index: 1 },
+    { token: "mi", index: 2 },
+    { token: "do", index: 3 },
+    { token: "fr", index: 4 },
+    { token: "sa", index: 5 },
+    { token: "so", index: 6 },
+  ];
+  for (const { token, index } of shortMatches) {
+    if (new RegExp(`\\b${token}\\b`, "i").test(day)) {
+      return index;
+    }
+  }
+  return Number.MAX_SAFE_INTEGER;
+}
 
 type CoursesSectionProps = {
   /** Aus YogaFlow-Sync (`data/yogaflow-courses.json`). */
@@ -62,6 +110,31 @@ export function CoursesSection({
     yogaflowCourseSeries,
     yogaflowCourses,
   );
+  const sortedCards = [
+    ...seriesBlocks.map((block, index) => ({
+      type: "series" as const,
+      index,
+      day: block.series.day,
+      weekdaySort: getWeekdaySortIndex(block.series.day),
+      block,
+    })),
+    ...manualCourses.map((course, index) => ({
+      type: "manual" as const,
+      index,
+      day: course.day,
+      weekdaySort: getWeekdaySortIndex(course.day),
+      course,
+    })),
+  ].sort((a, b) => {
+    if (a.weekdaySort !== b.weekdaySort) {
+      return a.weekdaySort - b.weekdaySort;
+    }
+    const byDay = a.day.localeCompare(b.day, "de", { sensitivity: "base" });
+    if (byDay !== 0) {
+      return byDay;
+    }
+    return a.index - b.index;
+  });
   const hasManual = manualCourses.length > 0;
   const hasSeries = seriesBlocks.length > 0;
   const hasAnyGrid = hasSeries || hasManual;
@@ -120,14 +193,16 @@ export function CoursesSection({
       <div className="mt-8 w-full">
         {hasAnyGrid ? (
           <div className={courseGridClass}>
-            {seriesBlocks.map(({ series, sessions }) => (
-              <div key={series.id} className={courseGridItemClass}>
-                <YogaflowSeriesCourseCard series={series} sessions={sessions} />
-              </div>
-            ))}
-            {manualCourses.map((course) => (
-              <div key={course.id} className={courseGridItemClass}>
-                <CourseRow course={course} />
+            {sortedCards.map((entry) => (
+              <div
+                key={entry.type === "series" ? entry.block.series.id : entry.course.id}
+                className={courseGridItemClass}
+              >
+                {entry.type === "series" ? (
+                  <YogaflowSeriesCourseCard series={entry.block.series} sessions={entry.block.sessions} />
+                ) : (
+                  <CourseRow course={entry.course} />
+                )}
               </div>
             ))}
           </div>
