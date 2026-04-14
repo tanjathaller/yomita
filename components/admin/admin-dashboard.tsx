@@ -3998,9 +3998,9 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                         />
                         <Button
                           type="button"
-                          variant="ghost"
+                          variant="outline"
                           size="sm"
-                          className="text-destructive hover:text-destructive"
+                          className="min-w-[7.5rem] border-destructive/35 font-semibold text-destructive shadow-sm hover:border-destructive/55 hover:bg-destructive/10 hover:text-destructive"
                           onClick={() =>
                             setDraft((prev) => ({
                               ...prev,
