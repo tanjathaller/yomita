@@ -23,6 +23,7 @@ import {
   ADMIN_SITE_CONTENT_FORM_ID,
 } from "@/lib/admin-dashboard-ui";
 import { BOOKING_BADGE_ANCHOR_PRESETS } from "@/lib/booking-badge-link";
+import { resolveImageUrl } from "@/lib/resolve-image-url";
 import { cn } from "@/lib/utils";
 import { DEFAULT_YOGAFLOW_COURSE_SERIES } from "@/lib/yogaflow-series-group";
 import type {
@@ -3992,7 +3993,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                     {draft.settings.faviconUrl?.trim() ? (
                       <div className="flex items-center gap-3">
                         <img
-                          src={draft.settings.faviconUrl.trim()}
+                          src={resolveImageUrl(draft.settings.faviconUrl.trim())}
                           alt=""
                           className="size-8 rounded border border-border/60 bg-background object-contain"
                         />

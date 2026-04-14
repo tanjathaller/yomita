@@ -5,6 +5,8 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SkipToContentLink } from "@/components/layout/skip-to-content-link";
 import { SiteJsonLd } from "@/components/seo/site-json-ld";
 import { getSiteContent } from "@/lib/get-site-content";
+import { resolveImageUrl } from "@/lib/resolve-image-url";
+import { toAbsoluteSiteUrl } from "@/lib/site-url";
 
 /** `site-content.json` bei jedem Request neu lesen (ohne erneuten `next build`). */
 export const dynamic = "force-dynamic";
@@ -16,7 +18,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const ogUrl =
     content.settings.ogImage?.desktop.url?.trim() ||
     content.settings.ogImage?.mobile.url?.trim();
-  const faviconUrl = content.settings.faviconUrl?.trim();
+  const faviconRaw = content.settings.faviconUrl?.trim();
+  const faviconResolved = faviconRaw ? resolveImageUrl(faviconRaw) : "";
+  const faviconAbsolute = faviconResolved ? toAbsoluteSiteUrl(faviconResolved) : undefined;
   return {
     title: {
       default: defaultTitle,
@@ -24,7 +28,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description: content.settings.metaDescription ?? undefined,
     openGraph: ogUrl ? { images: [{ url: ogUrl }] } : undefined,
-    icons: faviconUrl ? { icon: [{ url: faviconUrl }] } : undefined,
+    icons: faviconAbsolute ? { icon: [{ url: faviconAbsolute }] } : undefined,
   };
 }
 
