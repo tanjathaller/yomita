@@ -158,6 +158,10 @@ export type GeneralSettings = {
   businessName: string;
   /** Wenn gesetzt: Anzeige im Header und im mobilen Menü-Titel (z. B. Kurzmarke). Sonst `businessName`. */
   navWordmark?: string;
+  /** Steuert die Logo-Anzeige in der Navigation; fehlend entspricht `true`. */
+  logoEnabled?: boolean;
+  /** Steuert die Wordmark-Anzeige in der Navigation; fehlend entspricht `true`. */
+  wordmarkEnabled?: boolean;
   /** Optionale kleine Labels oberhalb von Sektions-Headlines. */
   sectionEyebrows?: {
     /** Hero-Eyebrow; Fallback ist `businessName`. */

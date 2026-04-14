@@ -1201,6 +1201,10 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
   }>({ toFade: null, toUnmount: null });
 
   const serializedContent = useMemo(() => JSON.stringify(draft), [draft]);
+  const logoEnabled = draft.settings.logoEnabled !== false;
+  const wordmarkEnabled = draft.settings.wordmarkEnabled !== false;
+  const canDisableLogo = wordmarkEnabled;
+  const canDisableWordmark = logoEnabled;
 
   useEffect(() => {
     setMobileSaveHost(document.getElementById(ADMIN_MOBILE_SAVE_PORTAL_ID));
@@ -3457,19 +3461,67 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                   <Field label="Business Name" value={draft.settings.businessName} onChange={(value) =>
                     setDraft((prev) => ({ ...prev, settings: { ...prev.settings, businessName: value } }))
                   } />
-                  <Field label="Nav Wordmark" value={draft.settings.navWordmark ?? ""} onChange={(value) =>
-                    setDraft((prev) => ({
-                      ...prev,
-                      settings: { ...prev.settings, navWordmark: value || undefined },
-                    }))
-                  } />
                   <Field label="App URL" value={draft.settings.appUrl} onChange={(value) =>
                     setDraft((prev) => ({ ...prev, settings: { ...prev.settings, appUrl: value } }))
                   } />
-                  <Field label="Site Title" value={draft.settings.siteTitle ?? ""} onChange={(value) =>
-                    setDraft((prev) => ({ ...prev, settings: { ...prev.settings, siteTitle: value || undefined } }))
-                  } />
-                  <div className="grid gap-3 md:col-span-2 md:grid-cols-2 md:items-start">
+                  <div className="space-y-4 rounded-lg border border-border/60 bg-muted/10 p-4 md:col-span-2">
+                    <div className="space-y-1">
+                      <h3 className="text-sm font-semibold">Logo & Nav Wordmark</h3>
+                      <p className="text-xs text-muted-foreground">
+                        Alle Einstellungen fuer Navigation-Logo und Wordmark an einer Stelle.
+                      </p>
+                    </div>
+                    <Field label="Nav Wordmark" value={draft.settings.navWordmark ?? ""} onChange={(value) =>
+                      setDraft((prev) => ({
+                        ...prev,
+                        settings: { ...prev.settings, navWordmark: value || undefined },
+                      }))
+                    } />
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium">Navigation anzeigen</Label>
+                      <div className="grid gap-2 md:grid-cols-2">
+                        <label className="flex cursor-pointer items-center gap-2 rounded-md border border-border/60 bg-muted/15 px-3 py-2 text-sm">
+                          <input
+                            type="checkbox"
+                            checked={logoEnabled}
+                            disabled={logoEnabled && !canDisableLogo}
+                            onChange={(event) => {
+                              const nextChecked = event.target.checked;
+                              if (!nextChecked && !canDisableLogo) {
+                                return;
+                              }
+                              setDraft((prev) => ({
+                                ...prev,
+                                settings: { ...prev.settings, logoEnabled: nextChecked },
+                              }));
+                            }}
+                          />
+                          <span>Logo anzeigen</span>
+                        </label>
+                        <label className="flex cursor-pointer items-center gap-2 rounded-md border border-border/60 bg-muted/15 px-3 py-2 text-sm">
+                          <input
+                            type="checkbox"
+                            checked={wordmarkEnabled}
+                            disabled={wordmarkEnabled && !canDisableWordmark}
+                            onChange={(event) => {
+                              const nextChecked = event.target.checked;
+                              if (!nextChecked && !canDisableWordmark) {
+                                return;
+                              }
+                              setDraft((prev) => ({
+                                ...prev,
+                                settings: { ...prev.settings, wordmarkEnabled: nextChecked },
+                              }));
+                            }}
+                          />
+                          <span>Nav Wordmark anzeigen</span>
+                        </label>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        Mindestens eines muss aktiv bleiben: Logo oder Nav Wordmark.
+                      </p>
+                    </div>
+                    <div className="grid gap-3 md:grid-cols-2 md:items-start">
                     <div className="space-y-2 md:col-span-2">
                       <AdminImageFieldLabel variant="logoMobile" htmlFor="settings-logo-mobile-url">
                         Logo-URL (Mobil)
@@ -3595,6 +3647,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                         <p className="text-xs text-destructive">{uploadErrorLogo}</p>
                       ) : null}
                     </div>
+                  </div>
                   </div>
                   <div className="grid gap-3 md:col-span-2 md:grid-cols-2 md:items-start">
                     <div className="space-y-2 md:col-span-2">
@@ -3723,18 +3776,32 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                       {uploadErrorOg ? <p className="text-xs text-destructive">{uploadErrorOg}</p> : null}
                     </div>
                   </div>
-                  <div className="space-y-2 md:col-span-2">
-                    <Label>Meta Description</Label>
-                    <Textarea
-                      rows={4}
-                      value={draft.settings.metaDescription ?? ""}
-                      onChange={(event) =>
-                        setDraft((prev) => ({
-                          ...prev,
-                          settings: { ...prev.settings, metaDescription: event.target.value || undefined },
-                        }))
-                      }
-                    />
+                  <div className="space-y-4 rounded-lg border border-border/60 bg-muted/10 p-4 md:col-span-2">
+                    <div className="space-y-1">
+                      <h3 className="text-sm font-semibold">SEO</h3>
+                      <p className="text-xs text-muted-foreground">
+                        Seitentitel und Meta-Beschreibung fuer Suchmaschinen an einer Stelle.
+                      </p>
+                    </div>
+                    <Field label="Site Title" value={draft.settings.siteTitle ?? ""} onChange={(value) =>
+                      setDraft((prev) => ({
+                        ...prev,
+                        settings: { ...prev.settings, siteTitle: value || undefined },
+                      }))
+                    } />
+                    <div className="space-y-2">
+                      <Label>Meta Description</Label>
+                      <Textarea
+                        rows={4}
+                        value={draft.settings.metaDescription ?? ""}
+                        onChange={(event) =>
+                          setDraft((prev) => ({
+                            ...prev,
+                            settings: { ...prev.settings, metaDescription: event.target.value || undefined },
+                          }))
+                        }
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="space-y-3">

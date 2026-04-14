@@ -24,6 +24,9 @@ export function SiteHeader({ settings, hasAktuellesItems }: SiteHeaderProps) {
     hasAktuellesItems === false ? { hasAktuellesItems: false } : undefined,
   );
   const headerTitle = settings.navWordmark?.trim() || settings.businessName;
+  const showLogo = settings.logoEnabled !== false && Boolean(settings.logo);
+  const showWordmark = settings.wordmarkEnabled !== false;
+  const mobileNavTitle = showWordmark ? headerTitle : undefined;
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50 bg-transparent">
@@ -34,7 +37,7 @@ export function SiteHeader({ settings, hasAktuellesItems }: SiteHeaderProps) {
             href="/#hero"
             className="text-footer-wordmark flex min-w-0 flex-1 items-center gap-2.5"
           >
-            {settings.logo ? (
+            {showLogo && settings.logo ? (
               <span className="relative size-9 shrink-0 overflow-hidden rounded-md">
                 <img
                   src={resolveImageUrl(settings.logo.mobile.url)}
@@ -45,13 +48,15 @@ export function SiteHeader({ settings, hasAktuellesItems }: SiteHeaderProps) {
                 />
               </span>
             ) : null}
-            <span className="min-w-0 truncate text-2xl font-semibold leading-none tracking-tight">
-              {headerTitle}
-            </span>
+            {showWordmark ? (
+              <span className="min-w-0 truncate text-2xl font-semibold leading-none tracking-tight">
+                {headerTitle}
+              </span>
+            ) : null}
           </HashScrollLink>
           <MobileNav
             items={navItems}
-            businessName={headerTitle}
+            businessName={mobileNavTitle}
             appCtaLabel="Zur YogaFlow-App"
             appCtaUrl={settings.appUrl}
             menuButtonVariant="ghost"
@@ -65,7 +70,7 @@ export function SiteHeader({ settings, hasAktuellesItems }: SiteHeaderProps) {
             href="/#hero"
             className="text-footer-wordmark flex min-w-0 shrink-0 items-center gap-2.5"
           >
-            {settings.logo ? (
+            {showLogo && settings.logo ? (
               <span className="relative size-9 shrink-0 overflow-hidden rounded-md">
                 <picture className="absolute inset-0 block">
                   <source
@@ -82,9 +87,11 @@ export function SiteHeader({ settings, hasAktuellesItems }: SiteHeaderProps) {
                 </picture>
               </span>
             ) : null}
-            <span className="truncate text-base font-semibold tracking-tight lg:text-2xl lg:leading-none">
-              {headerTitle}
-            </span>
+            {showWordmark ? (
+              <span className="truncate text-base font-semibold tracking-tight lg:text-2xl lg:leading-none">
+                {headerTitle}
+              </span>
+            ) : null}
           </HashScrollLink>
 
           <nav

@@ -210,6 +210,8 @@ export const generalSettingsSchema = z
   .object({
     businessName: z.string(),
     navWordmark: z.string().optional(),
+    logoEnabled: z.boolean().optional(),
+    wordmarkEnabled: z.boolean().optional(),
     sectionEyebrows: z
       .object({
         hero: z.string().optional(),
@@ -234,6 +236,22 @@ export const generalSettingsSchema = z
     ogImageUrl: z.string().optional(),
     ogImage: optionalUrlPairSchema,
     navigation: z.array(navItemSchema).optional(),
+  })
+  .superRefine((settings, ctx) => {
+    const logoEnabled = settings.logoEnabled !== false;
+    const wordmarkEnabled = settings.wordmarkEnabled !== false;
+    if (!logoEnabled && !wordmarkEnabled) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["logoEnabled"],
+        message: "Mindestens Logo oder Nav Wordmark muss aktiviert sein.",
+      });
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["wordmarkEnabled"],
+        message: "Mindestens Logo oder Nav Wordmark muss aktiviert sein.",
+      });
+    }
   })
   .transform((s) => {
     const { logoUrl, ogImageUrl, logo, ogImage, ...rest } = s;

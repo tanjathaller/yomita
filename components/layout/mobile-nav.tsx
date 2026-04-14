@@ -23,7 +23,7 @@ import {
 
 type MobileNavProps = {
   items: NavItem[];
-  businessName: string;
+  businessName?: string;
   appCtaLabel: string;
   appCtaUrl: string;
   /** z. B. Pill-Header: `variant="ghost"` + `className` für runden Icon-Button */
@@ -40,7 +40,8 @@ export function MobileNav({
   menuButtonVariant = "outline",
 }: MobileNavProps) {
   const [open, setOpen] = useState(false);
-  const name = businessName.trim();
+  const name = businessName?.trim() ?? "";
+  const showWordmark = name.length > 0;
   const wordmarkStyle = { fontSize: wordmarkFontSizeCss(name) } as const;
 
   return (
@@ -62,14 +63,16 @@ export function MobileNav({
         overlayClassName="bg-[rgba(30,40,28,0.06)] supports-backdrop-filter:backdrop-blur-none"
         className="w-[min(100%,75vw)] max-w-none gap-0 border-0 data-[side=right]:border-l-0 shadow-none overflow-hidden rounded-l-[min(var(--radius-md),12px)] bg-[rgba(222,233,214,0.30)] text-foreground supports-backdrop-filter:backdrop-blur-[20px] dark:bg-[rgba(50,60,47,0.28)] [&_button]:text-foreground [&_button]:hover:bg-[rgba(118,146,106,0.16)] dark:[&_button]:hover:bg-[rgba(160,191,147,0.15)]"
       >
-        <SheetHeader className="@container border-b border-[rgba(72,90,68,0.30)] px-4 pb-6 pt-14 text-center dark:border-[rgba(169,194,158,0.26)] sm:px-6">
-          <SheetTitle
-            className="font-heading text-footer-wordmark text-center leading-[0.82] font-black tracking-[0.065em] uppercase select-none drop-shadow-[0_2px_20px_rgba(0,0,0,0.08)]"
-            style={wordmarkStyle}
-          >
-            {name}
-          </SheetTitle>
-        </SheetHeader>
+        {showWordmark ? (
+          <SheetHeader className="@container border-b border-[rgba(72,90,68,0.30)] px-4 pb-6 pt-14 text-center dark:border-[rgba(169,194,158,0.26)] sm:px-6">
+            <SheetTitle
+              className="font-heading text-footer-wordmark text-center leading-[0.82] font-black tracking-[0.065em] uppercase select-none drop-shadow-[0_2px_20px_rgba(0,0,0,0.08)]"
+              style={wordmarkStyle}
+            >
+              {name}
+            </SheetTitle>
+          </SheetHeader>
+        ) : null}
         <nav
           className="flex w-full flex-col px-2"
           aria-label="Hauptnavigation"

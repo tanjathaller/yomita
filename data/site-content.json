@@ -168,6 +168,8 @@
   "settings": {
     "businessName": "Tanja Thaller",
     "navWordmark": "YOMITA",
+    "logoEnabled": true,
+    "wordmarkEnabled": true,
     "sectionEyebrows": {
       "hero": "Tanja Thaller",
       "aktuell": "Journal",
@@ -210,6 +212,14 @@
     "appUrl": "https://andrethaller-ctrl-yo-gpke.bolt.host/auth",
     "siteTitle": "Yoga in Neuss – persönliche Yogakurse mit klarer Anleitung | Tanja Thaller",
     "metaDescription": "Yogakurse in Neuss & Düsseldorf: persönlich, präzise und ohne Esoterik. Kleine Gruppen, individuelle Begleitung und verständlich angeleitet. Melde dich gern für eine Stunde oder bei Fragen.",
+    "logo": {
+      "mobile": {
+        "url": "https://3ym7pno5nt6e8eux.private.blob.vercel-storage.com/logo/2026-04-14/c6379017-1415-4fa8-97b5-b82dafa5e946-logo-1.webp"
+      },
+      "desktop": {
+        "url": "https://3ym7pno5nt6e8eux.private.blob.vercel-storage.com/logo/2026-04-14/a0a70a50-438a-4b33-9c95-d169a300cc2b-logo-1.webp"
+      }
+    },
     "ogImage": {
       "mobile": {
         "url": "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=1200&h=630&fit=crop"
