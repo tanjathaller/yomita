@@ -3468,7 +3468,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                     <div className="space-y-1">
                       <h3 className="text-sm font-semibold">Logo & Nav Wordmark</h3>
                       <p className="text-xs text-muted-foreground">
-                        Alle Einstellungen fuer Navigation-Logo und Wordmark an einer Stelle.
+                        Alle Einstellungen für Navigation-Logo und Wordmark.
                       </p>
                     </div>
                     <Field label="Nav Wordmark" value={draft.settings.navWordmark ?? ""} onChange={(value) =>
@@ -3780,7 +3780,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                     <div className="space-y-1">
                       <h3 className="text-sm font-semibold">SEO</h3>
                       <p className="text-xs text-muted-foreground">
-                        Seitentitel und Meta-Beschreibung fuer Suchmaschinen an einer Stelle.
+                        Seitentitel und Meta-Beschreibung für Suchmaschinen.
                       </p>
                     </div>
                     <Field label="Site Title" value={draft.settings.siteTitle ?? ""} onChange={(value) =>
