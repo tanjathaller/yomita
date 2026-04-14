@@ -79,6 +79,8 @@
   --site-header-clearance: 5rem;
   /** Nur schmale Viewports: etwas weniger Luft unter der Leiste. */
   --site-header-clearance-mobile: 4.5rem;
+  /** Zusatz unter dem fixen Header bei In-Page-Ankern (Titelblock, About-Grid). */
+  --anchor-header-gap: 0.25rem;
   /** Footer- / Header-Wordmark (z. B. YOMITA): einheitlich, gut lesbar auf hellem Sage-Hintergrund */
   --footer-wordmark: oklch(0.5 0.03 118);
   --sidebar: oklch(0.978 0.01 100);
@@ -192,6 +194,18 @@
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+}
+
+@layer utilities {
+  .anchor-header-tight {
+    scroll-margin-top: calc(var(--site-header-clearance-mobile) + var(--anchor-header-gap));
+  }
+
+  @media (min-width: 1024px) {
+    .anchor-header-tight {
+      scroll-margin-top: calc(var(--site-header-clearance) + var(--anchor-header-gap));
+    }
   }
 }
 

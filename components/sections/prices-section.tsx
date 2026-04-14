@@ -24,11 +24,13 @@ export function PricesSection({ prices, eyebrowLabel, sectionTitle, sectionIntro
   const introMarkdown = sectionIntro?.trim() || DEFAULT_PRICES_INTRO_MARKDOWN;
   return (
     <SectionShell
-      id="preise"
       className="pb-24 lg:pb-34 bg-[linear-gradient(to_bottom,var(--background)_0%,var(--background)_70%,color-mix(in_oklab,var(--background)_78%,var(--surface-muted-band)_22%)_84%,color-mix(in_oklab,var(--background)_48%,var(--surface-muted-band)_52%)_94%,var(--surface-muted-band)_100%)]"
     >
       <div className="max-w-2xl pl-4 lg:pl-6">
-        <div className="relative inline-block pr-6 lg:pr-7">
+        <div
+          id="preise"
+          className={cn("anchor-header-tight", "relative inline-block pr-6 lg:pr-7")}
+        >
           {eyebrow ? (
             <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#7A956E] uppercase lg:text-sm">
               {eyebrow}

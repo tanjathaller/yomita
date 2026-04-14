@@ -7,7 +7,8 @@ import {
 } from "@/components/shared/section-wave";
 
 type SectionShellProps = {
-  id: string;
+  /** Optional: fehlt die `id`, liegt der In-Page-Anker in den Children (z. B. Titelblock). */
+  id?: string;
   children: React.ReactNode;
   className?: string;
   /** Zusätzliche Klassen für den inneren Breiten-Container (`mx-auto max-w-*`). */
@@ -31,9 +32,11 @@ export function SectionShell({
 }: SectionShellProps) {
   return (
     <section
-      id={id}
+      {...(id ? { id } : {})}
       className={cn(
-        "scroll-mt-[calc(var(--site-header-clearance-mobile)+0.5rem)] lg:scroll-mt-[calc(var(--site-header-clearance)+0.5rem)]",
+        id
+          ? "scroll-mt-[calc(var(--site-header-clearance-mobile)+0.5rem)] lg:scroll-mt-[calc(var(--site-header-clearance)+0.5rem)]"
+          : undefined,
         waveInto ? "relative pt-16 pb-24 lg:pt-24 lg:pb-32" : "py-16 lg:py-24",
         variant === "muted"
           ? "bg-[var(--surface-muted-band)]"

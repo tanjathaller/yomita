@@ -34,7 +34,6 @@ export function AktuellesSection({
 
   return (
     <SectionShell
-      id="aktuelles"
       variant={afterAboutTeaser ? "default" : "muted"}
       containerClassName="lg:max-w-7xl xl:max-w-[88rem]"
       className={cn(
@@ -44,7 +43,10 @@ export function AktuellesSection({
       )}
     >
       <div className="max-w-2xl pl-4 lg:pl-6">
-        <div className="relative inline-block pr-6 lg:pr-7">
+        <div
+          id="aktuelles"
+          className={cn("anchor-header-tight", "relative inline-block pr-6 lg:pr-7")}
+        >
           {eyebrow ? (
             <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#5F7F53] uppercase lg:text-sm">
               {eyebrow}

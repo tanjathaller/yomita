@@ -145,7 +145,6 @@ export function CoursesSection({
 
   return (
     <SectionShell
-      id="kurse"
       variant="muted"
       containerClassName="max-w-7xl lg:max-w-[min(88rem,calc(100%-2rem))] xl:max-w-[min(96rem,calc(100%-2.5rem))]"
       className={cn(
@@ -156,7 +155,10 @@ export function CoursesSection({
       )}
     >
       <div className="max-w-2xl pl-4 lg:pl-6">
-        <div className="relative inline-block pr-6 lg:pr-7">
+        <div
+          id="kurse"
+          className={cn("anchor-header-tight", "relative inline-block pr-6 lg:pr-7")}
+        >
           {eyebrow ? (
             <p className="mb-2 ml-1 text-xs font-semibold tracking-[0.18em] text-[#7A956E] uppercase lg:text-sm">
               {eyebrow}

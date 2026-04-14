@@ -8,6 +8,7 @@ import { createPortal } from "react-dom";
 import { ContactForm } from "@/components/forms/contact-form";
 import { SectionShell } from "@/components/shared/section-shell";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type ContactSectionProps = {
   contact: ContactModel;
@@ -30,13 +31,15 @@ export function ContactSection({ contact }: ContactSectionProps) {
 
   return (
     <SectionShell
-      id="kontakt"
       className="pb-24 lg:pb-34 bg-[linear-gradient(to_bottom,var(--background)_0%,var(--background)_58%,color-mix(in_oklab,var(--background)_84%,var(--surface-muted-footer)_16%)_74%,color-mix(in_oklab,var(--background)_60%,var(--surface-muted-footer)_40%)_88%,color-mix(in_oklab,var(--background)_32%,var(--surface-muted-footer)_68%)_97%,var(--surface-muted-footer)_100%)]"
     >
       <div className="grid gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-20">
         <div className="space-y-6 lg:col-start-1 lg:row-start-1">
           <div className="max-w-2xl pl-4 lg:pl-6">
-            <div className="relative inline-block pr-6 lg:pr-7">
+            <div
+              id="kontakt"
+              className={cn("anchor-header-tight", "relative inline-block pr-6 lg:pr-7")}
+            >
               <h2 className="text-[#2F3B2A] text-5xl font-semibold tracking-tight lg:text-6xl">
                 {contact.formHeadline}
               </h2>

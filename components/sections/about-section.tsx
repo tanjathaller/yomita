@@ -43,11 +43,16 @@ export function AboutSection({ about }: AboutSectionProps) {
 
   return (
     <SectionShell
-      id="ueber-mich"
       variant="muted"
       className="-mt-2 pt-12 pb-28 lg:pt-20 lg:pb-40 xl:pb-44 bg-[linear-gradient(to_bottom,var(--surface-muted-band)_0%,var(--surface-muted-band)_68%,color-mix(in_oklab,var(--surface-muted-band)_86%,var(--background)_14%)_80%,color-mix(in_oklab,var(--surface-muted-band)_64%,var(--background)_36%)_90%,color-mix(in_oklab,var(--surface-muted-band)_34%,var(--background)_66%)_97%,var(--background)_100%)]"
     >
-      <div className="grid min-w-0 w-full grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center lg:gap-10 xl:grid-cols-[minmax(0,0.93fr)_minmax(0,1.07fr)] xl:gap-14">
+      <div
+        id="ueber-mich"
+        className={cn(
+          "anchor-header-tight",
+          "grid min-w-0 w-full grid-cols-1 gap-8 lg:grid-cols-2 lg:items-center lg:gap-10 xl:grid-cols-[minmax(0,0.93fr)_minmax(0,1.07fr)] xl:gap-14",
+        )}
+      >
         <div className="relative flex w-full min-w-0 justify-center lg:block">
           {/* Desktop: weicher Farb-Klecks hinter dem Bild */}
           <div
