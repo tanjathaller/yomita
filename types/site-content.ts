@@ -232,6 +232,8 @@ export type AktuellesItem = {
    * „Workshop“, wenn der Titel „workshop“ enthält, sonst „Aktuell“.
    */
   badgeLabel?: string;
+  /** Steuert das Bild-Badge pro Karte; fehlend entspricht `true`. */
+  badgeEnabled?: boolean;
   /** Body copy; Markdown if the section renderer supports it. */
   text: string;
   image: SiteResponsiveImage;

@@ -2020,6 +2020,26 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                             <Label htmlFor={`aktuell-badge-${item.id}`}>
                               Badge auf dem Bild
                             </Label>
+                            <label className="flex h-9 cursor-pointer items-center gap-2 rounded-md border border-border/60 bg-muted/15 px-3 text-sm">
+                              <input
+                                type="checkbox"
+                                checked={item.badgeEnabled !== false}
+                                onChange={(event) =>
+                                  setDraft((prev) => ({
+                                    ...prev,
+                                    aktuell: {
+                                      ...prev.aktuell,
+                                      items: prev.aktuell.items.map((current) =>
+                                        current.id === item.id
+                                          ? { ...current, badgeEnabled: event.target.checked }
+                                          : current,
+                                      ),
+                                    },
+                                  }))
+                                }
+                              />
+                              <span>Badge anzeigen</span>
+                            </label>
                             <Input
                               id={`aktuell-badge-${item.id}`}
                               placeholder="Leer = automatisch (Aktuell / Workshop)"

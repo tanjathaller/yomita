@@ -142,11 +142,13 @@ export function AktuellesSection({
                       />
                     </>
                   ) : null}
-                  <div className="absolute left-4 top-4 lg:left-3 lg:top-3">
-                    <span className="rounded-full bg-background/90 px-3 py-1 text-xs font-semibold tracking-widest text-[#7A956E] uppercase shadow-sm backdrop-blur-sm lg:px-2.5 lg:py-0.5">
-                      {badgeLabel}
-                    </span>
-                  </div>
+                  {item.badgeEnabled !== false ? (
+                    <div className="absolute left-4 top-4 lg:left-3 lg:top-3">
+                      <span className="rounded-full bg-background/90 px-3 py-1 text-xs font-semibold tracking-widest text-[#7A956E] uppercase shadow-sm backdrop-blur-sm lg:px-2.5 lg:py-0.5">
+                        {badgeLabel}
+                      </span>
+                    </div>
+                  ) : null}
                 </div>
                 <div
                   className={cn(

@@ -369,6 +369,7 @@ export const aktuellesItemSchema = z.object({
   id: z.string(),
   title: z.string().optional(),
   badgeLabel: z.string().max(40).optional(),
+  badgeEnabled: z.boolean().optional(),
   text: z.string(),
   image: siteResponsiveImageSchema,
   cta: aktuellCtaSchema.optional(),
