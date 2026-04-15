@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 
 const courseGridClass = cn(
   "flex flex-col gap-4",
-  // start: Jede Karte nur so hoch wie ihr Inhalt (z. B. geöffnete Terminliste vergrößert nicht die Nachbar-Karte).
+  // lg+: Karten nur so hoch wie ihr Inhalt (kein Mitstrecken bei geöffnetem Termin-Accordion).
   "lg:flex-row lg:flex-wrap lg:items-start lg:justify-center lg:gap-6 xl:gap-8",
 );
 

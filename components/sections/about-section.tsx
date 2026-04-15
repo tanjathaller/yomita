@@ -61,7 +61,7 @@ export function AboutSection({ about }: AboutSectionProps) {
           />
           <div
             data-about-portrait
-            className="relative aspect-[19/30] max-h-[31rem] w-full max-w-md shrink-0 rounded-t-3xl rounded-b-none border-0 bg-[var(--surface-muted-band)] outline-none ring-0 lg:max-h-[41rem] lg:w-full lg:max-w-none lg:-rotate-1 lg:rounded-3xl lg:rounded-br-[2.25rem] lg:shadow-xl lg:shadow-[#2F3B2A]/12 lg:ring-2 lg:ring-[#D8C9AF]/45 xl:max-h-[45rem] xl:ring-[#D8C9AF]/55"
+            className="relative aspect-[19/30] max-h-[31rem] w-full max-w-md shrink-0 rounded-t-3xl rounded-b-none border-0 bg-[var(--surface-muted-band)] outline-none ring-0 lg:max-h-[41rem] lg:w-full lg:max-w-none lg:rounded-3xl lg:rounded-br-[2.25rem] lg:shadow-[0_2px_6px_-1px_rgb(122_149_110_/_0.11),0_1px_3px_-1px_rgb(122_149_110_/_0.07)] lg:ring-2 lg:ring-[#D8C9AF]/45 xl:max-h-[45rem] xl:ring-[#D8C9AF]/55"
           >
               <div className="absolute inset-0 isolate overflow-hidden rounded-t-3xl rounded-b-none border-0 will-change-transform lg:inset-[3px] lg:rounded-[calc(1.5rem-3px)] lg:rounded-br-[2rem]">
                 <ResponsiveSiteImage
@@ -71,11 +71,11 @@ export function AboutSection({ about }: AboutSectionProps) {
                 />
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute inset-x-0 top-0 h-[62%] rounded-t-3xl border-0 border-t-2 border-[#2F3B2A] [mask-image:linear-gradient(to_bottom,black_0%,black_35%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_35%,transparent_100%)] lg:rounded-t-[calc(1.5rem-3px)]"
+                  className="pointer-events-none absolute inset-x-0 top-0 h-[62%] rounded-t-3xl border-0 border-t border-[#D8C9AF]/45 [mask-image:linear-gradient(to_bottom,black_0%,black_35%,transparent_100%)] [-webkit-mask-image:linear-gradient(to_bottom,black_0%,black_35%,transparent_100%)] lg:rounded-t-[calc(1.5rem-3px)]"
                 />
                 <div
                   aria-hidden
-                  className="pointer-events-none absolute inset-0 border-0 bg-gradient-to-t from-[rgba(34,48,34,0.34)] via-[rgba(44,60,43,0.16)] to-[rgba(58,76,56,0.05)]"
+                  className="pointer-events-none absolute inset-0 border-0 bg-gradient-to-t from-[rgba(34,48,34,0.34)] via-[rgba(44,60,43,0.16)] to-[rgba(58,76,56,0.02)]"
                 />
                 <div
                   aria-hidden
