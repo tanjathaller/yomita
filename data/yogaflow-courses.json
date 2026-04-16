@@ -1,6 +1,20 @@
 {
-  "syncedAt": "2026-04-16T13:29:29.322Z",
+  "syncedAt": "2026-04-16T15:17:29.797Z",
   "courses": [
+    {
+      "id": "bb75ddba-f0f9-402f-a321-8ab7c6de036a",
+      "type": "internal",
+      "title": "Test",
+      "description": "Hallo Herr Doktor",
+      "day": "16.04.2026",
+      "time": "19:00–20:00 (60 Min.)",
+      "location": "Neuss",
+      "bookingStatus": "available",
+      "price": "50,00 €",
+      "remainingSpots": 8,
+      "sortOrder": 10,
+      "startsOn": "2026-04-16"
+    },
     {
       "id": "386dcb69-67d7-422d-9ad1-f63492bb9a90",
       "type": "internal",
@@ -12,7 +26,7 @@
       "bookingStatus": "full",
       "price": "12,00 €",
       "remainingSpots": 0,
-      "sortOrder": 10,
+      "sortOrder": 20,
       "startsOn": "2026-04-21"
     },
     {
@@ -26,7 +40,7 @@
       "bookingStatus": "full",
       "price": "12,00 €",
       "remainingSpots": 0,
-      "sortOrder": 20,
+      "sortOrder": 30,
       "startsOn": "2026-04-22"
     },
     {
@@ -40,7 +54,7 @@
       "bookingStatus": "full",
       "price": "12,00 €",
       "remainingSpots": 0,
-      "sortOrder": 30,
+      "sortOrder": 40,
       "startsOn": "2026-04-28"
     },
     {
@@ -54,7 +68,7 @@
       "bookingStatus": "full",
       "price": "12,00 €",
       "remainingSpots": 0,
-      "sortOrder": 40,
+      "sortOrder": 50,
       "startsOn": "2026-04-29"
     },
     {
@@ -68,7 +82,7 @@
       "bookingStatus": "full",
       "price": "12,00 €",
       "remainingSpots": 0,
-      "sortOrder": 50,
+      "sortOrder": 60,
       "startsOn": "2026-05-05"
     },
     {
@@ -82,7 +96,7 @@
       "bookingStatus": "available",
       "price": "12,00 €",
       "remainingSpots": 4,
-      "sortOrder": 60,
+      "sortOrder": 70,
       "startsOn": "2026-05-12"
     },
     {
@@ -96,7 +110,7 @@
       "bookingStatus": "available",
       "price": "12,00 €",
       "remainingSpots": 1,
-      "sortOrder": 70,
+      "sortOrder": 80,
       "startsOn": "2026-05-13"
     },
     {
@@ -110,7 +124,7 @@
       "bookingStatus": "available",
       "price": "12,00 €",
       "remainingSpots": 6,
-      "sortOrder": 80,
+      "sortOrder": 90,
       "startsOn": "2026-05-26"
     },
     {
@@ -124,7 +138,7 @@
       "bookingStatus": "available",
       "price": "12,00 €",
       "remainingSpots": 3,
-      "sortOrder": 90,
+      "sortOrder": 100,
       "startsOn": "2026-05-27"
     }
   ]
