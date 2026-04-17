@@ -218,7 +218,7 @@ Kein Feld `externalUrl`.
 | `siteTitle`        | string?  | `<title>` / Branding |
 | `metaDescription`  | string?  | Meta-Description SEO |
 | `ogImage`          | object?  | optional; `mobile.url` und `desktop.url` für Link-Vorschauen; in Metadaten wird primär die Desktop-URL genutzt. Legacy: `ogImageUrl` → beide URLs |
-| `faviconUrl`       | string?  | optional; `https`-URL (z. B. nach Admin-Upload). Auslieferung: `/favicon.ico` wird per `proxy.ts` zu `/api/favicon` umgeschrieben (ersetzt Vercel-Default); private Blobs per Token. Metadaten: `rel="icon"` → `/favicon.ico`. Admin-Vorschau: `/api/blob-image?src=…`. |
+| `faviconUrl`       | string?  | optional; nach Upload oft relative URL `/api/blob-image?key=…` oder externe `https`-URL. Auslieferung: `/favicon.ico` → Rewrite zu `/api/favicon` (`proxy.ts`). Metadaten: `rel="icon"` → `/favicon.ico`. Admin-Vorschau nutzt dieselbe URL-Auflösung wie die öffentliche Seite. |
 | `navigation`       | siehe oben | optionale Nav-Einträge |
 
 ### `settings.yogaflowCourseSeries[]` (Eintrag)

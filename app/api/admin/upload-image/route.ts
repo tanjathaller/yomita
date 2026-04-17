@@ -1,35 +1,18 @@
 import { randomUUID } from "node:crypto";
 
-import { put } from "@vercel/blob";
+import type { Store } from "@netlify/blobs";
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { ADMIN_SESSION_COOKIE_NAME } from "@/lib/admin-auth-constants";
 import { isAdminSessionTokenValid } from "@/lib/admin-auth";
+import { getSiteMediaStore, siteMediaProxyPath } from "@/lib/netlify-site-media";
 
 const MAX_IMAGE_SIZE_BYTES = 5 * 1024 * 1024;
 const ALLOWED_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 function sanitizeFilename(filename: string): string {
   return filename.toLowerCase().replace(/[^a-z0-9.\-_]+/g, "-");
-}
-
-type UploadedBlobResult = {
-  url: string;
-};
-
-async function uploadImageToBlob(key: string, file: File): Promise<UploadedBlobResult> {
-  try {
-    return (await put(key, file, { access: "public" })) as UploadedBlobResult;
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "";
-    if (!message.toLowerCase().includes("private store")) {
-      throw error;
-    }
-
-    // Fallback for projects where the Blob store is configured as private.
-    return (await put(key, file, { access: "private" })) as UploadedBlobResult;
-  }
 }
 
 export async function POST(request: Request) {
@@ -39,13 +22,6 @@ export async function POST(request: Request) {
 
     if (!isAdminSessionTokenValid(sessionToken)) {
       return NextResponse.json({ error: "Nicht autorisiert." }, { status: 401 });
-    }
-
-    if (!process.env.BLOB_READ_WRITE_TOKEN) {
-      return NextResponse.json(
-        { error: "BLOB_READ_WRITE_TOKEN fehlt. Upload ist nicht konfiguriert." },
-        { status: 500 },
-      );
     }
 
     const formData = await request.formData();
@@ -88,10 +64,24 @@ export async function POST(request: Request) {
 
     const safeName = sanitizeFilename(file.name || "image.webp");
     const key = `${blobPrefix}/${new Date().toISOString().slice(0, 10)}/${randomUUID()}-${safeName}`;
-    const uploaded = await uploadImageToBlob(key, file);
-    const imageUrl = uploaded.url;
 
-    return NextResponse.json({ url: imageUrl });
+    let store: Store;
+    try {
+      store = getSiteMediaStore();
+    } catch {
+      return NextResponse.json(
+        {
+          error:
+            "Netlify Blobs nicht erreichbar. Auf Netlify deployen oder lokal NETLIFY_SITE_ID und NETLIFY_AUTH_TOKEN (PAT mit Blobs) in .env.local setzen.",
+        },
+        { status: 500 },
+      );
+    }
+    await store.set(key, file, {
+      metadata: { contentType: file.type },
+    });
+
+    return NextResponse.json({ url: siteMediaProxyPath(key) });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unbekannter Upload-Fehler.";
     return NextResponse.json({ error: message }, { status: 500 });

@@ -49,7 +49,7 @@ Empfehlung **Next.js App Router** mit **Route Groups**:
 4. **Caching:** `fetch` mit `revalidate` (ISR) oder On-Demand Revalidation nach Speichern im Admin (Vercel-tauglich).
 5. **Admin:** Formulare pro Bereich; Speichern per **Server Action** (`siteContentSchema`), danach `revalidatePath` für öffentliche Routen.
 6. **Kontakt:** POST → API → Versand/Weiterleitung; `contact.formRecipientEmail` optional, sonst Env.
-7. **Medien:** URLs in Content je Bild mit Mobil- und Desktop-Variante (`hero.backgroundImage`, `aktuell.items[].image`, `about.image`, `settings.logo`, `settings.ogImage`); Upload über Admin → Vercel Blob (`/api/admin/upload-image`, scopes u. a. `hero`, `logo`, `aktuelles`, `about`, `og`). Breakpoint für die Auswahl entspricht Tailwind `lg` (1024px).
+7. **Medien:** URLs in Content je Bild mit Mobil- und Desktop-Variante (`hero.backgroundImage`, `aktuell.items[].image`, `about.image`, `settings.logo`, `settings.ogImage`); Upload über Admin → Netlify Blobs (`/api/admin/upload-image`, Auslieferung `/api/blob-image?key=…`, scopes u. a. `hero`, `logo`, `aktuelles`, `about`, `og`). Breakpoint für die Auswahl entspricht Tailwind `lg` (1024px).
 
 ## 4. Wiederverwendbare Komponenten
 

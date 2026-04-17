@@ -28,7 +28,7 @@ One-Pager für eine Yogalehrerin (Next.js): öffentliche Landingpage mit Fokus a
 ## Stack (festgelegt)
 
 - **Next.js** (App Router), **TypeScript**, **Tailwind CSS**, **shadcn/ui**
-- **GitHub**, **Vercel** (Deployment), Domain **IONOS**
+- **GitHub**, **Netlify** (Deployment + **Netlify Blobs** für Admin-Medien), Domain **IONOS**
 
 ## Medien
 
@@ -57,13 +57,36 @@ Das **Hero-Bild** der Startseite liegt statisch unter [`public/images/hero.png`]
 
 Vorlage: [`.env.example`](./.env.example) → bei Bedarf nach `.env.local` kopieren (Kontakt-API, Revalidate, sobald umgesetzt).
 
-**Kontaktformular (Resend):** In **`.env.local`** und in **Vercel → Environment Variables** (Production) mindestens `RESEND_API_KEY`, `RESEND_FROM_EMAIL` und **`CONTACT_TO_EMAIL`** setzen, sofern im Admin kein Feld **Formular-Empfänger** (`formRecipientEmail`) gepflegt ist. Zieladresse für Anfragen: **`Namaste@yomita.de`**. Domain **`yomita.de`** bei [Resend](https://resend.com) verifizieren; `RESEND_FROM_EMAIL` muss zur verifizierten Domain passen (z. B. `Kontakt <Namaste@yomita.de>`).
+**Kontaktformular (Resend):** In **`.env.local`** und in **Netlify → Site configuration → Environment variables** (Scope **Production**, bei Bedarf auch Deploy Previews) mindestens `RESEND_API_KEY`, `RESEND_FROM_EMAIL` und **`CONTACT_TO_EMAIL`** setzen, sofern im Admin kein Feld **Formular-Empfänger** (`formRecipientEmail`) gepflegt ist. Zieladresse für Anfragen: **`Namaste@yomita.de`**. Domain **`yomita.de`** bei [Resend](https://resend.com) verifizieren; `RESEND_FROM_EMAIL` muss zur verifizierten Domain passen (z. B. `Kontakt <Namaste@yomita.de>`).
 
-### Deployment / Domain (Live)
+### Deployment / Domain (Live, Netlify)
 
-- **Kanonische URL:** `https://yomita.de` (Apex, ohne `www`). `www.yomita.de` per Redirect auf die Apex-URL ausrichten (DNS bei IONOS auf Vercel; in Vercel Domains und ggf. Redirect prüfen).
-- **`NEXT_PUBLIC_SITE_URL`:** `https://yomita.de` (ohne trailing slash) in **`.env.local`** und in **Vercel → Project → Settings → Environment Variables** für **Production** setzen. Nach Änderungen einen **Redeploy** auslösen, damit Canonicals, Sitemap, `robots.txt` und JSON-LD die richtige Domain nutzen.
-- Ohne diese Variable fällt die App auf die automatische **`VERCEL_URL`** (`*.vercel.app`) zurück — für das Live-Mapping auf `yomita.de` ist die Variable Pflicht.
+Secrets aus einem früheren Vercel-Projekt **wandern nicht automatisch**; dieselben Namen und Werte in Netlify unter **Environment variables** neu anlegen (Production und ggf. Branch deploys / Deploy Previews). Checkliste (siehe auch [`.env.example`](./.env.example)):
+
+| Variable | Zweck |
+|----------|--------|
+| `NEXT_PUBLIC_SITE_URL` | Kanonische URL `https://yomita.de` (ohne Slash am Ende). **Pflicht** für Live; ohne sie nutzt die App nur Netlify-Fallbacks, nicht eure Marketing-Domain. |
+| `RESEND_API_KEY`, `RESEND_FROM_EMAIL`, `CONTACT_TO_EMAIL` | Kontaktformular |
+| `ADMIN_SESSION_SECRET`, `ADMIN_PASSWORD_HASH` | Admin-Login |
+| `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Upstash Redis (Content) |
+| `NETLIFY_SITE_ID`, `NETLIFY_AUTH_TOKEN` | Nur **lokal** / optional in CI: Netlify [Personal Access Token](https://docs.netlify.com/api-and-cli-guides/cli-guides/get-started-with-cli#obtain-a-token-in-the-netlify-ui) mit Blobs-Zugriff + Site-ID aus dem Dashboard. Auf **gehosteter** Netlify-Production sind Blobs ohne diese Variablen nutzbar. |
+| `REVALIDATE_SECRET` | optional, falls On-Demand Revalidation genutzt wird |
+
+**Medien (Netlify Blobs):** Uploads landen im Store `site-media`; Auslieferung über `/api/blob-image?key=…`. (Die einmalige Migration von Vercel Blob ist im Repo erledigt; es gibt kein Migrationsskript mehr.)
+
+**Vercel-Projekt trennen:** Wenn die Site nur noch auf **Netlify** läuft und DNS auf Netlify zeigt, kannst du im Vercel-Dashboard die **Environment Variables** löschen, die **Git-Integration** zum Repo entfernen und das Projekt löschen oder archivieren. Vorher prüfen: keine anderen Dienste mehr an dieses Vercel-Projekt gebunden (z. B. separates Preview-Team, Analytics). Nach Löschen des Vercel-Blob-Stores wären alte `*.vercel-storage.com`-URLs tot — eure Live-Daten liegen in **Netlify Blobs** und in `data/site-content.json` bzw. KV.
+
+Nach Änderungen an Umgebungsvariablen in Netlify einen **neuen Deploy** auslösen (z. B. „Clear cache and deploy site“), damit Canonicals, Sitemap, `robots.txt` und JSON-LD stimmen.
+
+**Nach dem ersten erfolgreichen Deploy:** `/sitemap.xml`, `robots.txt` und eine Beispiel-Seite im Browser prüfen (Canonical-Link, `metadataBase`).
+
+**DNS (IONOS):** Apex **`yomita.de`** zeigt auf Netlify (A/CNAME laut [Netlify Custom domains](https://docs.netlify.com/domains-https/custom-domains/)); **`www.yomita.de`** in Netlify als Domain hinzufügen und Redirect auf die Apex-URL einrichten.
+
+**GitHub Actions:** Der Workflow [`.github/workflows/sync-yogaflow-courses.yml`](./.github/workflows/sync-yogaflow-courses.yml) nutzt **Repository Secrets** unter GitHub (nicht Netlify). Optional **`YOGAFLOW_APP_URL`** auf `https://yomita.de` oder die Netlify-Preview-URL setzen, falls zuvor eine `*.vercel.app`-Adresse verwendet wurde.
+
+**Doppel-Deployments vermeiden:** Wenn das Repo noch an **Vercel** und **Netlify** hängt, löst jeder Push zwei Builds aus. Nach Cutover die Vercel-Git-Integration trennen oder das Vercel-Projekt archivieren.
+
+**Build auf Netlify:** Im Repo liegt [`netlify.toml`](./netlify.toml) mit `@netlify/plugin-nextjs` und `npm run build:netlify` (`next build --webpack`), damit der Next-16-Output mit der Netlify-Runtime stabil zusammenspielt. Lokal reicht `npm run build`; für einen Netlify-parity-Build: `npm run build:netlify`. Optional `npx netlify-cli build --offline` — unter **Windows** mit Projekt-Pfaden, die **Leerzeichen** enthalten, kann die Edge-Bundling-Phase der CLI fehlschlagen; der **Deploy auf Netlify (Linux)** ist davon in der Regel nicht betroffen.
 
 ## Hinweis für neue Chat-Sessions (Cursor / KI)
 

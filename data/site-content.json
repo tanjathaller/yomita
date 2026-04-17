@@ -27,10 +27,10 @@
         "image": {
           "alt": "Yoga-Retreat Golden Light mit Michaela",
           "mobile": {
-            "url": "https://3ym7pno5nt6e8eux.private.blob.vercel-storage.com/aktuelles/2026-04-06/31532bb8-d870-4cf6-ab2e-f1c3fc6ab0c0-tanja-yogaretreat-aktuelles-mobile.webp"
+            "url": "/api/blob-image?key=aktuelles%2F2026-04-06%2F31532bb8-d870-4cf6-ab2e-f1c3fc6ab0c0-tanja-yogaretreat-aktuelles-mobile.webp"
           },
           "desktop": {
-            "url": "https://3ym7pno5nt6e8eux.private.blob.vercel-storage.com/aktuelles/2026-04-06/ce6755bb-6f28-4254-b017-58638d195330-tanja-yogaretreat-aktuelles.webp"
+            "url": "/api/blob-image?key=aktuelles%2F2026-04-06%2Fce6755bb-6f28-4254-b017-58638d195330-tanja-yogaretreat-aktuelles.webp"
           }
         },
         "cta": {
@@ -47,10 +47,10 @@
         "image": {
           "alt": "tanja 3 mobile",
           "mobile": {
-            "url": "https://3ym7pno5nt6e8eux.private.blob.vercel-storage.com/aktuelles/2026-04-07/2f4982d2-6fad-47e9-bec7-7c09e2f840bd-tanja-3-mobile.webp"
+            "url": "/api/blob-image?key=aktuelles%2F2026-04-07%2F2f4982d2-6fad-47e9-bec7-7c09e2f840bd-tanja-3-mobile.webp"
           },
           "desktop": {
-            "url": "https://3ym7pno5nt6e8eux.private.blob.vercel-storage.com/aktuelles/2026-04-07/163640c3-c550-4e12-896a-a4f9c9262ac0-tanja-3-mobile.webp"
+            "url": "/api/blob-image?key=aktuelles%2F2026-04-07%2F163640c3-c550-4e12-896a-a4f9c9262ac0-tanja-3-mobile.webp"
           }
         },
         "cta": {
@@ -148,10 +148,10 @@
     "image": {
       "alt": "Portrait im Yogastudio",
       "mobile": {
-        "url": "https://3ym7pno5nt6e8eux.private.blob.vercel-storage.com/about/2026-04-08/e1e1921e-a1e8-446d-b174-c22ba6a0f951-tanja-thaller-yoga-lehrerin-portrait-achtsamkeit-ruhe.webp"
+        "url": "/api/blob-image?key=about%2F2026-04-08%2Fe1e1921e-a1e8-446d-b174-c22ba6a0f951-tanja-thaller-yoga-lehrerin-portrait-achtsamkeit-ruhe.webp"
       },
       "desktop": {
-        "url": "https://3ym7pno5nt6e8eux.private.blob.vercel-storage.com/about/2026-04-08/49cc14a0-06a7-4e6b-b0f2-360e7d7c116d-tanja-thaller-yoga-lehrerin-portrait-achtsamkeit-ruhe-desktop.webp"
+        "url": "/api/blob-image?key=about%2F2026-04-08%2F49cc14a0-06a7-4e6b-b0f2-360e7d7c116d-tanja-thaller-yoga-lehrerin-portrait-achtsamkeit-ruhe-desktop.webp"
       }
     }
   },
@@ -213,13 +213,13 @@
     "appUrl": "https://andrethaller-ctrl-yo-gpke.bolt.host/auth",
     "siteTitle": "Yoga in Neuss – persönliche Yogakurse mit klarer Anleitung | Tanja Thaller",
     "metaDescription": "Yogakurse in Neuss & Düsseldorf: persönlich, präzise und ohne Esoterik. Kleine Gruppen, individuelle Begleitung und verständlich angeleitet. Melde dich gern für eine Stunde oder bei Fragen.",
-    "faviconUrl": "https://3ym7pno5nt6e8eux.private.blob.vercel-storage.com/favicon/2026-04-14/ef3a13cc-6daf-42ba-a3ea-dfde83d5622a-logo-1.webp",
+    "faviconUrl": "/api/blob-image?key=favicon%2F2026-04-14%2Fef3a13cc-6daf-42ba-a3ea-dfde83d5622a-logo-1.webp",
     "logo": {
       "mobile": {
-        "url": "https://3ym7pno5nt6e8eux.private.blob.vercel-storage.com/logo/2026-04-14/c6379017-1415-4fa8-97b5-b82dafa5e946-logo-1.webp"
+        "url": "/api/blob-image?key=logo%2F2026-04-14%2Fc6379017-1415-4fa8-97b5-b82dafa5e946-logo-1.webp"
       },
       "desktop": {
-        "url": "https://3ym7pno5nt6e8eux.private.blob.vercel-storage.com/logo/2026-04-14/a0a70a50-438a-4b33-9c95-d169a300cc2b-logo-1.webp"
+        "url": "/api/blob-image?key=logo%2F2026-04-14%2Fa0a70a50-438a-4b33-9c95-d169a300cc2b-logo-1.webp"
       }
     },
     "ogImage": {

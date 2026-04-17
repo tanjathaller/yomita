@@ -2,6 +2,7 @@
 # Secrets (Pflicht): YOGAFLOW_SUPABASE_URL, YOGAFLOW_SUPABASE_ANON_KEY, YOGAFLOW_SYNC_EMAIL,
 # YOGAFLOW_SYNC_PASSWORD
 # Optional: YOGAFLOW_APP_URL – wenn gesetzt: Restplätze per Playwright aus der Web-App; sonst Fallback registrations.
+# Nach Umzug von Vercel auf Netlify: URL ggf. auf https://yomita.de oder die Netlify-Preview-Domain anpassen (nicht mehr *.vercel.app).
 # Bei Branch-Schutz: Workflow braucht Schreibzugriff (z. B. „Allow GitHub Actions to create and approve pull requests“ oder PAT).
 
 name: Sync YogaFlow courses

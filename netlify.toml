@@ -1,0 +1,12 @@
+# Next.js auf Netlify: offizielles Build-Plugin (SSR, App Router).
+# https://docs.netlify.com/frameworks/next-js/overview/
+
+[build]
+  # Webpack: Turbopack-Build + Netlify Edge/Middleware-Bundling lokal/CI sonst fehlschlagen (Next 16).
+  command = "npm run build:netlify"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  NODE_VERSION = "20"
