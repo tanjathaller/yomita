@@ -34,7 +34,7 @@ export function ResponsiveSiteImage({
     const mobileUrl = image.mobile.url.trim();
     const src = mobileUrl ? mobileSrc : desktopSrc;
     return (
-      <picture className={pictureClassName}>
+      <picture key={src} className={pictureClassName}>
         <img
           src={src}
           alt={image.alt}
@@ -47,7 +47,7 @@ export function ResponsiveSiteImage({
   }
 
   return (
-    <picture className={pictureClassName}>
+    <picture key={`${mobileSrc}\u001f${desktopSrc}`} className={pictureClassName}>
       <source media="(min-width: 1024px)" srcSet={desktopSrc} />
       <img
         src={mobileSrc}

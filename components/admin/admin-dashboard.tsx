@@ -24,6 +24,7 @@ import {
 } from "@/lib/admin-dashboard-ui";
 import { BOOKING_BADGE_ANCHOR_PRESETS } from "@/lib/booking-badge-link";
 import { resolveImageUrl } from "@/lib/resolve-image-url";
+import { disconnectSiteContentObjectGraph } from "@/lib/site-content-object-graph";
 import { cn } from "@/lib/utils";
 import { DEFAULT_YOGAFLOW_COURSE_SERIES } from "@/lib/yogaflow-series-group";
 import type {
@@ -115,17 +116,6 @@ type SectionKey =
   | "contact"
   | "settings"
   | "legal";
-
-/**
- * Tiefenkopie der Startdaten für den Admin-Draft.
- * React Flight (RSC → Client) kann identische JSON-Subtrees zu einer gemeinsamen
- * Objekt-Referenz zusammenführen. Ohne Clone würden z. B. `hero.backgroundImage` und
- * `aktuell.items[].image` dieselbe Referenz teilen können → ein Hero-Upload wirkt sich
- * fälschlich auf andere Sektionen aus.
- */
-function cloneInitialSiteContent(content: SiteContent): SiteContent {
-  return structuredClone(content);
-}
 
 const sections: Array<{ id: SectionKey; label: string }> = [
   { id: "hero", label: "Hero" },
@@ -1170,7 +1160,9 @@ function MarkdownEditor({
 }
 
 export function AdminDashboard({ initialContent, saveAction }: AdminDashboardProps) {
-  const [draft, setDraft] = useState<SiteContent>(() => cloneInitialSiteContent(initialContent));
+  const [draft, setDraft] = useState<SiteContent>(() =>
+    disconnectSiteContentObjectGraph(initialContent),
+  );
   const [activeSection, setActiveSection] = useState<SectionKey>("hero");
   const [saveState, saveFormAction, savePending] = useActionState(saveAction, {});
   const [sectionTabsTop, setSectionTabsTop] = useState(104);

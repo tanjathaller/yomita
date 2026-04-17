@@ -6,6 +6,7 @@ import path from "node:path";
 import { Redis } from "@upstash/redis";
 
 import { siteContentSchema } from "@/lib/schemas/site-content";
+import { disconnectSiteContentObjectGraph } from "@/lib/site-content-object-graph";
 import type { SiteContent } from "@/types/site-content";
 
 const SITE_CONTENT_KV_KEY = "site:content";
@@ -29,7 +30,7 @@ function hasRedisConfig(): boolean {
 async function readSiteContentFromFile(): Promise<SiteContent> {
   const raw = await readFile(SITE_CONTENT_FILE_PATH, "utf-8");
   const json: unknown = JSON.parse(raw);
-  return siteContentSchema.parse(json);
+  return disconnectSiteContentObjectGraph(siteContentSchema.parse(json));
 }
 
 async function writeSiteContentToFile(content: SiteContent): Promise<void> {
@@ -49,14 +50,15 @@ export async function readSiteContent(): Promise<SiteContent> {
     return fallback;
   }
 
-  return siteContentSchema.parse(record);
+  return disconnectSiteContentObjectGraph(siteContentSchema.parse(record));
 }
 
 export async function saveSiteContent(content: SiteContent): Promise<SiteContent> {
   const parsed = siteContentSchema.parse(content);
+  const toPersist = disconnectSiteContentObjectGraph(parsed);
   if (hasRedisConfig()) {
-    await redisClient!.set(SITE_CONTENT_KV_KEY, parsed);
-    return parsed;
+    await redisClient!.set(SITE_CONTENT_KV_KEY, toPersist);
+    return toPersist;
   }
 
   if (process.env.NODE_ENV === "production") {
@@ -65,8 +67,8 @@ export async function saveSiteContent(content: SiteContent): Promise<SiteContent
     );
   }
 
-  await writeSiteContentToFile(parsed);
-  return parsed;
+  await writeSiteContentToFile(toPersist);
+  return toPersist;
 }
 
 export async function seedSiteContentFromFileToKv(): Promise<SiteContent> {
