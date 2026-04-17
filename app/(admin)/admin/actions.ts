@@ -138,6 +138,8 @@ export async function saveSiteContentAction(
   revalidatePath("/impressum");
   revalidatePath("/datenschutz");
   revalidatePath("/llms.txt");
+  /** Admin lädt `readSiteContent` per RSC; ohne Revalidation kann ein gecachter Stand mit falschen Bild-Referenzen zurückkommen. */
+  revalidatePath("/admin");
 
   return {
     ok: true,

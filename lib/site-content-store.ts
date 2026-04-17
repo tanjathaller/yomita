@@ -4,6 +4,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 import { Redis } from "@upstash/redis";
+import { unstable_noStore as noStore } from "next/cache";
 
 import { siteContentSchema } from "@/lib/schemas/site-content";
 import { disconnectSiteContentObjectGraph } from "@/lib/site-content-object-graph";
@@ -39,6 +40,9 @@ async function writeSiteContentToFile(content: SiteContent): Promise<void> {
 }
 
 export async function readSiteContent(): Promise<SiteContent> {
+  /** Verhindert Full Route / Data Cache mit veraltetem JSON (wirkt wie „nach Reload wieder alte Bilder“). */
+  noStore();
+
   if (!hasRedisConfig()) {
     return readSiteContentFromFile();
   }

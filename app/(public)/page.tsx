@@ -9,6 +9,9 @@ import { HeroSection } from "@/components/sections/hero-section";
 import { PricesSection } from "@/components/sections/prices-section";
 import { HeroSeamDebug } from "@/components/debug/hero-seam-debug";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function generateMetadata(): Promise<Metadata> {
   return {
     alternates: { canonical: "/" },

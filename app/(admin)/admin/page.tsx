@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 import { saveSiteContentAction } from "./actions";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminHomePage() {
   await requireAdminAuth();
   try {

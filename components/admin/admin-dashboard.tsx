@@ -13,6 +13,7 @@ import {
   useState,
 } from "react";
 import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import { Heading3, Link2, ListOrdered } from "lucide-react";
 import remarkBreaks from "remark-breaks";
@@ -1160,6 +1161,7 @@ function MarkdownEditor({
 }
 
 export function AdminDashboard({ initialContent, saveAction }: AdminDashboardProps) {
+  const router = useRouter();
   const [draft, setDraft] = useState<SiteContent>(() =>
     disconnectSiteContentObjectGraph(initialContent),
   );
@@ -1257,12 +1259,13 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
   useEffect(() => {
     if (saveState.message) {
       setSaveToast({ text: saveState.message, isError: false });
+      router.refresh();
       return;
     }
     if (saveState.error) {
       setSaveToast({ text: saveState.error, isError: true });
     }
-  }, [saveState.message, saveState.error]);
+  }, [saveState.message, saveState.error, router]);
 
   useEffect(() => {
     if (!saveToast) {
