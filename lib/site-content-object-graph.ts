@@ -1,14 +1,21 @@
 import type { SiteContent } from "@/types/site-content";
 
 /**
- * Tiefenkopie von `SiteContent`, damit nirgends dieselbe Objekt-Referenz
- * in mehreren logischen Feldern hängt (z. B. Hero, Aktuelles, Logo, About).
+ * Tiefenkopie wie beim KV-Serialisieren (`JSON.stringify`): garantiert keine
+ * geteilten Objekt-Referenzen mehr (Hero, Aktuelles, Logo, About, …).
  *
- * Hintergrund: React Flight kann beim RSC→Client-Transport referenzidentische
- * Subtrees zusammenführen; bearbeitbare Client-State darf diese Referenzen nicht
- * „mitverändern“. Zusätzlich schützt das Lesen aus Stores vor seltenen
- * referenzgeteilten Deserialisaten.
+ * Hintergrund: React Flight (RSC→Client) und manche Deserialisierer können
+ * identische Subtrees referenzidentisch machen; ein Logo-URL-Update würde dann
+ * fälschlich auch andere Felder „mitziehen“.
  */
 export function disconnectSiteContentObjectGraph(content: SiteContent): SiteContent {
-  return structuredClone(content);
+  return JSON.parse(JSON.stringify(content)) as SiteContent;
+}
+
+/** Rohtext aus Datei/Redis vor `siteContentSchema.parse` — gleiche Referenz-Entkopplung. */
+export function disconnectUnknownJsonTree(value: unknown): unknown {
+  if (value === null || typeof value !== "object") {
+    return value;
+  }
+  return JSON.parse(JSON.stringify(value));
 }

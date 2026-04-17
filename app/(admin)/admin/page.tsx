@@ -1,5 +1,6 @@
 import { AdminDashboard } from "@/components/admin/admin-dashboard";
 import { requireAdminAuth } from "@/lib/admin-auth";
+import { disconnectSiteContentObjectGraph } from "@/lib/site-content-object-graph";
 import { readSiteContent } from "@/lib/site-content-store";
 import { withSortedLists } from "@/lib/sort-content";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +12,9 @@ export const dynamic = "force-dynamic";
 export default async function AdminHomePage() {
   await requireAdminAuth();
   try {
-    const content = withSortedLists(await readSiteContent());
+    const content = disconnectSiteContentObjectGraph(
+      withSortedLists(await readSiteContent()),
+    );
 
     return (
       <AdminDashboard

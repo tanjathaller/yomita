@@ -7,7 +7,10 @@ import { Redis } from "@upstash/redis";
 import { unstable_noStore as noStore } from "next/cache";
 
 import { siteContentSchema } from "@/lib/schemas/site-content";
-import { disconnectSiteContentObjectGraph } from "@/lib/site-content-object-graph";
+import {
+  disconnectSiteContentObjectGraph,
+  disconnectUnknownJsonTree,
+} from "@/lib/site-content-object-graph";
 import type { SiteContent } from "@/types/site-content";
 
 const SITE_CONTENT_KV_KEY = "site:content";
@@ -31,7 +34,8 @@ function hasRedisConfig(): boolean {
 async function readSiteContentFromFile(): Promise<SiteContent> {
   const raw = await readFile(SITE_CONTENT_FILE_PATH, "utf-8");
   const json: unknown = JSON.parse(raw);
-  return disconnectSiteContentObjectGraph(siteContentSchema.parse(json));
+  const plain = disconnectUnknownJsonTree(json);
+  return disconnectSiteContentObjectGraph(siteContentSchema.parse(plain));
 }
 
 async function writeSiteContentToFile(content: SiteContent): Promise<void> {
@@ -54,7 +58,9 @@ export async function readSiteContent(): Promise<SiteContent> {
     return fallback;
   }
 
-  return disconnectSiteContentObjectGraph(siteContentSchema.parse(record));
+  const normalized: unknown =
+    typeof record === "string" ? JSON.parse(record) : disconnectUnknownJsonTree(record);
+  return disconnectSiteContentObjectGraph(siteContentSchema.parse(normalized));
 }
 
 export async function saveSiteContent(content: SiteContent): Promise<SiteContent> {

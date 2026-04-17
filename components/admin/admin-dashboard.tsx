@@ -1210,7 +1210,10 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
     toUnmount: ReturnType<typeof setTimeout> | null;
   }>({ toFade: null, toUnmount: null });
 
-  const serializedContent = useMemo(() => JSON.stringify(draft), [draft]);
+  const serializedContent = useMemo(
+    () => JSON.stringify(disconnectSiteContentObjectGraph(draft)),
+    [draft],
+  );
   const logoEnabled = draft.settings.logoEnabled !== false;
   const wordmarkEnabled = draft.settings.wordmarkEnabled !== false;
   const canDisableLogo = wordmarkEnabled;
@@ -1755,13 +1758,15 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                     id="hero-image-alt"
                     value={draft.hero.backgroundImage.alt}
                     onChange={(event) =>
-                      setDraft((prev) => ({
-                        ...prev,
-                        hero: {
-                          ...prev.hero,
-                          backgroundImage: { ...prev.hero.backgroundImage, alt: event.target.value },
-                        },
-                      }))
+                      setDraft((prev) =>
+                        disconnectSiteContentObjectGraph({
+                          ...prev,
+                          hero: {
+                            ...prev.hero,
+                            backgroundImage: { ...prev.hero.backgroundImage, alt: event.target.value },
+                          },
+                        }),
+                      )
                     }
                   />
                   <p className="text-muted-foreground text-sm">
@@ -1777,16 +1782,18 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                       id="hero-bg-mobile-url"
                       value={draft.hero.backgroundImage.mobile.url}
                       onChange={(event) =>
-                        setDraft((prev) => ({
-                          ...prev,
-                          hero: {
-                            ...prev.hero,
-                            backgroundImage: {
-                              ...prev.hero.backgroundImage,
-                              mobile: { url: event.target.value },
+                        setDraft((prev) =>
+                          disconnectSiteContentObjectGraph({
+                            ...prev,
+                            hero: {
+                              ...prev.hero,
+                              backgroundImage: {
+                                ...prev.hero.backgroundImage,
+                                mobile: { url: event.target.value },
+                              },
                             },
-                          },
-                        }))
+                          }),
+                        )
                       }
                     />
                     <AdminImageFieldLabel variant="heroMobile">Mobil hochladen</AdminImageFieldLabel>
@@ -1830,16 +1837,18 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                       id="hero-bg-desktop-url"
                       value={draft.hero.backgroundImage.desktop.url}
                       onChange={(event) =>
-                        setDraft((prev) => ({
-                          ...prev,
-                          hero: {
-                            ...prev.hero,
-                            backgroundImage: {
-                              ...prev.hero.backgroundImage,
-                              desktop: { url: event.target.value },
+                        setDraft((prev) =>
+                          disconnectSiteContentObjectGraph({
+                            ...prev,
+                            hero: {
+                              ...prev.hero,
+                              backgroundImage: {
+                                ...prev.hero.backgroundImage,
+                                desktop: { url: event.target.value },
+                              },
                             },
-                          },
-                        }))
+                          }),
+                        )
                       }
                     />
                     <AdminImageFieldLabel variant="heroDesktop">Desktop hochladen</AdminImageFieldLabel>
@@ -2152,23 +2161,25 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                 id={`aktuell-image-mobile-url-${item.id}`}
                                 value={item.image.mobile.url}
                                 onChange={(event) =>
-                                  setDraft((prev) => ({
-                                    ...prev,
-                                    aktuell: {
-                                      ...prev.aktuell,
-                                      items: prev.aktuell.items.map((current) =>
-                                        current.id === item.id
-                                          ? {
-                                              ...current,
-                                              image: {
-                                                ...current.image,
-                                                mobile: { url: event.target.value },
-                                              },
-                                            }
-                                          : current,
-                                      ),
-                                    },
-                                  }))
+                                  setDraft((prev) =>
+                                    disconnectSiteContentObjectGraph({
+                                      ...prev,
+                                      aktuell: {
+                                        ...prev.aktuell,
+                                        items: prev.aktuell.items.map((current) =>
+                                          current.id === item.id
+                                            ? {
+                                                ...current,
+                                                image: {
+                                                  ...current.image,
+                                                  mobile: { url: event.target.value },
+                                                },
+                                              }
+                                            : current,
+                                        ),
+                                      },
+                                    }),
+                                  )
                                 }
                               />
                             </div>
@@ -2183,23 +2194,25 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                                 id={`aktuell-image-desktop-url-${item.id}`}
                                 value={item.image.desktop.url}
                                 onChange={(event) =>
-                                  setDraft((prev) => ({
-                                    ...prev,
-                                    aktuell: {
-                                      ...prev.aktuell,
-                                      items: prev.aktuell.items.map((current) =>
-                                        current.id === item.id
-                                          ? {
-                                              ...current,
-                                              image: {
-                                                ...current.image,
-                                                desktop: { url: event.target.value },
-                                              },
-                                            }
-                                          : current,
-                                      ),
-                                    },
-                                  }))
+                                  setDraft((prev) =>
+                                    disconnectSiteContentObjectGraph({
+                                      ...prev,
+                                      aktuell: {
+                                        ...prev.aktuell,
+                                        items: prev.aktuell.items.map((current) =>
+                                          current.id === item.id
+                                            ? {
+                                                ...current,
+                                                image: {
+                                                  ...current.image,
+                                                  desktop: { url: event.target.value },
+                                                },
+                                              }
+                                            : current,
+                                        ),
+                                      },
+                                    }),
+                                  )
                                 }
                               />
                             </div>
@@ -2305,17 +2318,19 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                               <Input
                                 value={item.image.alt}
                                 onChange={(event) =>
-                                  setDraft((prev) => ({
-                                    ...prev,
-                                    aktuell: {
-                                      ...prev.aktuell,
-                                      items: prev.aktuell.items.map((current) =>
-                                        current.id === item.id
-                                          ? { ...current, image: { ...current.image, alt: event.target.value } }
-                                          : current,
-                                      ),
-                                    },
-                                  }))
+                                  setDraft((prev) =>
+                                    disconnectSiteContentObjectGraph({
+                                      ...prev,
+                                      aktuell: {
+                                        ...prev.aktuell,
+                                        items: prev.aktuell.items.map((current) =>
+                                          current.id === item.id
+                                            ? { ...current, image: { ...current.image, alt: event.target.value } }
+                                            : current,
+                                        ),
+                                      },
+                                    }),
+                                  )
                                 }
                               />
                             </div>
@@ -3419,13 +3434,15 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                       id="about-image-mobile-url"
                       value={draft.about.image.mobile.url}
                       onChange={(event) =>
-                        setDraft((prev) => ({
-                          ...prev,
-                          about: {
-                            ...prev.about,
-                            image: { ...prev.about.image, mobile: { url: event.target.value } },
-                          },
-                        }))
+                        setDraft((prev) =>
+                          disconnectSiteContentObjectGraph({
+                            ...prev,
+                            about: {
+                              ...prev.about,
+                              image: { ...prev.about.image, mobile: { url: event.target.value } },
+                            },
+                          }),
+                        )
                       }
                     />
                   </div>
@@ -3437,13 +3454,15 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                       id="about-image-desktop-url"
                       value={draft.about.image.desktop.url}
                       onChange={(event) =>
-                        setDraft((prev) => ({
-                          ...prev,
-                          about: {
-                            ...prev.about,
-                            image: { ...prev.about.image, desktop: { url: event.target.value } },
-                          },
-                        }))
+                        setDraft((prev) =>
+                          disconnectSiteContentObjectGraph({
+                            ...prev,
+                            about: {
+                              ...prev.about,
+                              image: { ...prev.about.image, desktop: { url: event.target.value } },
+                            },
+                          }),
+                        )
                       }
                     />
                   </div>
@@ -3530,10 +3549,12 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                       id="about-image-alt"
                       value={draft.about.image.alt}
                       onChange={(event) =>
-                        setDraft((prev) => ({
-                          ...prev,
-                          about: { ...prev.about, image: { ...prev.about.image, alt: event.target.value } },
-                        }))
+                        setDraft((prev) =>
+                          disconnectSiteContentObjectGraph({
+                            ...prev,
+                            about: { ...prev.about, image: { ...prev.about.image, alt: event.target.value } },
+                          }),
+                        )
                       }
                     />
                   </div>
@@ -3706,13 +3727,13 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                               mobile: { url: "" },
                               desktop: { url: "" },
                             };
-                            return {
+                            return disconnectSiteContentObjectGraph({
                               ...prev,
                               settings: {
                                 ...prev.settings,
                                 logo: { ...prevLogo, mobile: { url: event.target.value } },
                               },
-                            };
+                            });
                           })
                         }
                       />
@@ -3730,13 +3751,13 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                               mobile: { url: "" },
                               desktop: { url: "" },
                             };
-                            return {
+                            return disconnectSiteContentObjectGraph({
                               ...prev,
                               settings: {
                                 ...prev.settings,
                                 logo: { ...prevLogo, desktop: { url: event.target.value } },
                               },
-                            };
+                            });
                           })
                         }
                       />
@@ -3834,13 +3855,13 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                               mobile: { url: "" },
                               desktop: { url: "" },
                             };
-                            return {
+                            return disconnectSiteContentObjectGraph({
                               ...prev,
                               settings: {
                                 ...prev.settings,
                                 ogImage: { ...prevOg, mobile: { url: event.target.value } },
                               },
-                            };
+                            });
                           })
                         }
                       />
@@ -3858,13 +3879,13 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                               mobile: { url: "" },
                               desktop: { url: "" },
                             };
-                            return {
+                            return disconnectSiteContentObjectGraph({
                               ...prev,
                               settings: {
                                 ...prev.settings,
                                 ogImage: { ...prevOg, desktop: { url: event.target.value } },
                               },
-                            };
+                            });
                           })
                         }
                       />
@@ -3963,13 +3984,15 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                         value={draft.settings.faviconUrl ?? ""}
                         onChange={(event) => {
                           const v = event.target.value.trim();
-                          setDraft((prev) => ({
-                            ...prev,
-                            settings: {
-                              ...prev.settings,
-                              faviconUrl: v || undefined,
-                            },
-                          }));
+                          setDraft((prev) =>
+                            disconnectSiteContentObjectGraph({
+                              ...prev,
+                              settings: {
+                                ...prev.settings,
+                                faviconUrl: v || undefined,
+                              },
+                            }),
+                          );
                         }}
                       />
                     </div>
@@ -4018,10 +4041,12 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                           size="sm"
                           className="min-w-[7.5rem] border-destructive/35 font-semibold text-destructive shadow-sm hover:border-destructive/55 hover:bg-destructive/10 hover:text-destructive"
                           onClick={() =>
-                            setDraft((prev) => ({
-                              ...prev,
-                              settings: { ...prev.settings, faviconUrl: undefined },
-                            }))
+                            setDraft((prev) =>
+                              disconnectSiteContentObjectGraph({
+                                ...prev,
+                                settings: { ...prev.settings, faviconUrl: undefined },
+                              }),
+                            )
                           }
                         >
                           Favicon entfernen
