@@ -1,20 +1,6 @@
 {
-  "syncedAt": "2026-04-16T20:11:58.866Z",
+  "syncedAt": "2026-04-17T06:24:46.429Z",
   "courses": [
-    {
-      "id": "bb75ddba-f0f9-402f-a321-8ab7c6de036a",
-      "type": "internal",
-      "title": "Test",
-      "description": "Hallo Herr Doktor",
-      "day": "16.04.2026",
-      "time": "19:00–20:00 (60 Min.)",
-      "location": "Neuss",
-      "bookingStatus": "available",
-      "price": "50,00 €",
-      "remainingSpots": 8,
-      "sortOrder": 10,
-      "startsOn": "2026-04-16"
-    },
     {
       "id": "386dcb69-67d7-422d-9ad1-f63492bb9a90",
       "type": "internal",
@@ -26,7 +12,7 @@
       "bookingStatus": "full",
       "price": "12,00 €",
       "remainingSpots": 0,
-      "sortOrder": 20,
+      "sortOrder": 10,
       "startsOn": "2026-04-21"
     },
     {
@@ -40,7 +26,7 @@
       "bookingStatus": "full",
       "price": "12,00 €",
       "remainingSpots": 0,
-      "sortOrder": 30,
+      "sortOrder": 20,
       "startsOn": "2026-04-22"
     },
     {
@@ -54,7 +40,7 @@
       "bookingStatus": "full",
       "price": "12,00 €",
       "remainingSpots": 0,
-      "sortOrder": 40,
+      "sortOrder": 30,
       "startsOn": "2026-04-28"
     },
     {
@@ -68,7 +54,7 @@
       "bookingStatus": "full",
       "price": "12,00 €",
       "remainingSpots": 0,
-      "sortOrder": 50,
+      "sortOrder": 40,
       "startsOn": "2026-04-29"
     },
     {
@@ -82,7 +68,7 @@
       "bookingStatus": "full",
       "price": "12,00 €",
       "remainingSpots": 0,
-      "sortOrder": 60,
+      "sortOrder": 50,
       "startsOn": "2026-05-05"
     },
     {
@@ -96,7 +82,7 @@
       "bookingStatus": "available",
       "price": "12,00 €",
       "remainingSpots": 4,
-      "sortOrder": 70,
+      "sortOrder": 60,
       "startsOn": "2026-05-12"
     },
     {
@@ -110,7 +96,7 @@
       "bookingStatus": "available",
       "price": "12,00 €",
       "remainingSpots": 1,
-      "sortOrder": 80,
+      "sortOrder": 70,
       "startsOn": "2026-05-13"
     },
     {
@@ -124,7 +110,7 @@
       "bookingStatus": "available",
       "price": "12,00 €",
       "remainingSpots": 6,
-      "sortOrder": 90,
+      "sortOrder": 80,
       "startsOn": "2026-05-26"
     },
     {
@@ -138,8 +124,36 @@
       "bookingStatus": "available",
       "price": "12,00 €",
       "remainingSpots": 3,
-      "sortOrder": 100,
+      "sortOrder": 90,
       "startsOn": "2026-05-27"
+    },
+    {
+      "id": "f2f1dfcb-61eb-4b94-86db-61539a60ea96",
+      "type": "internal",
+      "title": "Yoga am Mittwoch",
+      "description": "Vinyasa für Fortgeschrittene",
+      "day": "03.06.2026",
+      "time": "18:00–19:30 (90 Min.)",
+      "location": "Neuss",
+      "bookingStatus": "available",
+      "price": "12,00 €",
+      "remainingSpots": 8,
+      "sortOrder": 100,
+      "startsOn": "2026-06-03"
+    },
+    {
+      "id": "bb75ddba-f0f9-402f-a321-8ab7c6de036a",
+      "type": "internal",
+      "title": "Test",
+      "description": "Hallo! Ich bin ein Test",
+      "day": "06.09.2026",
+      "time": "19:00–20:00 (60 Min.)",
+      "location": "Neuss",
+      "bookingStatus": "available",
+      "price": "50,00 €",
+      "remainingSpots": 8,
+      "sortOrder": 110,
+      "startsOn": "2026-09-06"
     }
   ]
 }
