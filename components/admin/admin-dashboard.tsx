@@ -116,6 +116,17 @@ type SectionKey =
   | "settings"
   | "legal";
 
+/**
+ * Tiefenkopie der Startdaten für den Admin-Draft.
+ * React Flight (RSC → Client) kann identische JSON-Subtrees zu einer gemeinsamen
+ * Objekt-Referenz zusammenführen. Ohne Clone würden z. B. `hero.backgroundImage` und
+ * `aktuell.items[].image` dieselbe Referenz teilen können → ein Hero-Upload wirkt sich
+ * fälschlich auf andere Sektionen aus.
+ */
+function cloneInitialSiteContent(content: SiteContent): SiteContent {
+  return structuredClone(content);
+}
+
 const sections: Array<{ id: SectionKey; label: string }> = [
   { id: "hero", label: "Hero" },
   { id: "aktuell", label: "Aktuelles" },
@@ -1159,7 +1170,7 @@ function MarkdownEditor({
 }
 
 export function AdminDashboard({ initialContent, saveAction }: AdminDashboardProps) {
-  const [draft, setDraft] = useState<SiteContent>(initialContent);
+  const [draft, setDraft] = useState<SiteContent>(() => cloneInitialSiteContent(initialContent));
   const [activeSection, setActiveSection] = useState<SectionKey>("hero");
   const [saveState, saveFormAction, savePending] = useActionState(saveAction, {});
   const [sectionTabsTop, setSectionTabsTop] = useState(104);
@@ -1300,6 +1311,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
 
     const formData = new FormData();
     formData.append("file", file);
+    formData.append("scope", "aktuelles");
 
     try {
       const response = await fetch("/api/admin/upload-image", {
