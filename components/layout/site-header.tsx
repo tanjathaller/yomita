@@ -27,6 +27,11 @@ export function SiteHeader({ settings, hasAktuellesItems }: SiteHeaderProps) {
   const showLogo = settings.logoEnabled !== false && Boolean(settings.logo);
   const showWordmark = settings.wordmarkEnabled !== false;
   const mobileNavTitle = showWordmark ? headerTitle : undefined;
+  const logoMobileSrc =
+    showLogo && settings.logo ? resolveImageUrl(settings.logo.mobile.url) : "";
+  const logoDesktopSrc =
+    showLogo && settings.logo ? resolveImageUrl(settings.logo.desktop.url) : "";
+  const logoPictureKey = `${logoMobileSrc}\u001f${logoDesktopSrc}`;
 
   return (
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50 bg-transparent">
@@ -40,7 +45,8 @@ export function SiteHeader({ settings, hasAktuellesItems }: SiteHeaderProps) {
             {showLogo && settings.logo ? (
               <span className="relative size-9 shrink-0 overflow-hidden rounded-md">
                 <img
-                  src={resolveImageUrl(settings.logo.mobile.url)}
+                  key={logoMobileSrc}
+                  src={logoMobileSrc}
                   alt=""
                   width={36}
                   height={36}
@@ -72,13 +78,10 @@ export function SiteHeader({ settings, hasAktuellesItems }: SiteHeaderProps) {
           >
             {showLogo && settings.logo ? (
               <span className="relative size-9 shrink-0 overflow-hidden rounded-md">
-                <picture className="absolute inset-0 block">
-                  <source
-                    media="(min-width: 1024px)"
-                    srcSet={resolveImageUrl(settings.logo.desktop.url)}
-                  />
+                <picture key={logoPictureKey} className="absolute inset-0 block">
+                  <source media="(min-width: 1024px)" srcSet={logoDesktopSrc} />
                   <img
-                    src={resolveImageUrl(settings.logo.mobile.url)}
+                    src={logoMobileSrc}
                     alt=""
                     width={40}
                     height={40}

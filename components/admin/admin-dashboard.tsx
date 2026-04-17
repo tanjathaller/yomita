@@ -1327,26 +1327,28 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
         throw new Error(data.error ?? "Upload fehlgeschlagen.");
       }
 
-      setDraft((prev) => ({
-        ...prev,
-        aktuell: {
-          ...prev.aktuell,
-          items: prev.aktuell.items.map((current) =>
-            current.id === itemId
-              ? {
-                  ...current,
-                  image: {
-                    ...current.image,
-                    [slot]: { url: data.url! },
-                    alt: current.image.alt.trim()
-                      ? current.image.alt
-                      : deriveAltFromFilename(file.name),
-                  },
-                }
-              : current,
-          ),
-        },
-      }));
+      setDraft((prev) =>
+        disconnectSiteContentObjectGraph({
+          ...prev,
+          aktuell: {
+            ...prev.aktuell,
+            items: prev.aktuell.items.map((current) =>
+              current.id === itemId
+                ? {
+                    ...current,
+                    image: {
+                      ...current.image,
+                      [slot]: { url: data.url! },
+                      alt: current.image.alt.trim()
+                        ? current.image.alt
+                        : deriveAltFromFilename(file.name),
+                    },
+                  }
+                : current,
+            ),
+          },
+        }),
+      );
     } catch (error) {
       const message = error instanceof Error ? error.message : "Upload fehlgeschlagen.";
       setUploadErrorAktuellById((prev) => ({ ...prev, [itemId]: message }));
@@ -1382,19 +1384,21 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
         throw new Error(data.error ?? "Upload fehlgeschlagen.");
       }
 
-      setDraft((prev) => ({
-        ...prev,
-        about: {
-          ...prev.about,
-          image: {
-            ...prev.about.image,
-            [slot]: { url: data.url! },
-            alt: prev.about.image.alt.trim()
-              ? prev.about.image.alt
-              : deriveAltFromFilename(file.name),
+      setDraft((prev) =>
+        disconnectSiteContentObjectGraph({
+          ...prev,
+          about: {
+            ...prev.about,
+            image: {
+              ...prev.about.image,
+              [slot]: { url: data.url! },
+              alt: prev.about.image.alt.trim()
+                ? prev.about.image.alt
+                : deriveAltFromFilename(file.name),
+            },
           },
-        },
-      }));
+        }),
+      );
     } catch (error) {
       const message = error instanceof Error ? error.message : "Upload fehlgeschlagen.";
       setUploadErrorAbout(message);
@@ -1430,19 +1434,21 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
         throw new Error(data.error ?? "Upload fehlgeschlagen.");
       }
 
-      setDraft((prev) => ({
-        ...prev,
-        hero: {
-          ...prev.hero,
-          backgroundImage: {
-            ...prev.hero.backgroundImage,
-            [slot]: { url: data.url! },
-            alt: prev.hero.backgroundImage.alt.trim()
-              ? prev.hero.backgroundImage.alt
-              : deriveAltFromFilename(file.name),
+      setDraft((prev) =>
+        disconnectSiteContentObjectGraph({
+          ...prev,
+          hero: {
+            ...prev.hero,
+            backgroundImage: {
+              ...prev.hero.backgroundImage,
+              [slot]: { url: data.url! },
+              alt: prev.hero.backgroundImage.alt.trim()
+                ? prev.hero.backgroundImage.alt
+                : deriveAltFromFilename(file.name),
+            },
           },
-        },
-      }));
+        }),
+      );
     } catch (error) {
       const message = error instanceof Error ? error.message : "Upload fehlgeschlagen.";
       setUploadErrorHero(message);
@@ -1480,7 +1486,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
 
       setDraft((prev) => {
         const prevOg = prev.settings.ogImage ?? { mobile: { url: "" }, desktop: { url: "" } };
-        return {
+        return disconnectSiteContentObjectGraph({
           ...prev,
           settings: {
             ...prev.settings,
@@ -1489,7 +1495,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
               desktop: { url: slot === "desktop" ? data.url! : prevOg.desktop.url },
             },
           },
-        };
+        });
       });
     } catch (error) {
       const message = error instanceof Error ? error.message : "Upload fehlgeschlagen.";
@@ -1528,7 +1534,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
 
       setDraft((prev) => {
         const prevLogo = prev.settings.logo ?? { mobile: { url: "" }, desktop: { url: "" } };
-        return {
+        return disconnectSiteContentObjectGraph({
           ...prev,
           settings: {
             ...prev.settings,
@@ -1537,7 +1543,7 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
               desktop: { url: slot === "desktop" ? data.url! : prevLogo.desktop.url },
             },
           },
-        };
+        });
       });
     } catch (error) {
       const message = error instanceof Error ? error.message : "Upload fehlgeschlagen.";
@@ -1574,10 +1580,12 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
         throw new Error(data.error ?? "Upload fehlgeschlagen.");
       }
 
-      setDraft((prev) => ({
-        ...prev,
-        settings: { ...prev.settings, faviconUrl: data.url! },
-      }));
+      setDraft((prev) =>
+        disconnectSiteContentObjectGraph({
+          ...prev,
+          settings: { ...prev.settings, faviconUrl: data.url! },
+        }),
+      );
     } catch (error) {
       const message = error instanceof Error ? error.message : "Upload fehlgeschlagen.";
       setUploadErrorFavicon(message);

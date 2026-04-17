@@ -26,7 +26,8 @@ export async function POST(request: Request) {
 
     const formData = await request.formData();
     const file = formData.get("file");
-    const scopeRaw = formData.get("scope");
+    const scopeRaw =
+      typeof formData.get("scope") === "string" ? (formData.get("scope") as string).trim() : "";
     const blobPrefix =
       scopeRaw === "about"
         ? "about"
