@@ -29,8 +29,12 @@ export function getSiteMediaStore(): Store {
   return getStore(SITE_MEDIA_STORE_NAME, { consistency: "strong" });
 }
 
+/**
+ * Öffentliche Bild-URL (relativ). Pfadbasiert, damit CDNs den Cache pro Objekt unterscheiden
+ * (Query-only `/api/blob-image` kann sonst ein einziges Response-Objekt cachen).
+ */
 export function siteMediaProxyPath(key: string): string {
-  return `/api/blob-image?key=${encodeURIComponent(key)}`;
+  return `/api/blob-image/${key}`;
 }
 
 export function extractSiteMediaKeyFromStoredValue(raw: string): string | null {
@@ -47,8 +51,23 @@ export function extractSiteMediaKeyFromStoredValue(raw: string): string | null {
     }
   }
 
+  if (trimmed.startsWith("/api/blob-image/")) {
+    const withoutQuery = trimmed.split("?")[0] ?? "";
+    const key = withoutQuery.slice("/api/blob-image/".length);
+    return key && isValidSiteMediaKey(key) ? key : null;
+  }
+
   try {
     const parsed = new URL(trimmed);
+    const pathname = parsed.pathname;
+    if (pathname.startsWith("/api/blob-image/")) {
+      const key = pathname.slice("/api/blob-image/".length);
+      return key && isValidSiteMediaKey(key) ? key : null;
+    }
+    if (pathname.endsWith("/api/blob-image") || pathname === "/api/blob-image") {
+      const key = parsed.searchParams.get("key");
+      return key && isValidSiteMediaKey(key) ? key : null;
+    }
     if (!parsed.hostname.endsWith(".private.blob.vercel-storage.com")) {
       return null;
     }
