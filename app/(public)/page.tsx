@@ -52,6 +52,8 @@ export default async function HomePage() {
         appButtonLabel={content.settings.coursesSectionAppButtonLabel}
         afterAktuelles={hasAktuelles}
         afterAboutTeaser={false}
+        yogaflowSyncedAt={content.yogaflowSyncedAt}
+        yogaflowCoursesLoadError={content.yogaflowCoursesLoadError}
       />
       <PricesSection
         prices={content.prices}

@@ -267,10 +267,17 @@ export type SiteContent = {
   /** Manuell im Content (KV/JSON) gepflegte Kurse – nicht aus der YogaFlow-Sync-Datei. */
   courses: Course[];
   /**
-   * Nur zur Laufzeit auf der öffentlichen Seite: Kurse aus `data/yogaflow-courses.json`.
-   * Wird nicht mit dem Admin in KV persistiert.
+   * Nur zur Laufzeit auf der öffentlichen Seite: Kurse aus externer JSON (`NEXT_PUBLIC_YOGAFLOW_DATA_URL`)
+   * oder lokal `data/yogaflow-courses.json` (Entwicklung). Wird nicht mit dem Admin in KV persistiert.
    */
   yogaflowCourses?: Course[];
+  /** ISO-Zeitstempel der zuletzt erfolgreich geladenen YogaFlow-JSON (`syncedAt` im Artefakt). */
+  yogaflowSyncedAt?: string;
+  /**
+   * `NEXT_PUBLIC_YOGAFLOW_DATA_URL` gesetzt, aber der letzte Server-Fetch/Parse ist fehlgeschlagen
+   * (Netzwerk, Timeout, Schema). Öffentliche Seite bleibt nutzbar; App-Termine fehlen bis zum nächsten erfolgreichen Request.
+   */
+  yogaflowCoursesLoadError?: boolean;
   prices: PriceItem[];
   about: AboutSection;
   contact: ContactSection;

@@ -10,7 +10,8 @@
     "lint": "eslint",
     "seed:site-content-kv": "node --import tsx scripts/seed-site-content-kv.mts",
     "sync:yogaflow": "node --import tsx scripts/sync-yogaflow-courses.ts",
-    "sync:yogaflow:local": "node --import tsx --env-file=.env.local scripts/sync-yogaflow-courses.ts"
+    "sync:yogaflow:local": "node --import tsx --env-file=.env.local scripts/sync-yogaflow-courses.ts",
+    "publish:yogaflow": "node --import tsx scripts/publish-yogaflow-courses.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.3.0",

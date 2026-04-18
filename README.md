@@ -71,6 +71,7 @@ Secrets aus einem früheren Vercel-Projekt **wandern nicht automatisch**; diesel
 | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Upstash Redis (Content) |
 | `NETLIFY_SITE_ID`, `NETLIFY_AUTH_TOKEN` | Nur **lokal** / optional in CI: Netlify [Personal Access Token](https://docs.netlify.com/api-and-cli-guides/cli-guides/get-started-with-cli#obtain-a-token-in-the-netlify-ui) mit Blobs-Zugriff + Site-ID aus dem Dashboard. Auf **gehosteter** Netlify-Production sind Blobs ohne diese Variablen nutzbar. |
 | `REVALIDATE_SECRET` | optional, falls On-Demand Revalidation genutzt wird |
+| `NEXT_PUBLIC_YOGAFLOW_DATA_URL` | **Öffentliche** URL zur YogaFlow-JSON (`syncedAt` + `courses`), z. B. `https://raw.githubusercontent.com/…/main/yogaflow-courses.json`. Ohne sie nutzt die Site lokal/fallback die (nicht eingecheckte) Datei `data/yogaflow-courses.json`. |
 
 **Medien (Netlify Blobs):** Uploads landen im Store `site-media`; Auslieferung über `/api/blob-image?key=…`. (Die einmalige Migration von Vercel Blob ist im Repo erledigt; es gibt kein Migrationsskript mehr.)
 
@@ -82,9 +83,9 @@ Nach Änderungen an Umgebungsvariablen in Netlify einen **neuen Deploy** auslös
 
 **DNS (IONOS):** Apex **`yomita.de`** zeigt auf Netlify (A/CNAME laut [Netlify Custom domains](https://docs.netlify.com/domains-https/custom-domains/)); **`www.yomita.de`** in Netlify als Domain hinzufügen und Redirect auf die Apex-URL einrichten.
 
-**GitHub Actions:** Der Workflow [`.github/workflows/sync-yogaflow-courses.yml`](./.github/workflows/sync-yogaflow-courses.yml) nutzt **Repository Secrets** unter GitHub (nicht Netlify). Optional **`YOGAFLOW_APP_URL`** auf `https://yomita.de` oder die Netlify-Preview-URL setzen, falls zuvor eine `*.vercel.app`-Adresse verwendet wurde.
+**GitHub Actions (YogaFlow):** Der Workflow [`.github/workflows/sync-yogaflow-courses.yml`](./.github/workflows/sync-yogaflow-courses.yml) zieht Kurse aus Supabase (Secrets `YOGAFLOW_*`), schreibt `data/yogaflow-courses.json` und **publiziert** per `npm run publish:yogaflow` in ein **separates Daten-Repo** (`YOGAFLOW_DATA_REPO`, `YOGAFLOW_DATA_REPO_TOKEN`) — **kein** Commit mehr ins Site-Repo, damit **keine** Netlify-Deploys durch den Cron entstehen. Optional **`YOGAFLOW_APP_URL`** für Restplätze per Playwright. Intervall standardmäßig **stündlich** (`cron` im Workflow, mit Kommentaren für 6h/30min). **Lokal:** `npm run sync:yogaflow:local` erzeugt die JSON (liegt in `.gitignore`); `npm run publish:yogaflow` mit `YOGAFLOW_PUBLISH_STRATEGY=git-data-repo` und `YOGAFLOW_DATA_REPO_DIR` testet den Push ins Daten-Repo.
 
-**Netlify + privates Repo (Git Contributor):** Netlify erlaubt auf dem Free-Tarif nur **einen** Git-Contributor. Commits müssen zur mit Netlify verknüpften GitHub-Identität passen (z. B. `tanjathaller`). Dafür im Repo unter **Settings → Secrets and variables → Actions** optional **`SYNC_GIT_AUTHOR_NAME`** und **`SYNC_GIT_AUTHOR_EMAIL`** setzen (E-Mail wie unter [github.com/settings/emails](https://github.com/settings/emails), z. B. die `…@users.noreply.github.com` der gleichen GitHub-Accounts). Dann schreibt der YogaFlow-Sync nicht mehr als `github-actions[bot]` und Netlify baut wieder durch.
+**Netlify + privates Repo (Git Contributor):** Betrifft nur noch **Commits im Daten-Repo** (falls dort Branch-Schutz o. Ä.). Optional **`SYNC_GIT_AUTHOR_NAME`** und **`SYNC_GIT_AUTHOR_EMAIL`** in GitHub Actions setzen; für das **Site-Repo** entfällt die frühere Anforderung, Sync-Commits an den Netlify-Contributor anzupassen.
 
 **Doppel-Deployments vermeiden:** Wenn das Repo noch an **Vercel** und **Netlify** hängt, löst jeder Push zwei Builds aus. Nach Cutover die Vercel-Git-Integration trennen oder das Vercel-Projekt archivieren.
 

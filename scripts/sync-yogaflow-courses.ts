@@ -1,5 +1,6 @@
 /**
- * Liest Kurse aus Supabase und schreibt `data/yogaflow-courses.json`.
+ * Liest Kurse aus Supabase und schreibt `data/yogaflow-courses.json` (Artefakt; i. d. R. nicht
+ * mehr ins Site-Repo committet). Veröffentlichung ins Daten-Repo: `npm run publish:yogaflow`.
  * Restplätze: bevorzugt per Playwright aus der YogaFlow-Web-App (YOGAFLOW_APP_URL),
  * sonst Fallback über `registrations` (oft unvollständig wegen RLS).
  *

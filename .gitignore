@@ -42,3 +42,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# YogaFlow-Sync-Artefakt (öffentliche Site lädt per NEXT_PUBLIC_YOGAFLOW_DATA_URL; lokal per npm run sync:yogaflow)
+/data/yogaflow-courses.json

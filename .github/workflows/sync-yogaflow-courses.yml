@@ -1,22 +1,35 @@
-# Holt Kurse aus YogaFlow (Supabase) und committet data/yogaflow-courses.json bei Änderung.
-# Secrets (Pflicht): YOGAFLOW_SUPABASE_URL, YOGAFLOW_SUPABASE_ANON_KEY, YOGAFLOW_SYNC_EMAIL,
+# Holt Kurse aus YogaFlow (Supabase), schreibt data/yogaflow-courses.json und publiziert sie
+# in ein separates Daten-Repo — kein Commit mehr ins Site-Repo (keine Netlify-Deploys durch Sync).
+#
+# Secrets (Sync, Pflicht): YOGAFLOW_SUPABASE_URL, YOGAFLOW_SUPABASE_ANON_KEY, YOGAFLOW_SYNC_EMAIL,
 # YOGAFLOW_SYNC_PASSWORD
-# Optional: YOGAFLOW_APP_URL – wenn gesetzt: Restplätze per Playwright aus der Web-App; sonst Fallback registrations.
-# Nach Umzug von Vercel auf Netlify: URL ggf. auf https://yomita.de oder die Netlify-Preview-Domain anpassen (nicht mehr *.vercel.app).
-# Netlify Free + privates Repo: Commits müssen vom mit Netlify verknüpften GitHub-User stammen. Optional setzen:
-#   SYNC_GIT_AUTHOR_NAME, SYNC_GIT_AUTHOR_EMAIL (Repository Secrets) = Name + E-Mail wie bei GitHub (z. B. noreply unter github.com/settings/emails).
-# Ohne diese Secrets: Commit als github-actions[bot] → Netlify „unrecognized Git contributor“ möglich.
-# Bei Branch-Schutz: Workflow braucht Schreibzugriff (z. B. „Allow GitHub Actions to create and approve pull requests“ oder PAT).
+# Optional: YOGAFLOW_APP_URL – Restplätze per Playwright; sonst Fallback registrations.
+#
+# Secrets (Publish, für Daten-Repo): YOGAFLOW_DATA_REPO (owner/name, z. B. org/yogaflow-site-data),
+# YOGAFLOW_DATA_REPO_TOKEN (PAT / Fine-grained mit Inhalt: Schreiben auf das Daten-Repo).
+# Fehlen diese beiden: Publish wird übersprungen (Hinweis im Log); Site nutzt dann nur noch
+# NEXT_PUBLIC_YOGAFLOW_DATA_URL, sobald die JSON manuell oder später per CI dort liegt.
+#
+# Optional: SYNC_GIT_AUTHOR_NAME, SYNC_GIT_AUTHOR_EMAIL – Commit-Autor im Daten-Repo
+# (sinnvoll, wenn das Daten-Repo Branch-Schutz / Contributor-Regeln hat).
+#
+# Intervall (schedule):
+#   Standard: stündlich — cron: "0 * * * *"
+#   Alle 6 Stunden: "0 */6 * * *"
+#   Alle 30 Minuten: "*/30 * * * *" (mehr GitHub-Actions-Minuten; bei privatem Repo auf Kontingent achten)
+#
+# Hinweis GitHub Actions: Jeder Lauf zählt gegen die Minuten des Repos/Organisation;
+# Playwright + Sync kann mehrere Minuten dauern — Intervall nicht unnötig hochdrehen.
 
 name: Sync YogaFlow courses
 
 on:
   schedule:
-    - cron: "0 */6 * * *"
+    - cron: "0 * * * *"
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: sync-yogaflow-courses
@@ -27,8 +40,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
 
       - uses: actions/setup-node@v5
         with:
@@ -75,27 +86,26 @@ jobs:
           YOGAFLOW_APP_URL: ${{ secrets.YOGAFLOW_APP_URL }}
         run: npm run sync:yogaflow
 
-      # Wichtig: kein `git pull` mit „dirty“ Working Tree (Sync ändert die JSON schon).
-      # Ablauf: erst committen, dann rebase auf origin, dann push.
-      - name: Commit wenn geändert
+      - name: Checkout YogaFlow data repository
+        if: ${{ secrets.YOGAFLOW_DATA_REPO != '' && secrets.YOGAFLOW_DATA_REPO_TOKEN != '' }}
+        uses: actions/checkout@v5
+        with:
+          repository: ${{ secrets.YOGAFLOW_DATA_REPO }}
+          token: ${{ secrets.YOGAFLOW_DATA_REPO_TOKEN }}
+          path: yogaflow-data-repo
+
+      - name: Publish JSON to data repository
         env:
-          SYNC_NAME: ${{ secrets.SYNC_GIT_AUTHOR_NAME }}
-          SYNC_EMAIL: ${{ secrets.SYNC_GIT_AUTHOR_EMAIL }}
+          SYNC_GIT_AUTHOR_NAME: ${{ secrets.SYNC_GIT_AUTHOR_NAME }}
+          SYNC_GIT_AUTHOR_EMAIL: ${{ secrets.SYNC_GIT_AUTHOR_EMAIL }}
         run: |
-          if [ -n "${SYNC_NAME:-}" ] && [ -n "${SYNC_EMAIL:-}" ]; then
-            git config user.name "${SYNC_NAME}"
-            git config user.email "${SYNC_EMAIL}"
-            echo "Git-Autor für Commit: ${SYNC_NAME} <${SYNC_EMAIL}>"
+          set -euo pipefail
+          if [ -d yogaflow-data-repo/.git ]; then
+            export YOGAFLOW_PUBLISH_STRATEGY=git-data-repo
+            export YOGAFLOW_DATA_REPO_DIR="${GITHUB_WORKSPACE}/yogaflow-data-repo"
+            echo "Publish: Zielverzeichnis ${YOGAFLOW_DATA_REPO_DIR}"
           else
-            echo "::notice::SYNC_GIT_AUTHOR_NAME + SYNC_GIT_AUTHOR_EMAIL nicht gesetzt – Commit als github-actions[bot] (Netlify Free + privates Repo: ggf. Deploy-Fehler)."
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            echo "::notice::YOGAFLOW_DATA_REPO / YOGAFLOW_DATA_REPO_TOKEN nicht gesetzt oder Checkout übersprungen – Publish wird mit strategy=none ausgeführt."
+            export YOGAFLOW_PUBLISH_STRATEGY=none
           fi
-          git add data/yogaflow-courses.json
-          if git diff --staged --quiet; then
-            echo "Keine Änderung an yogaflow-courses.json"
-            exit 0
-          fi
-          git commit -m "chore: sync YogaFlow-Kurse"
-          git pull --rebase origin "${GITHUB_REF_NAME}"
-          git push origin "${GITHUB_REF_NAME}"
+          npm run publish:yogaflow

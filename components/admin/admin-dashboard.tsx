@@ -3232,11 +3232,13 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                   </div>
                 </div>
                 <div className="rounded-lg border border-border bg-muted/30 p-3 text-sm text-muted-foreground">
-                  <strong className="text-foreground">YogaFlow:</strong> Termine kommen aus{" "}
-                  <code className="text-xs">data/yogaflow-courses.json</code> (Sync: Supabase +
-                  optional Playwright für Restplätze, Secret{" "}
-                  <code className="text-xs">YOGAFLOW_APP_URL</code>). Pro YogaFlow-Kurs eine Karte
-                  mit Terminliste; konkrete Daten und Status in der aufklappbaren Liste.{" "}
+                  <strong className="text-foreground">YogaFlow:</strong> Termine auf der
+                  öffentlichen Seite kommen aus externer JSON (
+                  <code className="text-xs">NEXT_PUBLIC_YOGAFLOW_DATA_URL</code> in Netlify; Sync:
+                  GitHub Action, Supabase + optional Playwright für Restplätze, Secret{" "}
+                  <code className="text-xs">YOGAFLOW_APP_URL</code>). Lokal kann{" "}
+                  <code className="text-xs">data/yogaflow-courses.json</code> ohne URL weiter
+                  genutzt werden. Pro YogaFlow-Serie eine Karte mit Terminliste.{" "}
                   <strong className="text-foreground">Manuelle Kurse</strong> lassen sich oben
                   bearbeiten; auf der Seite erscheinen sie nach den YogaFlow-Kursen.
                 </div>
