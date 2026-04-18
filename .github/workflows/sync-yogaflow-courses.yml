@@ -86,13 +86,19 @@ jobs:
           YOGAFLOW_APP_URL: ${{ secrets.YOGAFLOW_APP_URL }}
         run: npm run sync:yogaflow
 
-      - name: Checkout YogaFlow data repository
-        if: ${{ secrets.YOGAFLOW_DATA_REPO != '' && secrets.YOGAFLOW_DATA_REPO_TOKEN != '' }}
-        uses: actions/checkout@v5
-        with:
-          repository: ${{ secrets.YOGAFLOW_DATA_REPO }}
-          token: ${{ secrets.YOGAFLOW_DATA_REPO_TOKEN }}
-          path: yogaflow-data-repo
+      # Secrets dürfen hier nicht in `if:` verwendet werden (Parse-Fehler). Stattdessen env + Shell.
+      - name: Clone YogaFlow data repository
+        env:
+          DATA_REPO: ${{ secrets.YOGAFLOW_DATA_REPO }}
+          DATA_TOKEN: ${{ secrets.YOGAFLOW_DATA_REPO_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${DATA_REPO:-}" ] || [ -z "${DATA_TOKEN:-}" ]; then
+            echo "::notice::YOGAFLOW_DATA_REPO oder YOGAFLOW_DATA_REPO_TOKEN fehlt – kein Clone; Publish nutzt strategy=none."
+            exit 0
+          fi
+          rm -rf yogaflow-data-repo
+          git clone --depth 1 "https://x-access-token:${DATA_TOKEN}@github.com/${DATA_REPO}.git" yogaflow-data-repo
 
       - name: Publish JSON to data repository
         env:
