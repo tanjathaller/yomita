@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { extractSiteMediaKeyFromStoredValue } from "@/lib/netlify-site-media";
+
 const bookingStatusSchema = z.enum(["available", "full"]);
 
 const bookingBadgeLinkSchema = z
@@ -259,20 +261,28 @@ export const generalSettingsSchema = z
       });
     }
     const fav = settings.faviconUrl?.trim();
-    if (fav && !/^https?:\/\/\S+$/i.test(fav)) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["faviconUrl"],
-        message: "Favicon-URL muss mit https:// oder http:// beginnen.",
-      });
+    if (fav) {
+      const okHttp = /^https?:\/\/\S+$/i.test(fav);
+      const okBlob = extractSiteMediaKeyFromStoredValue(fav) !== null;
+      if (!okHttp && !okBlob) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["faviconUrl"],
+          message:
+            "Favicon-URL muss mit https:// oder http:// beginnen, oder ein Website-Bild (/api/blob-image …) sein.",
+        });
+      }
     }
   })
   .transform((s) => {
     const { logoUrl, ogImageUrl, logo, ogImage, faviconUrl, ...rest } = s;
     const fav = faviconUrl?.trim();
+    const faviconOk =
+      fav &&
+      (/^https?:\/\/\S+$/i.test(fav) || extractSiteMediaKeyFromStoredValue(fav) !== null);
     return {
       ...rest,
-      faviconUrl: fav && /^https?:\/\/\S+$/i.test(fav) ? fav : undefined,
+      faviconUrl: faviconOk ? fav : undefined,
       logo: normalizeOptionalUrlPair(logo, logoUrl),
       ogImage: normalizeOptionalUrlPair(ogImage, ogImageUrl),
     };

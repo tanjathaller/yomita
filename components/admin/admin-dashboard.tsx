@@ -135,6 +135,9 @@ type AdminDashboardProps = {
     prevState: SaveContentActionState,
     formData: FormData,
   ) => Promise<SaveContentActionState>;
+  /** Laufzeit: `syncedAt` aus YogaFlow-JSON (wie öffentliche Seite), nicht Teil des Speichern-Entwurfs. */
+  yogaflowSyncedAt?: string;
+  yogaflowCoursesLoadError?: boolean;
 };
 
 function buildId(prefix: string): string {
@@ -158,6 +161,18 @@ function yogaflowSeriesList(
   return settings.yogaflowCourseSeries?.length
     ? settings.yogaflowCourseSeries
     : DEFAULT_YOGAFLOW_COURSE_SERIES;
+}
+
+function formatYogaflowSyncedAtLabel(iso: string): string {
+  const t = iso.trim();
+  if (!t) return "";
+  const d = new Date(t);
+  if (Number.isNaN(d.getTime())) return t;
+  return d.toLocaleString("de-DE", {
+    timeZone: "Europe/Berlin",
+    dateStyle: "short",
+    timeStyle: "short",
+  });
 }
 
 function replaceCourseInDraft(
@@ -1160,7 +1175,12 @@ function MarkdownEditor({
   );
 }
 
-export function AdminDashboard({ initialContent, saveAction }: AdminDashboardProps) {
+export function AdminDashboard({
+  initialContent,
+  saveAction,
+  yogaflowSyncedAt,
+  yogaflowCoursesLoadError = false,
+}: AdminDashboardProps) {
   const router = useRouter();
   const [draft, setDraft] = useState<SiteContent>(() =>
     disconnectSiteContentObjectGraph(initialContent),
@@ -3242,6 +3262,20 @@ export function AdminDashboard({ initialContent, saveAction }: AdminDashboardPro
                   <strong className="text-foreground">Manuelle Kurse</strong> lassen sich oben
                   bearbeiten; auf der Seite erscheinen sie nach den YogaFlow-Kursen.
                 </div>
+                {yogaflowCoursesLoadError ? (
+                  <p
+                    className="mt-3 text-xs text-amber-900 dark:text-amber-200/90"
+                    role="status"
+                  >
+                    App-Termine-JSON ist gerade nicht ladbar (Netzwerk oder Konfiguration). Die
+                    öffentliche Seite zeigt in diesem Fall einen Hinweis bei den Kursen.
+                  </p>
+                ) : null}
+                {yogaflowSyncedAt?.trim() ? (
+                  <p className="mt-2 text-xs text-muted-foreground">
+                    Stand App-Termine: {formatYogaflowSyncedAtLabel(yogaflowSyncedAt)}
+                  </p>
+                ) : null}
               </div>
             ) : null}
 

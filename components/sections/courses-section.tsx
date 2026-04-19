@@ -69,18 +69,6 @@ function getWeekdaySortIndex(dayRaw: string): number {
   return Number.MAX_SAFE_INTEGER;
 }
 
-function formatYogaflowSyncedAtLabel(iso: string): string {
-  const t = iso.trim();
-  if (!t) return "";
-  const d = new Date(t);
-  if (Number.isNaN(d.getTime())) return t;
-  return d.toLocaleString("de-DE", {
-    timeZone: "Europe/Berlin",
-    dateStyle: "short",
-    timeStyle: "short",
-  });
-}
-
 type CoursesSectionProps = {
   /** Aus YogaFlow-Sync (Remote-JSON oder lokale Datei). */
   yogaflowCourses: Course[];
@@ -101,8 +89,6 @@ type CoursesSectionProps = {
   afterAktuelles?: boolean;
   /** Wenn es kein Aktuelles gibt: unter dem Kurz-„Über mich“-Teaser (spacing + divider). */
   afterAboutTeaser?: boolean;
-  /** `syncedAt` aus der YogaFlow-JSON nach erfolgreichem Laden. */
-  yogaflowSyncedAt?: string;
   /** Remote-URL gesetzt, Server-Fetch der Kurs-JSON fehlgeschlagen. */
   yogaflowCoursesLoadError?: boolean;
 };
@@ -118,7 +104,6 @@ export function CoursesSection({
   appButtonLabel,
   afterAktuelles = false,
   afterAboutTeaser = false,
-  yogaflowSyncedAt,
   yogaflowCoursesLoadError = false,
 }: CoursesSectionProps) {
   const eyebrow = eyebrowLabel?.trim();
@@ -249,12 +234,6 @@ export function CoursesSection({
           >
             App-Termine sind gerade nicht erreichbar. Bitte später erneut laden oder die Kurse
             direkt in der Buchungs-App prüfen.
-          </p>
-        ) : null}
-
-        {yogaflowSyncedAt?.trim() ? (
-          <p className="mt-3 max-w-2xl pl-4 text-xs text-muted-foreground lg:pl-6">
-            Stand App-Termine: {formatYogaflowSyncedAtLabel(yogaflowSyncedAt)}
           </p>
         ) : null}
       </div>
