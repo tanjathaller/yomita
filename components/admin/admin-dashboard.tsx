@@ -24,7 +24,10 @@ import {
   ADMIN_SITE_CONTENT_FORM_ID,
 } from "@/lib/admin-dashboard-ui";
 import { BOOKING_BADGE_ANCHOR_PRESETS } from "@/lib/booking-badge-link";
-import { realignCourseGridSortOrdersByWeekday } from "@/lib/course-grid-sort";
+import {
+  getWeekdaySortIndex,
+  realignCourseGridSortOrdersByWeekday,
+} from "@/lib/course-grid-sort";
 import { resolveImageUrl } from "@/lib/resolve-image-url";
 import { disconnectSiteContentObjectGraph } from "@/lib/site-content-object-graph";
 import { cn } from "@/lib/utils";
@@ -2793,9 +2796,11 @@ export function AdminDashboard({
                                       const list = [...yogaflowSeriesList(prev.settings)];
                                       const prevDay = list[index]!.day;
                                       list[index] = { ...list[index]!, day: v };
+                                      const prevIdx = getWeekdaySortIndex(prevDay);
+                                      const nextIdx = getWeekdaySortIndex(v);
                                       if (
-                                        prevDay.trim() === "" &&
-                                        v.trim() !== ""
+                                        prevIdx === Number.MAX_SAFE_INTEGER &&
+                                        nextIdx < Number.MAX_SAFE_INTEGER
                                       ) {
                                         const aligned = realignCourseGridSortOrdersByWeekday({
                                           settings: {
