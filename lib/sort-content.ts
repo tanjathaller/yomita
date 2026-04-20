@@ -1,3 +1,4 @@
+import { applyCourseGridSortV2IfNeeded } from "@/lib/course-grid-sort";
 import { ensureYogaflowCourseSeriesSettings } from "@/lib/yogaflow-series-group";
 import type {
   AktuellesItem,
@@ -19,17 +20,21 @@ export function sortPrices(prices: PriceItem[]): PriceItem[] {
 }
 
 export function withSortedLists(content: SiteContent): SiteContent {
-  return {
+  const migrated = applyCourseGridSortV2IfNeeded({
     ...content,
     settings: ensureYogaflowCourseSeriesSettings(content.settings),
+  });
+  return {
+    ...migrated,
+    settings: migrated.settings,
     aktuell: {
-      ...content.aktuell,
-      items: sortAktuellesItems(content.aktuell.items),
+      ...migrated.aktuell,
+      items: sortAktuellesItems(migrated.aktuell.items),
     },
-    courses: sortCourses(content.courses),
-    yogaflowCourses: content.yogaflowCourses?.length
-      ? sortCourses(content.yogaflowCourses)
-      : content.yogaflowCourses,
-    prices: sortPrices(content.prices),
+    courses: sortCourses(migrated.courses),
+    yogaflowCourses: migrated.yogaflowCourses?.length
+      ? sortCourses(migrated.yogaflowCourses)
+      : migrated.yogaflowCourses,
+    prices: sortPrices(migrated.prices),
   };
 }

@@ -40,6 +40,11 @@ function MetaRow({
 
 const DEFAULT_SERIES_BADGE = "Buchung über die App";
 
+function metaLine(value: string): string {
+  const t = value.trim();
+  return t.length > 0 ? t : "—";
+}
+
 function sessionShowsWaitingList(session: InternalCourse): boolean {
   const r = session.remainingSpots;
   return r !== undefined && Number.isFinite(r) && r <= 0;
@@ -117,17 +122,17 @@ export function YogaflowSeriesCourseCard({
             )}
           >
             <MetaRow label="Wochentag" className="min-w-0">
-              {series.day}
+              {metaLine(series.day)}
             </MetaRow>
             <MetaRow label="Zeit" className="min-w-0">
-              {series.time}
+              {metaLine(series.time)}
             </MetaRow>
           </div>
           <MetaRow
             label="Ort"
             className="lg:col-span-2 lg:@min-[22rem]/card-header:col-span-1"
           >
-            {series.location}
+            {metaLine(series.location)}
           </MetaRow>
         </dl>
       </CardHeader>

@@ -10,6 +10,10 @@
 # Fehlen diese beiden: Publish wird übersprungen (Hinweis im Log); Site nutzt dann nur noch
 # NEXT_PUBLIC_YOGAFLOW_DATA_URL, sobald die JSON manuell oder später per CI dort liegt.
 #
+# Optional (Serien-Karten in Redis / Upstash): KV_REST_API_URL + KV_REST_API_TOKEN
+# oder UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN (wie in Netlify).
+# Fehlt: Schritt sync:yogaflow:series-kv wird übersprungen (Exit 0).
+#
 # Optional: SYNC_GIT_AUTHOR_NAME, SYNC_GIT_AUTHOR_EMAIL – Commit-Autor im Daten-Repo
 # (sinnvoll, wenn das Daten-Repo Branch-Schutz / Contributor-Regeln hat).
 #
@@ -115,3 +119,11 @@ jobs:
             export YOGAFLOW_PUBLISH_STRATEGY=none
           fi
           npm run publish:yogaflow
+
+      - name: Merge neue YogaFlow-Serien in Redis (optional)
+        env:
+          KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
+          KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
+          UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+          UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+        run: npm run sync:yogaflow:series-kv

@@ -193,6 +193,11 @@ export type GeneralSettings = {
    * Beim Parsen erhalten; optional aus Admin entfernt.
    */
   coursesManualSectionTitle?: string;
+  /**
+   * `2` = Kurs-Raster nutzt einheitliche `sortOrder` über YogaFlow-Serien + manuelle Kurse
+   * (Migration aus alter Wochentag-Sortierung). Fehlt → Migration in `withSortedLists`.
+   */
+  courseGridSortVersion?: number;
   /** Karten für App-Serien (Vinyasa Dienstag, Flow Mittwoch, …); Termine kommen aus `yogaflowCourses`. */
   yogaflowCourseSeries?: YogaflowCourseSeries[];
   /** Optionaler Titel der Preise-Sektion (Fallback: „Preise“). */
