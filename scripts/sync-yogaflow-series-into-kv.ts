@@ -1,6 +1,7 @@
 /**
  * Nach `sync:yogaflow` / `publish:yogaflow`: fehlende `yogaflowCourseSeries` aus
  * `data/yogaflow-courses.json` in Redis (`site:content`) ergänzen (idempotent).
+ * Entfernt `yogaflow-auto-*`-Serien, wenn kein `matchTitles`-Titel mehr in der Sync-JSON vorkommt.
  *
  * Env (ein Paar nötig): KV_REST_API_URL + KV_REST_API_TOKEN oder
  * UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN (oder yomita_*-Alias).
@@ -88,12 +89,15 @@ function earliestSessionForTitle(courses: Course[], title: string): InternalCour
   })[0];
 }
 
-function maxGridSortOrder(content: SiteContent): number {
+function maxGridSortOrderForSeriesAndCourses(
+  series: YogaflowCourseSeries[],
+  courses: Course[],
+): number {
   let m = 0;
-  for (const s of content.settings.yogaflowCourseSeries ?? []) {
+  for (const s of series) {
     m = Math.max(m, s.sortOrder);
   }
-  for (const c of content.courses) {
+  for (const c of courses) {
     m = Math.max(m, c.sortOrder);
   }
   return m;
@@ -132,8 +136,7 @@ async function main(): Promise<void> {
   const yogaflowJson: unknown = JSON.parse(yogaflowRaw);
   const yogaflowPayload = yogaflowCoursesFileSchema.parse(yogaflowJson);
 
-  const seriesList = [...(content.settings.yogaflowCourseSeries ?? [])];
-  const covered = coveredMatchTitles(seriesList);
+  let seriesList = [...(content.settings.yogaflowCourseSeries ?? [])];
   const internalTitles = new Set<string>();
   for (const c of yogaflowPayload.courses) {
     if (!isInternalCourse(c)) continue;
@@ -141,54 +144,60 @@ async function main(): Promise<void> {
     if (t) internalTitles.add(t);
   }
 
+  const beforePrune = seriesList.length;
+  seriesList = seriesList.filter((s) => {
+    if (!s.id.startsWith("yogaflow-auto-")) return true;
+    return s.matchTitles.some((t) => internalTitles.has(t.trim()));
+  });
+  const pruned = beforePrune - seriesList.length;
+  if (pruned > 0) {
+    console.log(
+      `[sync-yogaflow-series-into-kv] ${pruned} Auto-Serie(n) entfernt (kein passender App-Kurstitel mehr in der Sync-JSON).`,
+    );
+  }
+
+  const covered = coveredMatchTitles(seriesList);
   const missingTitles = [...internalTitles].filter((t) => !covered.has(t)).sort((a, b) =>
     a.localeCompare(b, "de"),
   );
 
-  if (missingTitles.length === 0) {
-    const toWrite = disconnectSiteContentObjectGraph(siteContentSchema.parse(content));
-    await redis.set(SITE_CONTENT_KV_KEY, toWrite);
-    console.log("[sync-yogaflow-series-into-kv] Keine neuen App-Titel – KV nur normalisiert (v2).");
-    return;
+  let added = 0;
+  if (missingTitles.length > 0) {
+    const existingIds = new Set(seriesList.map((s) => s.id));
+    const room = MAX_YOGAFLOW_SERIES - seriesList.length;
+    if (room <= 0) {
+      console.warn(
+        `[sync-yogaflow-series-into-kv] Serien-Limit (${MAX_YOGAFLOW_SERIES}) – ${missingTitles.length} neue Titel nicht angelegt.`,
+      );
+    } else {
+      const toAdd = missingTitles.slice(0, room);
+      if (toAdd.length < missingTitles.length) {
+        console.warn(
+          `[sync-yogaflow-series-into-kv] Nur ${toAdd.length}/${missingTitles.length} neue Serien (Limit Platz ${room}).`,
+        );
+      }
+      const baseOrder = maxGridSortOrderForSeriesAndCourses(seriesList, content.courses);
+      toAdd.forEach((title, i) => {
+        const first = earliestSessionForTitle(yogaflowPayload.courses, title);
+        const slug = slugifyForId(title);
+        const id = uniqueSeriesId(slug, existingIds);
+        const row: YogaflowCourseSeries = {
+          id,
+          sortOrder: baseOrder + 10 * (i + 1),
+          matchTitles: [title],
+          displayTitle: title,
+          description: (first?.description ?? "").trim(),
+          day: "",
+          time: (first?.time ?? "").trim(),
+          location: (first?.location ?? "").trim(),
+          price: first?.price,
+          bookingBadgeLabel: "Buchung über die App",
+        };
+        seriesList.push(row);
+        added += 1;
+      });
+    }
   }
-
-  const existingIds = new Set(seriesList.map((s) => s.id));
-  const room = MAX_YOGAFLOW_SERIES - seriesList.length;
-  if (room <= 0) {
-    console.warn(
-      `[sync-yogaflow-series-into-kv] Serien-Limit (${MAX_YOGAFLOW_SERIES}) erreicht – ${missingTitles.length} Titel nicht angelegt.`,
-    );
-    const toWrite = disconnectSiteContentObjectGraph(siteContentSchema.parse(content));
-    await redis.set(SITE_CONTENT_KV_KEY, toWrite);
-    return;
-  }
-
-  const toAdd = missingTitles.slice(0, room);
-  if (toAdd.length < missingTitles.length) {
-    console.warn(
-      `[sync-yogaflow-series-into-kv] Nur ${toAdd.length}/${missingTitles.length} neue Serien (Limit Platz ${room}).`,
-    );
-  }
-
-  const baseOrder = maxGridSortOrder(content);
-  toAdd.forEach((title, i) => {
-    const first = earliestSessionForTitle(yogaflowPayload.courses, title);
-    const slug = slugifyForId(title);
-    const id = uniqueSeriesId(slug, existingIds);
-    const row: YogaflowCourseSeries = {
-      id,
-      sortOrder: baseOrder + 10 * (i + 1),
-      matchTitles: [title],
-      displayTitle: title,
-      description: (first?.description ?? "").trim(),
-      day: "",
-      time: (first?.time ?? "").trim(),
-      location: (first?.location ?? "").trim(),
-      price: first?.price,
-      bookingBadgeLabel: "Buchung über die App",
-    };
-    seriesList.push(row);
-  });
 
   content = {
     ...content,
@@ -201,9 +210,14 @@ async function main(): Promise<void> {
   const parsed = siteContentSchema.parse(content);
   const toWrite = disconnectSiteContentObjectGraph(parsed);
   await redis.set(SITE_CONTENT_KV_KEY, toWrite);
-  console.log(
-    `[sync-yogaflow-series-into-kv] OK: ${toAdd.length} neue Serie(n) in Redis; v2-Sortierung angewendet.`,
-  );
+
+  if (added > 0 || pruned > 0) {
+    console.log(
+      `[sync-yogaflow-series-into-kv] OK: +${added} Serie(n), −${pruned} Auto-Serie(n); KV aktualisiert.`,
+    );
+  } else {
+    console.log("[sync-yogaflow-series-into-kv] Keine Serien-Änderung – KV normalisiert (v2).");
+  }
 }
 
 main().catch((e) => {
