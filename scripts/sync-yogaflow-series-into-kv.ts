@@ -65,20 +65,6 @@ function uniqueSeriesId(baseSlug: string, existingIds: Set<string>): string {
   return id;
 }
 
-function weekdayDeFromIso(iso?: string): string {
-  if (!iso || !/^\d{4}-\d{2}-\d{2}$/.test(iso)) return "";
-  try {
-    const d = new Date(`${iso}T12:00:00`);
-    const w = new Intl.DateTimeFormat("de-DE", {
-      weekday: "long",
-      timeZone: "Europe/Berlin",
-    }).format(d);
-    return w ? w.charAt(0).toUpperCase() + w.slice(1) : "";
-  } catch {
-    return "";
-  }
-}
-
 function coveredMatchTitles(series: YogaflowCourseSeries[] | undefined): Set<string> {
   const s = new Set<string>();
   for (const row of series ?? []) {
@@ -195,7 +181,7 @@ async function main(): Promise<void> {
       matchTitles: [title],
       displayTitle: title,
       description: (first?.description ?? "").trim(),
-      day: weekdayDeFromIso(first?.startsOn),
+      day: "",
       time: (first?.time ?? "").trim(),
       location: (first?.location ?? "").trim(),
       price: first?.price,

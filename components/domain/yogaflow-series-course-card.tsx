@@ -63,6 +63,7 @@ export function YogaflowSeriesCourseCard({
 }: YogaflowSeriesCourseCardProps) {
   const sessionBookingHref = resolveYogaflowAppCoursesPageUrl(appUrl);
   const sessionCount = sessions.length;
+  const showWeekday = series.day.trim().length > 0;
   const summaryLabel =
     sessionCount === 0
       ? "Termine anzeigen"
@@ -116,14 +117,17 @@ export function YogaflowSeriesCourseCard({
               "min-w-0 max-lg:col-span-full",
               // Mobil: Wochentag + Zeit nebeneinander, sobald die Kartenbreite es zulässt
               "max-lg:grid max-lg:grid-cols-1 max-lg:items-start max-lg:gap-x-4 max-lg:gap-y-2.5",
-              "max-lg:@min-[18rem]/card-header:grid-cols-2 max-lg:@min-[18rem]/card-header:gap-y-0",
+              showWeekday &&
+                "max-lg:@min-[18rem]/card-header:grid-cols-2 max-lg:@min-[18rem]/card-header:gap-y-0",
               // Desktop: Kinder direkt im <dl>-Raster wie zuvor
               "lg:contents",
             )}
           >
-            <MetaRow label="Wochentag" className="min-w-0">
-              {metaLine(series.day)}
-            </MetaRow>
+            {showWeekday ? (
+              <MetaRow label="Wochentag" className="min-w-0">
+                {series.day.trim()}
+              </MetaRow>
+            ) : null}
             <MetaRow label="Zeit" className="min-w-0">
               {metaLine(series.time)}
             </MetaRow>
