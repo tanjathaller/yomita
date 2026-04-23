@@ -18,8 +18,10 @@
 # (sinnvoll, wenn das Daten-Repo Branch-Schutz / Contributor-Regeln hat).
 #
 # Intervall (schedule):
-#   Standard: stündlich — cron: "0 * * * *"
-#   Alle 6 Stunden: "0 */6 * * *"
+#   Stündlich, aber NICHT auf Minute 0: GitHub weist darauf hin, dass zu Stundenbeginn
+#   besonders viele Cron-Jobs laufen — Verzögerungen oder ausbleibende Läufe möglich.
+#   Daher z. B. Minute 23 UTC: "23 * * * *" (weiterhin einmal pro Stunde).
+#   Alle 6 Stunden: "23 */6 * * *"
 #   Alle 30 Minuten: "*/30 * * * *" (mehr GitHub-Actions-Minuten; bei privatem Repo auf Kontingent achten)
 #
 # Hinweis GitHub Actions: Jeder Lauf zählt gegen die Minuten des Repos/Organisation;
@@ -29,7 +31,7 @@ name: Sync YogaFlow courses
 
 on:
   schedule:
-    - cron: "0 * * * *"
+    - cron: "23 * * * *"
   workflow_dispatch:
 
 permissions:
