@@ -58,12 +58,14 @@ jobs:
           K: ${{ secrets.YOGAFLOW_SUPABASE_ANON_KEY }}
           E: ${{ secrets.YOGAFLOW_SYNC_EMAIL }}
           P: ${{ secrets.YOGAFLOW_SYNC_PASSWORD }}
+          T: ${{ secrets.YOGAFLOW_TENANT_ID }}
         run: |
           missing=""
           [ -z "$U" ] && missing="${missing} YOGAFLOW_SUPABASE_URL"
           [ -z "$K" ] && missing="${missing} YOGAFLOW_SUPABASE_ANON_KEY"
           [ -z "$E" ] && missing="${missing} YOGAFLOW_SYNC_EMAIL"
           [ -z "$P" ] && missing="${missing} YOGAFLOW_SYNC_PASSWORD"
+          [ -z "$T" ] && missing="${missing} YOGAFLOW_TENANT_ID"
           if [ -n "$missing" ]; then
             echo "::error::Folgende GitHub Secrets fehlen oder sind leer:$missing"
             echo "Settings → Secrets and variables → Actions → Repository secrets"
@@ -89,6 +91,7 @@ jobs:
           YOGAFLOW_SUPABASE_ANON_KEY: ${{ secrets.YOGAFLOW_SUPABASE_ANON_KEY }}
           YOGAFLOW_SYNC_EMAIL: ${{ secrets.YOGAFLOW_SYNC_EMAIL }}
           YOGAFLOW_SYNC_PASSWORD: ${{ secrets.YOGAFLOW_SYNC_PASSWORD }}
+          YOGAFLOW_TENANT_ID: ${{ secrets.YOGAFLOW_TENANT_ID }}
           YOGAFLOW_APP_URL: ${{ secrets.YOGAFLOW_APP_URL }}
         run: npm run sync:yogaflow
 

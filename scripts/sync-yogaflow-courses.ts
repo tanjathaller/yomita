@@ -387,6 +387,7 @@ async function main() {
   const anonKey = requireEnv("YOGAFLOW_SUPABASE_ANON_KEY");
   const email = requireEnv("YOGAFLOW_SYNC_EMAIL");
   const password = requireEnv("YOGAFLOW_SYNC_PASSWORD");
+  const tenantId = normalizeSecret(process.env.YOGAFLOW_TENANT_ID ?? "");
 
   const jwt = await supabasePasswordGrant(baseUrl, anonKey, email, password);
   const today = todayBerlinYmd();
@@ -399,10 +400,12 @@ async function main() {
 
   let courses: SupabaseCourseRow[];
 
+  const tenantFilter = tenantId ? `&tenant_id=eq.${tenantId}` : "";
+
   if (extraFields) {
     const pathWithExtra =
       `/rest/v1/courses?select=${baseSelect},${extraFields}` +
-      `&status=eq.active&date=gte.${today}&order=date.asc,time.asc`;
+      `${tenantFilter}&status=eq.active&date=gte.${today}&order=date.asc,time.asc`;
     try {
       courses = await fetchAllRows<SupabaseCourseRow>(
         baseUrl,
@@ -415,11 +418,11 @@ async function main() {
       );
     } catch {
       console.warn(
-        `Supabase: Zusatzfelder „${extraFields}“ schlagen fehl – nutze Standard-Select (Spalten in der DB prüfen).`,
+        `Supabase: Zusatzfelder „${extraFields}" schlagen fehl – nutze Standard-Select (Spalten in der DB prüfen).`,
       );
       const pathBase =
         `/rest/v1/courses?select=${baseSelect}` +
-        `&status=eq.active&date=gte.${today}&order=date.asc,time.asc`;
+        `${tenantFilter}&status=eq.active&date=gte.${today}&order=date.asc,time.asc`;
       courses = await fetchAllRows<SupabaseCourseRow>(
         baseUrl,
         pathBase,
@@ -430,7 +433,7 @@ async function main() {
   } else {
     const coursePath =
       `/rest/v1/courses?select=${baseSelect}` +
-      `&status=eq.active&date=gte.${today}&order=date.asc,time.asc`;
+      `${tenantFilter}&status=eq.active&date=gte.${today}&order=date.asc,time.asc`;
     courses = await fetchAllRows<SupabaseCourseRow>(
       baseUrl,
       coursePath,
