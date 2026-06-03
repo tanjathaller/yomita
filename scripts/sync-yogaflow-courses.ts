@@ -442,6 +442,32 @@ async function main() {
     );
   }
 
+  // Kurse herausfiltern, die heute bereits beendet sind (end_time bereits vergangen).
+  // Der Supabase-Filter `date >= today` prüft nur das Datum, nicht die Uhrzeit.
+  const currentBerlinTime = (() => {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Europe/Berlin",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    }).formatToParts(new Date());
+    const h = parts.find((p) => p.type === "hour")!.value;
+    const m = parts.find((p) => p.type === "minute")!.value;
+    return `${h}:${m}`;
+  })();
+  const beforeFilter = courses.length;
+  courses = courses.filter((row) => {
+    if (row.date !== today) return true;
+    const endHm = row.end_time ? row.end_time.substring(0, 5) : null;
+    if (!endHm) return true;
+    return endHm > currentBerlinTime;
+  });
+  if (courses.length < beforeFilter) {
+    console.log(
+      `${beforeFilter - courses.length} heute bereits beendete Kurse herausgefiltert (Berlin-Zeit ${currentBerlinTime}).`,
+    );
+  }
+
   const appUrl = normalizeSecret(process.env.YOGAFLOW_APP_URL ?? "");
   const remainingById = new Map<string, number>();
 
