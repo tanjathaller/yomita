@@ -126,6 +126,7 @@ jobs:
           npm run publish:yogaflow
 
       - name: Merge neue YogaFlow-Serien in Redis (optional)
+        continue-on-error: true
         env:
           KV_REST_API_URL: ${{ secrets.KV_REST_API_URL }}
           KV_REST_API_TOKEN: ${{ secrets.KV_REST_API_TOKEN }}
