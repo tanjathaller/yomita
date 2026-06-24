@@ -4,6 +4,7 @@ import type { Course, GeneralSettings } from "@/types/site-content";
 
 import { CourseRow } from "@/components/domain/course-row";
 import { YogaflowSeriesCourseCard } from "@/components/domain/yogaflow-series-course-card";
+import { CoursesGrid } from "@/components/sections/courses-grid";
 import { MarkdownContent } from "@/components/shared/markdown-content";
 import { SectionShell } from "@/components/shared/section-shell";
 import { buttonVariants } from "@/components/ui/button-variants";
@@ -146,7 +147,7 @@ export function CoursesSection({
 
       <div className="mt-8 w-full">
         {hasAnyGrid ? (
-          <div className={courseGridClass}>
+          <CoursesGrid className={courseGridClass}>
             {sortedCards.map((entry) => (
               <div
                 key={entry.type === "series" ? entry.block.series.id : entry.course.id}
@@ -163,7 +164,7 @@ export function CoursesSection({
                 )}
               </div>
             ))}
-          </div>
+          </CoursesGrid>
         ) : null}
 
         {!hasAnyGrid ? (
