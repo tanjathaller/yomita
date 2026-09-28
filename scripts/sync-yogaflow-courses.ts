@@ -7,6 +7,8 @@
  * Env: YOGAFLOW_SUPABASE_URL, YOGAFLOW_SUPABASE_ANON_KEY, YOGAFLOW_SYNC_EMAIL,
  * YOGAFLOW_SYNC_PASSWORD; optional YOGAFLOW_APP_URL (Playwright) und
  * YOGAFLOW_SUPABASE_COURSES_EXTRA_FIELDS (Restplätze direkt aus `courses`, falls Spalten existieren).
+ * Studio-Kontext: Header `x-omlify-tenant` = Slug aus `tenants` zu YOGAFLOW_TENANT_ID
+ * (optional überschreibbar per YOGAFLOW_TENANT_SLUG).
  *
  * Restplätze primär: Supabase-RPC `get_course_participant_counts` (registered_count + max_participants).
  *
@@ -168,11 +170,50 @@ async function supabasePasswordGrant(
   return data.access_token;
 }
 
+/**
+ * YogaFlow ordnet einen Login über `x-omlify-tenant` dem Studio-Profil zu. Ohne Header
+ * findet die RLS das Profil nur, wenn der Login genau ein Studio-Profil hat.
+ */
+const TENANT_HEADER = "x-omlify-tenant";
+
+function tenantHeaders(tenantSlug: string | undefined): Record<string, string> {
+  return tenantSlug ? { [TENANT_HEADER]: tenantSlug } : {};
+}
+
+async function resolveTenantSlug(
+  baseUrl: string,
+  anonKey: string,
+  tenantId: string,
+): Promise<string | undefined> {
+  const fromEnv = normalizeSecret(process.env.YOGAFLOW_TENANT_SLUG ?? "");
+  if (fromEnv) return fromEnv.toLowerCase();
+  if (!tenantId) return undefined;
+
+  const res = await fetch(
+    `${baseUrl.replace(/\/$/, "")}/rest/v1/tenants?select=slug&id=eq.${encodeURIComponent(tenantId)}`,
+    { headers: { apikey: anonKey, Accept: "application/json" } },
+  );
+  if (!res.ok) {
+    throw new Error(
+      `Studio-Slug für YOGAFLOW_TENANT_ID nicht ermittelbar (${res.status}): ${await res.text()}`,
+    );
+  }
+  const rows = (await res.json()) as { slug?: string | null }[];
+  const slug = rows[0]?.slug?.trim().toLowerCase();
+  if (!slug) {
+    throw new Error(
+      `Kein Studio mit YOGAFLOW_TENANT_ID=${tenantId} gefunden – Secret prüfen oder YOGAFLOW_TENANT_SLUG setzen.`,
+    );
+  }
+  return slug;
+}
+
 async function fetchAllRows<T>(
   baseUrl: string,
   pathWithQuery: string,
   anonKey: string,
   jwt: string,
+  tenantSlug: string | undefined,
 ): Promise<T[]> {
   const url = `${baseUrl.replace(/\/$/, "")}${pathWithQuery}`;
   const pageSize = 1000;
@@ -186,6 +227,7 @@ async function fetchAllRows<T>(
         Authorization: `Bearer ${jwt}`,
         Accept: "application/json",
         Range: `${offset}-${offset + pageSize - 1}`,
+        ...tenantHeaders(tenantSlug),
       },
     });
 
@@ -251,6 +293,7 @@ async function fetchRegisteredCountsFromRpc(
   anonKey: string,
   jwt: string,
   courseIds: string[],
+  tenantSlug: string | undefined,
 ): Promise<Map<string, number>> {
   const url = `${baseUrl.replace(/\/$/, "")}/rest/v1/rpc/get_course_participant_counts`;
   const customPayload = normalizeSecret(
@@ -261,6 +304,7 @@ async function fetchRegisteredCountsFromRpc(
     apikey: anonKey,
     Authorization: `Bearer ${jwt}`,
     Accept: "application/json",
+    ...tenantHeaders(tenantSlug),
   };
 
   const postJson = (body: string) =>
@@ -390,6 +434,14 @@ async function main() {
   const tenantId = normalizeSecret(process.env.YOGAFLOW_TENANT_ID ?? "");
 
   const jwt = await supabasePasswordGrant(baseUrl, anonKey, email, password);
+  const tenantSlug = await resolveTenantSlug(baseUrl, anonKey, tenantId);
+  if (tenantSlug) {
+    console.log(`Supabase: Studio-Kontext ${TENANT_HEADER}=${tenantSlug}`);
+  } else {
+    console.warn(
+      "Supabase: Kein Studio-Kontext (YOGAFLOW_TENANT_ID/YOGAFLOW_TENANT_SLUG fehlen) – Login mit mehreren Studio-Profilen sieht dann keine Kurse.",
+    );
+  }
   const today = todayBerlinYmd();
 
   const baseSelect =
@@ -412,6 +464,7 @@ async function main() {
         pathWithExtra,
         anonKey,
         jwt,
+        tenantSlug,
       );
       console.log(
         `Supabase: Kurse mit Zusatzfeldern geladen (${extraFields}).`,
@@ -428,6 +481,7 @@ async function main() {
         pathBase,
         anonKey,
         jwt,
+        tenantSlug,
       );
     }
   } else {
@@ -439,6 +493,7 @@ async function main() {
       coursePath,
       anonKey,
       jwt,
+      tenantSlug,
     );
   }
 
@@ -485,6 +540,7 @@ async function main() {
         anonKey,
         jwt,
         courses.map((c) => c.id),
+        tenantSlug,
       );
       let matched = 0;
       for (const row of courses) {
@@ -551,6 +607,7 @@ async function main() {
       registrationPath,
       anonKey,
       jwt,
+      tenantSlug,
     );
     for (const row of courses) {
       if (remainingById.has(row.id)) continue;
