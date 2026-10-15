@@ -68,18 +68,33 @@ function configureDataRepoRemote(cwd: string): boolean {
   return true;
 }
 
-function pushDataRepo(cwd: string): void {
+/** PAT als Authorization-Header – leerer extraheader sendet ungültige Auth und bricht den Push. */
+function applyDataRepoPatHeader(): boolean {
+  const token = process.env.YOGAFLOW_DATA_REPO_TOKEN?.trim();
+  if (!token) {
+    console.error("Publish: YOGAFLOW_DATA_REPO_TOKEN fehlt für den Push.");
+    return false;
+  }
+  const basic = Buffer.from(`x-access-token:${token}`, "utf8").toString("base64");
   execFileSync(
     "git",
     [
-      "-c",
-      "http.https://github.com/.extraheader=",
-      "push",
-      "origin",
-      "HEAD",
+      "config",
+      "--global",
+      "http.https://github.com/.extraheader",
+      `AUTHORIZATION: basic ${basic}`,
     ],
-    { cwd, stdio: "inherit", env: process.env },
+    { stdio: "ignore" },
   );
+  return true;
+}
+
+function pushDataRepo(cwd: string): void {
+  execFileSync("git", ["push", "origin", "HEAD"], {
+    cwd,
+    stdio: "inherit",
+    env: process.env,
+  });
 }
 
 function gitStagedIsEmpty(cwd: string): boolean {
@@ -155,6 +170,10 @@ function main(): void {
 
   unsetGithubExtraheader();
   if (!configureDataRepoRemote(DATA_REPO_DIR)) {
+    process.exitCode = 1;
+    return;
+  }
+  if (!applyDataRepoPatHeader()) {
     process.exitCode = 1;
     return;
   }
