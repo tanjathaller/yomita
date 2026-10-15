@@ -27,6 +27,61 @@ function runGit(args: string[], cwd: string): void {
   execFileSync("git", args, { cwd, stdio: "inherit", env: process.env });
 }
 
+/** actions/checkout setzt sonst global GITHUB_TOKEN – der darf den Daten-Repo-PAT nicht überlagern. */
+function unsetGithubExtraheader(): void {
+  try {
+    execFileSync(
+      "git",
+      ["config", "--global", "--unset-all", "http.https://github.com/.extraheader"],
+      { stdio: "ignore" },
+    );
+  } catch {
+    // Header war nicht gesetzt
+  }
+}
+
+const DATA_REPO_SLUG = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
+
+/** Remote explizit mit PAT, falls Git die Clone-Credentials verworfen hat. */
+function configureDataRepoRemote(cwd: string): boolean {
+  const token = process.env.YOGAFLOW_DATA_REPO_TOKEN?.trim();
+  const repo = process.env.YOGAFLOW_DATA_REPO?.trim();
+  if (!token || !repo) {
+    return true;
+  }
+  if (!DATA_REPO_SLUG.test(repo)) {
+    console.error(
+      "Publish: YOGAFLOW_DATA_REPO muss das Format owner/name haben.",
+    );
+    return false;
+  }
+  execFileSync(
+    "git",
+    [
+      "remote",
+      "set-url",
+      "origin",
+      `https://x-access-token:${token}@github.com/${repo}.git`,
+    ],
+    { cwd, stdio: "ignore", env: process.env },
+  );
+  return true;
+}
+
+function pushDataRepo(cwd: string): void {
+  execFileSync(
+    "git",
+    [
+      "-c",
+      "http.https://github.com/.extraheader=",
+      "push",
+      "origin",
+      "HEAD",
+    ],
+    { cwd, stdio: "inherit", env: process.env },
+  );
+}
+
 function gitStagedIsEmpty(cwd: string): boolean {
   try {
     execFileSync("git", ["diff", "--staged", "--quiet"], {
@@ -98,6 +153,12 @@ function main(): void {
     process.env.SYNC_GIT_AUTHOR_EMAIL?.trim() ||
     "41898282+github-actions[bot]@users.noreply.github.com";
 
+  unsetGithubExtraheader();
+  if (!configureDataRepoRemote(DATA_REPO_DIR)) {
+    process.exitCode = 1;
+    return;
+  }
+
   runGit(["config", "user.name", name], DATA_REPO_DIR);
   runGit(["config", "user.email", email], DATA_REPO_DIR);
 
@@ -109,7 +170,7 @@ function main(): void {
   }
 
   runGit(["commit", "-m", "chore: sync YogaFlow-Kurse (data repo)"], DATA_REPO_DIR);
-  runGit(["push", "origin", "HEAD"], DATA_REPO_DIR);
+  pushDataRepo(DATA_REPO_DIR);
   console.log("Publish: Commit und Push ins Daten-Repo OK.");
 }
 

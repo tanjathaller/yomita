@@ -45,7 +45,12 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
+      # persist-credentials: false – sonst setzt checkout einen globalen
+      # AUTHORIZATION-Header mit GITHUB_TOKEN. Der gilt nur für dieses Repo und
+      # überlagert den PAT beim Push ins Daten-Repo (Invalid username or token).
       - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-node@v5
         with:
@@ -102,19 +107,25 @@ jobs:
           DATA_TOKEN: ${{ secrets.YOGAFLOW_DATA_REPO_TOKEN }}
         run: |
           set -euo pipefail
+          git config --global --unset-all http.https://github.com/.extraheader || true
           if [ -z "${DATA_REPO:-}" ] || [ -z "${DATA_TOKEN:-}" ]; then
             echo "::notice::YOGAFLOW_DATA_REPO oder YOGAFLOW_DATA_REPO_TOKEN fehlt – kein Clone; Publish nutzt strategy=none."
             exit 0
           fi
+          echo "Daten-Repo-Token ist gesetzt (Länge ${#DATA_TOKEN})."
           rm -rf yogaflow-data-repo
           git clone --depth 1 "https://x-access-token:${DATA_TOKEN}@github.com/${DATA_REPO}.git" yogaflow-data-repo
+          git -C yogaflow-data-repo remote set-url origin "https://x-access-token:${DATA_TOKEN}@github.com/${DATA_REPO}.git"
 
       - name: Publish JSON to data repository
         env:
           SYNC_GIT_AUTHOR_NAME: ${{ secrets.SYNC_GIT_AUTHOR_NAME }}
           SYNC_GIT_AUTHOR_EMAIL: ${{ secrets.SYNC_GIT_AUTHOR_EMAIL }}
+          YOGAFLOW_DATA_REPO: ${{ secrets.YOGAFLOW_DATA_REPO }}
+          YOGAFLOW_DATA_REPO_TOKEN: ${{ secrets.YOGAFLOW_DATA_REPO_TOKEN }}
         run: |
           set -euo pipefail
+          git config --global --unset-all http.https://github.com/.extraheader || true
           if [ -d yogaflow-data-repo/.git ]; then
             export YOGAFLOW_PUBLISH_STRATEGY=git-data-repo
             export YOGAFLOW_DATA_REPO_DIR="${GITHUB_WORKSPACE}/yogaflow-data-repo"
