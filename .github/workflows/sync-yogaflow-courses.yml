@@ -119,18 +119,14 @@ jobs:
             -H "X-GitHub-Api-Version: 2022-11-28" \
             "https://api.github.com/repos/${DATA_REPO}")
           echo "GitHub API Repo-Check HTTP ${API_CODE}"
-          python3 -c "
-import json, sys
-with open('/tmp/gh-repo.json', encoding='utf-8') as f:
-    d = json.load(f)
-print('full_name:', d.get('full_name') or d.get('message'))
-perms = d.get('permissions') or {}
-print('permissions.pull:', perms.get('pull'))
-print('permissions.push:', perms.get('push'))
-if not perms.get('push'):
-    print('::error::YOGAFLOW_DATA_REPO_TOKEN hat kein Schreibrecht auf das Daten-Repo. Im Secret liegt oft ein anderes Token als das im Editor geänderte (z. B. cron-job-yogaflow-sync statt site-data). Token mit Contents: Read and write auf das Daten-Repo prüfen und Secret in yomita aktualisieren.')
-    sys.exit(1)
-"
+          FULL_NAME=$(jq -r '.full_name // .message // empty' /tmp/gh-repo.json)
+          PUSH=$(jq -r '.permissions.push // false' /tmp/gh-repo.json)
+          echo "full_name: ${FULL_NAME}"
+          echo "permissions.push: ${PUSH}"
+          if [ "${PUSH}" != "true" ]; then
+            echo "::error::YOGAFLOW_DATA_REPO_TOKEN hat kein Schreibrecht auf das Daten-Repo. Im Secret liegt oft ein anderes Token als das im Editor geänderte (z. B. cron-job-yogaflow-sync statt site-data). Token mit Contents: Read and write auf das Daten-Repo prüfen und Secret in yomita aktualisieren."
+            exit 1
+          fi
           rm -rf yogaflow-data-repo
           git clone --depth 1 "https://x-access-token:${DATA_TOKEN}@github.com/${DATA_REPO}.git" yogaflow-data-repo
           git -C yogaflow-data-repo remote set-url origin "https://x-access-token:${DATA_TOKEN}@github.com/${DATA_REPO}.git"
