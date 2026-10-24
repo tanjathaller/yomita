@@ -88,6 +88,8 @@ jobs:
             echo "YOGAFLOW_APP_URL nicht gesetzt – Playwright wird übersprungen (Sync nutzt registrations-Fallback)."
             exit 0
           fi
+          # ubuntu-latest ist seit 19.10.2026 Ubuntu 26.04. Chromium-Builds dafür
+          # gibt es erst ab Playwright 1.61 (Lockfile: >= 1.64.1).
           npx playwright install chromium --with-deps
 
       - name: Pull YogaFlow data
