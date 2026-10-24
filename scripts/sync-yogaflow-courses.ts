@@ -5,10 +5,11 @@
  * sonst Fallback über `registrations` (oft unvollständig wegen RLS).
  *
  * Env: YOGAFLOW_SUPABASE_URL, YOGAFLOW_SUPABASE_ANON_KEY, YOGAFLOW_SYNC_EMAIL,
- * YOGAFLOW_SYNC_PASSWORD; optional YOGAFLOW_APP_URL (Playwright) und
+ * YOGAFLOW_SYNC_PASSWORD; optional YOGAFLOW_APP_URL (Playwright und Studio-Slug) und
  * YOGAFLOW_SUPABASE_COURSES_EXTRA_FIELDS (Restplätze direkt aus `courses`, falls Spalten existieren).
- * Studio-Kontext: Header `x-omlify-tenant` = Slug aus `tenants` zu YOGAFLOW_TENANT_ID
- * (optional überschreibbar per YOGAFLOW_TENANT_SLUG).
+ * Login: Edge Function `functions/v1/login` mit Header `x-omlify-tenant`.
+ * Slug aus `YOGAFLOW_TENANT_SLUG`, sonst Subdomain von `YOGAFLOW_APP_URL` (`*.omlify.de`),
+ * sonst Slug aus `tenants` zu YOGAFLOW_TENANT_ID.
  *
  * Restplätze primär: Supabase-RPC `get_course_participant_counts` (registered_count + max_participants).
  *
@@ -132,36 +133,94 @@ function locationLabel(location: string | null, room: string | null): string {
   return loc || r || "Ort nach Absprache";
 }
 
+/** Studio-Subdomain von `https://<slug>.omlify.de`, wie die App den Tenant-Header setzt. */
+function tenantSlugFromAppUrl(appUrl: string): string | undefined {
+  const raw = normalizeSecret(appUrl);
+  if (!raw) return undefined;
+  let host: string;
+  try {
+    host = new URL(raw).hostname.toLowerCase();
+  } catch {
+    return undefined;
+  }
+  const platform = "omlify.de";
+  if (host === platform || host === `www.${platform}` || !host.endsWith(`.${platform}`)) {
+    return undefined;
+  }
+  const slug = host.slice(0, host.length - platform.length - 1);
+  if (!slug || slug.includes(".") || !/^[a-z0-9]{3,30}$/.test(slug)) return undefined;
+  return slug;
+}
+
+type YogaflowLoginBody = {
+  code?: string;
+  access_token?: string;
+  session?: { access_token?: string };
+};
+
+/**
+ * Die App meldet nicht über `/auth/v1/token` an, sondern über die Edge Function
+ * `functions/v1/login` plus Header `x-omlify-tenant`. Der direkte Passwort-Grant
+ * antwortet dafür mit invalid_credentials, auch wenn der App-Login klappt.
+ */
 async function supabasePasswordGrant(
   baseUrl: string,
   anonKey: string,
   email: string,
   password: string,
+  tenantSlug: string | undefined,
 ): Promise<string> {
-  const res = await fetch(
-    `${baseUrl.replace(/\/$/, "")}/auth/v1/token?grant_type=password`,
-    {
+  const root = baseUrl.replace(/\/$/, "");
+  if (tenantSlug) {
+    const res = await fetch(`${root}/functions/v1/login`, {
       method: "POST",
       headers: {
         apikey: anonKey,
+        Authorization: `Bearer ${anonKey}`,
         "Content-Type": "application/json",
+        [TENANT_HEADER]: tenantSlug,
       },
       body: JSON.stringify({ email, password }),
-    },
-  );
-  if (!res.ok) {
+    });
     const text = await res.text();
-    let hint = "";
+    let body: YogaflowLoginBody = {};
     try {
-      const body = JSON.parse(text) as { error_code?: string };
-      if (body.error_code === "invalid_credentials") {
-        hint =
-          "\n\nHinweis: E-Mail oder Passwort falsch – oder der Account existiert nicht in DIESEM Supabase-Projekt (URL + Anon-Key müssen zum gleichen Projekt wie in der YogaFlow-App passen). In GitHub: Secrets YOGAFLOW_SYNC_EMAIL / YOGAFLOW_SYNC_PASSWORD prüfen. Nach Passwort-Änderung das Secret aktualisieren.";
-      }
+      body = JSON.parse(text) as YogaflowLoginBody;
     } catch {
       /* ignore */
     }
-    throw new Error(`Supabase Auth fehlgeschlagen (${res.status}): ${text}${hint}`);
+    const token = body.session?.access_token ?? body.access_token;
+    if (res.ok && token) return token;
+    if (res.status !== 404) {
+      const hint =
+        res.status === 401 || body.code === "INVALID_CREDENTIALS"
+          ? `\n\nHinweis: Login für Studio „${tenantSlug}" über functions/v1/login abgelehnt. E-Mail, Passwort und YOGAFLOW_APP_URL (Subdomain = Studio-Slug) müssen zur App passen.`
+          : "";
+      throw new Error(
+        `YogaFlow-Login fehlgeschlagen (${res.status}): ${text}${hint}`,
+      );
+    }
+    console.warn(
+      "functions/v1/login nicht vorhanden – Fallback auf den direkten Supabase-Passwort-Login.",
+    );
+  } else {
+    console.warn(
+      "Kein Studio-Slug (YOGAFLOW_APP_URL auf *.omlify.de oder YOGAFLOW_TENANT_SLUG) – direkter Supabase-Passwort-Login.",
+    );
+  }
+
+  const res = await fetch(`${root}/auth/v1/token?grant_type=password`, {
+    method: "POST",
+    headers: {
+      apikey: anonKey,
+      "Content-Type": "application/json",
+      ...tenantHeaders(tenantSlug),
+    },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(`Supabase Auth fehlgeschlagen (${res.status}): ${text}`);
   }
   const data = (await res.json()) as { access_token?: string };
   if (!data.access_token) {
@@ -206,6 +265,29 @@ async function resolveTenantSlug(
     );
   }
   return slug;
+}
+
+async function lookupTenantIdBySlug(
+  baseUrl: string,
+  anonKey: string,
+  jwt: string,
+  slug: string,
+): Promise<string | undefined> {
+  const res = await fetch(
+    `${baseUrl.replace(/\/$/, "")}/rest/v1/tenants?select=id&slug=eq.${encodeURIComponent(slug)}`,
+    {
+      headers: {
+        apikey: anonKey,
+        Authorization: `Bearer ${jwt}`,
+        Accept: "application/json",
+        ...tenantHeaders(slug),
+      },
+    },
+  );
+  if (!res.ok) return undefined;
+  const rows = (await res.json()) as { id?: string | null }[];
+  const id = rows[0]?.id?.trim();
+  return id || undefined;
 }
 
 async function fetchAllRows<T>(
@@ -432,14 +514,40 @@ async function main() {
   const email = requireEnv("YOGAFLOW_SYNC_EMAIL");
   const password = requireEnv("YOGAFLOW_SYNC_PASSWORD");
   const tenantId = normalizeSecret(process.env.YOGAFLOW_TENANT_ID ?? "");
+  const appUrlForSlug = normalizeSecret(process.env.YOGAFLOW_APP_URL ?? "");
+  const slugFromEnv = normalizeSecret(process.env.YOGAFLOW_TENANT_SLUG ?? "").toLowerCase();
+  const tenantSlug =
+    slugFromEnv ||
+    tenantSlugFromAppUrl(appUrlForSlug) ||
+    (await resolveTenantSlug(baseUrl, anonKey, tenantId));
 
-  const jwt = await supabasePasswordGrant(baseUrl, anonKey, email, password);
-  const tenantSlug = await resolveTenantSlug(baseUrl, anonKey, tenantId);
+  const jwt = await supabasePasswordGrant(
+    baseUrl,
+    anonKey,
+    email,
+    password,
+    tenantSlug,
+  );
+  let courseTenantId = tenantId;
   if (tenantSlug) {
     console.log(`Supabase: Studio-Kontext ${TENANT_HEADER}=${tenantSlug}`);
+    const lookedUp = await lookupTenantIdBySlug(
+      baseUrl,
+      anonKey,
+      jwt,
+      tenantSlug,
+    );
+    if (lookedUp) {
+      if (tenantId && tenantId !== lookedUp) {
+        console.warn(
+          `YOGAFLOW_TENANT_ID passt nicht zum Studio „${tenantSlug}". Sync filtert mit der Studio-ID aus der App.`,
+        );
+      }
+      courseTenantId = lookedUp;
+    }
   } else {
     console.warn(
-      "Supabase: Kein Studio-Kontext (YOGAFLOW_TENANT_ID/YOGAFLOW_TENANT_SLUG fehlen) – Login mit mehreren Studio-Profilen sieht dann keine Kurse.",
+      "Supabase: Kein Studio-Kontext (YOGAFLOW_APP_URL auf *.omlify.de, YOGAFLOW_TENANT_SLUG oder YOGAFLOW_TENANT_ID fehlen) – Login mit mehreren Studio-Profilen sieht dann keine Kurse.",
     );
   }
   const today = todayBerlinYmd();
@@ -452,7 +560,9 @@ async function main() {
 
   let courses: SupabaseCourseRow[];
 
-  const tenantFilter = tenantId ? `&tenant_id=eq.${tenantId}` : "";
+  const tenantFilter = courseTenantId
+    ? `&tenant_id=eq.${encodeURIComponent(courseTenantId)}`
+    : "";
 
   if (extraFields) {
     const pathWithExtra =
